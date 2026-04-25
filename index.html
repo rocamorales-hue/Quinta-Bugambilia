@@ -167,9 +167,43 @@ function parseCSVLine(line) {
 
 // ── Parse the sheet ───────────────────────────────────────────────────────
 // Columns: Fecha(0), Día(1), Mañana(2), Tarde(3), Estado del Día(4)
+function parseDate(fechaRaw) {
+  if (!fechaRaw) return null;
+  let m, dateObj;
+
+  // DD/MM/YYYY or D/M/YYYY
+  m = fechaRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) return new Date(parseInt(m[3]), parseInt(m[2])-1, parseInt(m[1]));
+
+  // YYYY-MM-DD
+  m = fechaRaw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) return new Date(parseInt(m[1]), parseInt(m[2])-1, parseInt(m[3]));
+
+  // MM/DD/YYYY (US format fallback)
+  m = fechaRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) { dateObj = new Date(parseInt(m[3]), parseInt(m[1])-1, parseInt(m[2])); if (!isNaN(dateObj)) return dateObj; }
+
+  // Excel serial number (e.g. 46000)
+  const serial = parseInt(fechaRaw);
+  if (!isNaN(serial) && serial > 40000 && serial < 60000) {
+    // Excel epoch: Dec 30 1899
+    return new Date(Date.UTC(1899,11,30) + serial * 86400000);
+  }
+
+  // Try native parse as last resort
+  dateObj = new Date(fechaRaw);
+  return isNaN(dateObj.getTime()) ? null : dateObj;
+}
+
 function parseCSV(text) {
   const result = {};
   const lines = text.split('\n');
+
+  // Debug: store sample of raw data for error reporting
+  window._csvSample = lines.slice(0,5).join(' | ');
+  window._csvTotal  = lines.length;
+
+  let skippedRows = 0;
 
   for (const line of lines) {
     const row = parseCSVLine(line);
@@ -180,19 +214,9 @@ function parseCSV(text) {
     const tarde    = (row[3] || '').trim();
     const estado   = (row[4] || row[3] || '').trim();
 
-    // Parse date DD/MM/YYYY
-    let dateObj = null;
-    let m = fechaRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-    if (m) {
-      dateObj = new Date(parseInt(m[3]), parseInt(m[2])-1, parseInt(m[1]));
-    }
-    // Try YYYY-MM-DD
-    if (!dateObj) {
-      m = fechaRaw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-      if (m) dateObj = new Date(parseInt(m[1]), parseInt(m[2])-1, parseInt(m[3]));
-    }
+    const dateObj = parseDate(fechaRaw);
 
-    if (!dateObj || isNaN(dateObj.getTime())) continue;
+    if (!dateObj || isNaN(dateObj.getTime())) { skippedRows++; continue; }
     if (dateObj.getFullYear() !== YEAR) continue;
 
     const mo = dateObj.getMonth() + 1;
@@ -203,6 +227,8 @@ function parseCSV(text) {
     if (!result[monthKey]) result[monthKey] = {};
     result[monthKey][dayKey] = { manana, tarde, estado };
   }
+
+  window._csvSkipped = skippedRows;
   return result;
 }
 
@@ -252,7 +278,13 @@ async function loadData() {
     calendarData = parseCSV(text);
 
     const total = Object.values(calendarData).reduce((a,m)=>a+Object.keys(m).length,0);
-    if (total === 0) throw new Error('No se encontraron fechas en el CSV. Verifica que la pestaña publicada sea "Disponiblidad".');
+    if (total === 0) {
+      const sample = window._csvSample ? `<br><br><small style="opacity:.7">Primeras filas del CSV: <code>${window._csvSample.replace(/</g,'&lt;')}</code></small>` : '';
+      const hint = window._csvSkipped > 0
+        ? `Se leyeron ${window._csvTotal} líneas pero no se pudo interpretar el formato de fecha.`
+        : 'El CSV puede estar vacío o la pestaña publicada puede ser incorrecta.';
+      throw new Error(`No se encontraron fechas para ${YEAR}. ${hint} Verifica que la pestaña publicada sea "Disponibilidad" y que las fechas estén en formato DD/MM/YYYY.${sample}`);
+    }
 
   } catch(e) {
     const eb = document.getElementById('error-box');
