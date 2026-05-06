@@ -22,81 +22,40 @@
     }
     body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--charcoal); min-height:100vh; }
 
-    /* --- HEADER OPTIMIZADO PARA MÓVIL --- */
+    /* HEADER OPTIMIZADO */
     header { 
-      background:var(--charcoal); 
-      color:#fff; 
-      padding:0.8rem 1rem; 
-      display:flex; 
-      flex-direction: column; 
-      align-items:center; 
-      gap: 0.8rem;
-      position:sticky; 
-      top:0; 
-      z-index:100; 
-      box-shadow:0 2px 12px rgba(0,0,0,.25); 
+      background:var(--charcoal); color:#fff; padding:0.8rem 1rem; 
+      display:flex; flex-direction: column; align-items:center; gap: 0.8rem;
+      position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,.25); 
     }
-
-    .logo { 
-      font-family:'Cormorant Garamond',serif; 
-      font-size:1.6rem; 
-      font-weight:300; 
-      letter-spacing:.1em; 
-      text-align: center;
-    }
+    .logo { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:300; letter-spacing:.1em; text-align: center; }
     .logo span { color: var(--gold); opacity: 0.8; font-size: 1rem; }
     
-    .nav-container {
-      display: flex;
-      gap: 0.5rem;
-      width: 100%;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
+    .nav-container { display: flex; gap: 0.5rem; width: 100%; justify-content: center; flex-wrap: wrap; }
     .nav-link, #sync-btn { 
-      background:none; 
-      border:1.5px solid var(--gold); 
-      color:var(--gold); 
-      padding:.5rem 0.8rem; 
-      border-radius:20px; 
-      font-family:'DM Sans',sans-serif; 
-      font-size:.75rem; 
-      cursor:pointer; 
-      display:flex; 
-      align-items:center; 
-      gap:.3rem; 
-      text-decoration:none; 
-      transition:all .2s; 
+      background:none; border:1.5px solid var(--gold); color:var(--gold); padding:.5rem 0.8rem; 
+      border-radius:20px; font-size:.75rem; cursor:pointer; display:flex; align-items:center; gap:.3rem; text-decoration:none; transition:all .2s; 
     }
-
     .nav-link:hover, #sync-btn:hover { background:var(--gold); color:#fff; }
-    #sync-btn { background: var(--gold); color: white; border-color: var(--gold); font-weight: 500; }
+    #sync-btn { background: var(--gold); color: white; border-color: var(--gold); }
 
-    /* Ajustes PC */
     @media(min-width: 850px) {
       header { flex-direction: row; justify-content: space-between; height: 64px; padding: 0 2rem; }
       .nav-container { width: auto; }
       .logo { font-size: 1.9rem; }
     }
 
-    /* Ajustes Celular */
     @media(max-width: 500px) {
       .logo span { display: none; }
       .nav-link span { display: none; }
       .nav-link { padding: 0.6rem; border-radius: 50%; width: 42px; height: 42px; justify-content: center; }
-      #sync-btn { padding: 0.5rem 1.2rem; border-radius: 20px; width: auto; }
       #sync-btn span { display: inline; }
     }
 
-    #sync-btn svg { width:14px; height:14px; }
-    #sync-btn.loading svg { animation:spin .8s linear infinite; }
-    @keyframes spin { to { transform:rotate(360deg); } }
-    /* --- FIN HEADER --- */
-
+    /* CALENDARIO Y CONTENIDO */
     main { max-width:1100px; margin:0 auto; padding:2rem 1rem 4rem; }
-    h1 { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:300; margin-bottom:.3rem; text-align: center; }
-    .subtitle { color:var(--warm); font-size:.85rem; margin-bottom:2rem; text-align: center; }
+    h1 { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:300; text-align: center; margin-bottom: .5rem; }
+    .subtitle { color:var(--warm); font-size:.85rem; text-align: center; margin-bottom: 2rem; }
 
     .legend { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem; padding:1rem; background:var(--sand); border-radius:10px; border:1px solid var(--border); justify-content: center; }
     .legend-item { display:flex; align-items:center; gap:.4rem; font-size:.75rem; }
@@ -109,26 +68,29 @@
     .month-btn.active { background:var(--charcoal); border-color:var(--charcoal); color:#fff; }
 
     #calendar-wrap { background:#fff; border-radius:14px; border:1px solid var(--border); overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,.06); }
-    .cal-header { background:var(--charcoal); color:#fff; padding:1rem; text-align: center; }
-    .cal-month-title { font-family:'Cormorant Garamond',serif; font-size:1.6rem; letter-spacing:.05em; text-transform:capitalize; margin-bottom: 10px; }
+    .cal-header { background:var(--charcoal); color:#fff; padding:1.2rem; text-align: center; }
+    .cal-month-title { font-family:'Cormorant Garamond',serif; font-size:1.8rem; text-transform:capitalize; margin-bottom: 10px; }
     .cal-stats { display:flex; justify-content: center; gap:1.5rem; }
-    .stat-num { font-size:1.2rem; font-weight:500; }
+    .stat-num { font-size:1.3rem; font-weight:500; }
     .stat-lbl { font-size:.6rem; opacity:.7; text-transform:uppercase; }
 
     .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); }
-    .cal-day-name { background:var(--sand); padding:.5rem 0; text-align:center; font-size:.65rem; font-weight:600; color:var(--warm); border-bottom:1px solid var(--border); }
-    .cal-cell { border-right:1px solid var(--border); border-bottom:1px solid var(--border); min-height:85px; padding:.3rem; position:relative; }
+    .cal-day-name { background:var(--sand); padding:.6rem 0; text-align:center; font-size:.7rem; font-weight:600; color:var(--warm); border-bottom:1px solid var(--border); }
+    .cal-cell { border-right:1px solid var(--border); border-bottom:1px solid var(--border); min-height:95px; padding:.4rem; position:relative; }
     .cal-cell:nth-child(7n){border-right:none;}
     .cal-cell.empty{background:var(--sand);opacity:.4;}
-    .day-num { font-size:.8rem; font-weight:500; width:24px; height:24px; display:flex; align-items:center; justify-content:center; }
+    .day-num { font-size:.85rem; font-weight:500; width:26px; height:26px; display:flex; align-items:center; justify-content:center; }
     .cal-cell.today .day-num { background:var(--gold); color:#fff; border-radius:50%; }
 
     .session-tags { display:flex; flex-direction:column; gap:2px; margin-top:4px; }
-    .session-tag { font-size:.5rem; padding:1px 3px; border-radius:3px; font-weight:500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .session-tag { font-size:.55rem; padding:1px 4px; border-radius:4px; font-weight:500; }
     .tag-busy { background:rgba(185,64,64,.1); color:var(--red); }
-    .tag-partial { background:rgba(74,127,165,.1); color:var(--amber); }
+    .tag-partial { background:rgba(74,127,165,.15); color:var(--amber); }
 
-    footer { text-align:center; padding:2rem; font-size:.7rem; color:var(--warm); opacity: 0.8; }
+    #loading { padding: 3rem; text-align: center; color: var(--warm); }
+    .spinner { width:30px; height:30px; border:3px solid var(--border); border-top-color:var(--gold); border-radius:50%; animation:spin .8s linear infinite; margin: 0 auto 10px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    footer { text-align:center; padding:2rem; font-size:.75rem; color:var(--warm); }
   </style>
 </head>
 <body>
@@ -149,10 +111,7 @@
       <span>Rentas</span>
     </a>
     <button id="sync-btn" onclick="loadData()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M23 4v6h-6M1 20v-6h6"/>
-        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-      </svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
       <span>Actualizar</span>
     </button>
   </div>
@@ -163,26 +122,26 @@
   <p class="subtitle">Calendario sincronizado en tiempo real</p>
 
   <div class="legend">
-    <div class="legend-item"><div class="dot dot-free"></div> Libre</div>
+    <div class="legend-item"><div class="dot dot-free"></div> Disponible</div>
     <div class="legend-item"><div class="dot dot-busy"></div> Ocupado</div>
     <div class="legend-item"><div class="dot dot-partial"></div> Parcial</div>
   </div>
 
-  <div id="error-box"></div>
+  <div id="error-box" style="display:none; color:red; text-align:center; margin-bottom:1rem;"></div>
   <nav class="year-nav" id="month-nav"></nav>
 
   <div id="calendar-wrap">
-    <div id="loading"><div class="spinner"></div>Cargando...</div>
+    <div id="loading"><div class="spinner"></div>Cargando datos...</div>
   </div>
 </main>
 
-<footer> Rentas Quinta Bugambilia 2026 </footer>
+<footer> Quinta Bugambilia 2026 </footer>
 
 <script>
-// --- EL RESTO DE TU SCRIPT DE CARGA DE DATOS SIGUE IGUAL ---
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSo8m2mzpqf5Z_Znr_F6ZRDOqbZJ7zXuRzIkKkZHjU5A8ZvD3ejb7t6Pq_6YR28j12cAQCqQCqVFSve/pub?gid=0&single=true&output=csv';
 const MONTH_NAMES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const DAY_NAMES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
 let calendarData = {};
 let currentMonth = new Date().getMonth();
 const YEAR = 2026;
@@ -195,7 +154,8 @@ function parseCSVLine(line) {
     else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
     else cur += ch;
   }
-  cols.push(cur.trim()); return cols;
+  cols.push(cur.trim());
+  return cols;
 }
 
 function parseDate(fechaRaw) {
@@ -226,7 +186,7 @@ function parseCSV(text) {
 
 function getStatus(dayData) {
   if (!dayData) return 'free';
-  const e = (dayData.estado || '').toLowerCase();
+  const e = (dayData.estado || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   if (e.includes('parcial')) return 'partial';
   if (e.includes('ocup')) return 'busy';
   return 'free';
@@ -242,7 +202,8 @@ async function loadData() {
     renderNav();
     renderCalendar(currentMonth);
   } catch(e) {
-    document.getElementById('error-box').innerHTML = 'Error al cargar datos.';
+    document.getElementById('error-box').style.display = 'block';
+    document.getElementById('error-box').innerText = 'Error al cargar los datos.';
   }
   btn.classList.remove('loading');
 }
@@ -267,19 +228,39 @@ function renderCalendar(month) {
   const firstWD = new Date(YEAR, month, 1).getDay();
   const today = new Date();
 
-  let html = `<div class="cal-header"><div class="cal-month-title">${MONTH_NAMES[month]}</div></div><div class="cal-grid">`;
+  let free=0, busy=0, partial=0;
+  for (let d=1; d<=daysInMonth; d++) {
+    const dk = `${monthKey}-${String(d).padStart(2,'0')}`;
+    const s = getStatus(monthData[dk]);
+    if (s==='free') free++; else if (s==='busy') busy++; else partial++;
+  }
+
+  let html = `
+    <div class="cal-header">
+      <div class="cal-month-title">${MONTH_NAMES[month]}</div>
+      <div class="cal-stats">
+        <div class="stat"><div class="stat-num" style="color:#7ed4a0">${free}</div><div class="stat-lbl">Libres</div></div>
+        <div class="stat"><div class="stat-num" style="color:#f08080">${busy}</div><div class="stat-lbl">Ocupados</div></div>
+        <div class="stat"><div class="stat-num" style="color:#f5c06a">${partial}</div><div class="stat-lbl">Parciales</div></div>
+      </div>
+    </div>
+    <div class="cal-grid">`;
+
   DAY_NAMES.forEach(d => html += `<div class="cal-day-name">${d}</div>`);
   for (let i=0; i<firstWD; i++) html += `<div class="cal-cell empty"></div>`;
+
   for (let d=1; d<=daysInMonth; d++) {
     const dk = `${monthKey}-${String(d).padStart(2,'0')}`;
     const data = monthData[dk];
     const status = getStatus(data);
     const isToday = today.getFullYear()===YEAR && today.getMonth()===month && today.getDate()===d;
+
     html += `<div class="cal-cell ${status}${isToday?' today':''}">
       <div class="day-num">${d}</div>
       ${data ? `<div class="session-tags">
-        ${data.manana ? `<span class="session-tag tag-busy">☀</span>` : ''}
-        ${data.tarde ? `<span class="session-tag tag-partial">🌙</span>` : ''}
+        ${data.manana && data.manana.toLowerCase().includes('ocup') ? '<span class="session-tag tag-busy">☀ Ocupado</span>' : ''}
+        ${data.tarde && data.tarde.toLowerCase().includes('ocup') ? '<span class="session-tag tag-busy">🌙 Ocupado</span>' : ''}
+        ${(data.estado && data.estado.toLowerCase().includes('parcial')) ? '<span class="session-tag tag-partial">⚠ Parcial</span>' : ''}
       </div>` : ''}
     </div>`;
   }
