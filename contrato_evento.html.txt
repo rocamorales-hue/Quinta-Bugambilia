@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contrato de Evento – Quinta Bugambilia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --sand:#ddeef7; --cream:#f2f9f4; --charcoal:#1e3a2f; --warm:#4a7fa5;
+      --gold:#5db87a; --border:#b8d9c8;
+    }
+    body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--charcoal); padding: 1rem; line-height: 1.5; }
+
+    header { 
+      background:var(--charcoal); color:#fff; padding:1.5rem; 
+      border-radius: 12px; margin-bottom: 2rem; text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .logo { font-family:'Cormorant Garamond',serif; font-size:1.6rem; letter-spacing:.1em; margin-bottom: 5px; }
+    
+    .container { max-width: 850px; margin: 0 auto; background: #fff; padding: 2.5rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    h1 { font-family:'Cormorant Garamond',serif; font-size:1.8rem; margin-bottom: 1.5rem; color: var(--charcoal); border-bottom: 2px solid var(--gold); padding-bottom: 0.5rem; text-align: center; }
+
+    .section-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--gold); margin: 1.5rem 0 0.8rem; letter-spacing: 0.05em; }
+
+    .form-group { margin-bottom: 1.2rem; }
+    label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 0.4rem; color: var(--warm); }
+    input, select, textarea { 
+      width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 8px; 
+      font-family: inherit; font-size: 0.9rem; outline: none; transition: border 0.2s;
+    }
+    input:focus { border-color: var(--gold); background: #f9fdfb; }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+
+    .btn-submit { 
+      background: var(--gold); color: white; border: none; padding: 1.2rem; 
+      width: 100%; border-radius: 8px; font-weight: 600; cursor: pointer; 
+      font-size: 1rem; margin-top: 2rem; transition: all 0.3s;
+      box-shadow: 0 4px 10px rgba(93, 184, 122, 0.2);
+    }
+    .btn-submit:hover { background: var(--charcoal); transform: translateY(-2px); }
+
+    .nav-back { display: inline-block; margin-bottom: 1rem; text-decoration: none; color: var(--warm); font-size: 0.85rem; font-weight: 500; }
+    
+    /* Contrato Preview */
+    .contrato-info { background: #f8f8f8; padding: 1rem; border-radius: 8px; font-size: 0.8rem; border-left: 4px solid var(--gold); margin-bottom: 1.5rem; }
+
+    @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } .container { padding: 1.5rem; } }
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="nav-back">← Volver al Calendario</a>
+
+  <header>
+    <div class="logo">QUINTA BUGAMBILIA</div>
+    <p style="font-size: 0.75rem; opacity: 0.9; letter-spacing: 1px;">CONTRATO DE ARRENDAMIENTO PARA EVENTOS</p>
+  </header>
+
+  <div class="container">
+    <h1>Nuevo Registro de Evento</h1>
+
+    <div class="contrato-info">
+      <strong>Arrendador:</strong> Javier Antonio Morales Mizquez<br>
+      <strong>Ubicación:</strong> Fracc. Real del Catorce, Hermosillo, Sonora.
+    </div>
+    
+    <form id="eventoForm">
+      <div class="section-title">Datos del Arrendatario</div>
+      <div class="form-group">
+        <label>Nombre Completo del Cliente</label>
+        <input type="text" id="nombre" placeholder="Nombre completo" required>
+      </div>
+
+      <div class="section-title">Logística del Evento</div>
+      <div class="grid">
+        <div class="form-group">
+          <label>Fecha del Evento</label>
+          <input type="date" id="fecha_entrada" required>
+        </div>
+        <div class="form-group">
+          <label>Total de Personas</label>
+          <input type="number" id="personas" placeholder="Capacidad contratada" required>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="form-group">
+          <label>Hora de Entrada (Check-in)</label>
+          <input type="time" id="hora_entrada" value="14:00">
+        </div>
+        <div class="form-group">
+          <label>Hora de Salida (Check-out)</label>
+          <input type="time" id="hora_salida" value="22:00">
+        </div>
+      </div>
+
+      <div class="section-title">Costos y Garantía</div>
+      <div class="grid">
+        <div class="form-group">
+          <label>Precio Total ($ MXN)</label>
+          <input type="number" id="precio" placeholder="0.00" required>
+        </div>
+        <div class="form-group">
+          <label>Depósito de Garantía ($ MXN)</label>
+          <input type="number" id="deposito" placeholder="Ej. 1000.00" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Comentarios o Servicios Adicionales</label>
+        <textarea id="notas" rows="3" placeholder="Mobiliario extra, brincolín, tipo de evento..."></textarea>
+      </div>
+
+      <button type="button" class="btn-submit" onclick="generarPDF()">GENERAR CONTRATO PARA FIRMA</button>
+    </form>
+  </div>
+
+  <script>
+    function generarPDF() {
+      const nombre = document.getElementById('nombre').value;
+      if(!nombre) { alert("Por favor ingresa el nombre del cliente"); return; }
+      
+      // Aquí podrías integrar con jsPDF o simplemente enviar los datos a tu sistema
+      alert("Preparando contrato de " + nombre + " con las cláusulas de Quinta Bugambilia...");
+      console.log("Generando contrato con los datos del formulario...");
+    }
+  </script>
+
+</body>
+</html>
