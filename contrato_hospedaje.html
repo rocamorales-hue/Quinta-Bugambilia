@@ -20,28 +20,27 @@
     .field { display: flex; flex-direction: column; margin-bottom: 10px; }
     label { font-size: 0.8rem; font-weight: 600; margin-bottom: 5px; color: var(--warm); text-transform: uppercase; letter-spacing: 0.05em; }
     input { padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; }
-    input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(93, 184, 122, 0.1); }
     
     .btn-generar { 
         grid-column: span 2; padding: 18px; background: var(--charcoal); color: white; 
         border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1rem;
         margin-top: 15px; transition: all 0.2s;
     }
-    .btn-generar:hover { background: var(--gold); transform: translateY(-1px); }
+    .btn-generar:hover { background: var(--gold); }
 
     /* Estilos del Contrato Real */
     #contrato-final { 
-        max-width: 850px; margin: 0 auto; background: white; padding: 60px 80px; 
-        box-shadow: 0 0 20px rgba(0,0,0,0.1); line-height: 1.5; font-size: 10.5pt; color: #000;
+        max-width: 850px; margin: 0 auto; background: white; padding: 50px 70px; 
+        box-shadow: 0 0 20px rgba(0,0,0,0.1); line-height: 1.4; font-size: 10pt; color: #000;
         display: none; text-align: justify;
     }
-    .header-contrato { text-align: center; margin-bottom: 30px; }
-    .header-contrato h2 { font-family: 'Cormorant Garamond', serif; margin: 0; font-size: 1.5rem; text-decoration: underline; }
-    .clausula-header { font-weight: bold; display: block; margin-top: 12px; }
+    .header-contrato { text-align: center; margin-bottom: 25px; }
+    .header-contrato h2 { font-family: 'Cormorant Garamond', serif; margin: 0; font-size: 1.4rem; text-decoration: underline; }
+    .clausula-header { font-weight: bold; display: block; margin-top: 10px; text-decoration: underline; }
     
-    .firmas-container { margin-top: 60px; }
-    .firmas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; text-align: center; }
-    .linea-firma { margin-top: 45px; border-top: 1px solid #000; padding-top: 8px; }
+    .firmas-container { margin-top: 50px; }
+    .firmas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; text-align: center; }
+    .linea-firma { margin-top: 40px; border-top: 1px solid #000; padding-top: 8px; }
 
     .no-print-area { text-align: center; margin-top: 30px; }
     .btn-print { background: #3a8f5e; color: white; padding: 12px 25px; border: none; border-radius: 20px; cursor: pointer; font-weight: 500; }
@@ -50,72 +49,78 @@
       .form-container, .no-print-area { display: none !important; }
       body { background: white; padding: 0; }
       #contrato-final { display: block !important; box-shadow: none; padding: 0; width: 100%; margin: 0; }
-      @page { margin: 1.5cm; }
+      @page { margin: 1cm; }
     }
   </style>
 </head>
 <body>
 
 <div class="form-container">
-  <h1>Datos para Contrato de Hospedaje</h1>
+  <h1>Generar Contrato Quinta Bugambilia</h1>
   <div class="grid">
     <div class="field" style="grid-column: span 2;">
       <label>Nombre del Arrendatario</label>
-      <input type="text" id="nombreInput" placeholder="Ej. Roberto Carlos Morales Mizquez">
+      <input type="text" id="nombreInput" placeholder="Nombre completo">
     </div>
     <div class="field">
-      <label>Entrada (Día y Hora)</label>
-      <input type="text" id="entradaInput" placeholder="Sábado 14 de marzo, 10:00 AM">
+      <label>Fecha y Hora Check-in</label>
+      <input type="text" id="entradaInput" placeholder="Ej. Sábado 14 de Marzo - 10:00 AM">
     </div>
     <div class="field">
-      <label>Salida (Día y Hora)</label>
-      <input type="text" id="salidaInput" placeholder="Lunes 16 de marzo, 4:00 PM">
+      <label>Fecha y Hora Check-out</label>
+      <input type="text" id="salidaInput" placeholder="Ej. Lunes 16 de Marzo - 4:00 PM">
     </div>
     <div class="field">
       <label>Precio Total ($)</label>
-      <input type="text" id="precioInput" placeholder="Ej. $4,500.00 MXN">
+      <input type="text" id="precioInput" placeholder="Ej. $4,500.00">
     </div>
     <div class="field">
-      <label>Anticipo Recibido ($)</label>
-      <input type="text" id="anticipoInput" placeholder="Ej. $1,350.00 MXN">
+      <label>Anticipo (30%)</label>
+      <input type="text" id="anticipoInput" placeholder="Ej. $1,350.00">
     </div>
-    <button class="btn-generar" onclick="generarContrato()">Vista Previa del Contrato Completo</button>
+    <button class="btn-generar" onclick="generarContrato()">Generar Contrato Completo</button>
   </div>
 </div>
 
 <div id="contrato-final">
   <div class="header-contrato">
-    <h2>CONTRATO DE ARRENDAMIENTO TEMPORAL: QUINTA BUGAMBILIA (HOSPEDAJE)</h2>
+    <h2>CONTRATO DE ARRENDAMIENTO TEMPORAL: QUINTA BUGAMBILIA</h2>
   </div>
 
-  <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que celebran, por una parte, <strong>QUINTA BUGAMBILIA</strong> (en adelante "El Arrendador") y, por la otra, <strong id="out-nombre"></strong> (en adelante "El Arrendatario"), de acuerdo con las siguientes:</p>
+  <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que celebran, por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> en representación de <strong>QUINTA BUGAMBILIA</strong> (en adelante "El Arrendador") y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong> (en adelante "El Arrendatario"), de acuerdo con las siguientes:</p>
 
-  <h3 style="text-align: center; margin: 15px 0;">CLÁUSULAS</h3>
+  <h3 style="text-align: center; margin: 10px 0; font-size: 11pt;">CLÁUSULAS</h3>
   
-  <p><span class="clausula-header">PRIMERA. EL INMUEBLE</span> El Arrendador da en renta temporal la propiedad ubicada en el Fraccionamiento Real del Catorce, en Hermosillo, Sonora. Su uso es exclusivamente para descanso y convivencia familiar.</p>
+  <p><span class="clausula-header">PRIMERA. EL INMUEBLE</span> El Arrendador da en renta temporal la propiedad ubicada en el Fraccionamiento Real del Catorce, en Hermosillo, Sonora. Su uso es exclusivamente para descanso y convivencia familiar. El Arrendatario declara recibir el inmueble en buen estado y con las instalaciones (incluida la alberca) funcionando correctamente.</p>
 
-  <p><span class="clausula-header">SEGUNDA. FECHAS Y HORARIOS</span> El periodo de renta ampara la estancia bajo los siguientes horarios:<br>
-  <strong>Entrada:</strong> <span id="out-entrada"></span><br>
-  <strong>Salida:</strong> <span id="out-salida"></span></p>
+  <p><span class="clausula-header">SEGUNDA. FECHAS Y HORARIOS</span> El periodo de renta ampara la estancia bajo los siguientes horarios estrictos:<br>
+  <strong>Entrada (Check-in):</strong> <span id="out-entrada"></span>.<br>
+  <strong>Salida (Check-out):</strong> <span id="out-salida"></span>.<br>
+  <em>Nota: El incumplimiento en la hora de salida generará un cargo de $300.00 MXN por cada hora o fracción de retraso.</em></p>
 
-  <p><span class="clausula-header">TERCERA. PRECIO Y FORMA DE PAGO</span> El costo total por la estancia es de <strong id="out-precio"></strong>. El Arrendatario ha cubierto un anticipo de <strong id="out-anticipo"></strong> para formalizar la reserva. El saldo restante deberá liquidarse en su totalidad antes de ingresar a la propiedad.</p>
+  <p><span class="clausula-header">TERCERA. PRECIO Y FORMA DE PAGO</span> El costo total por la estancia base es de <strong id="out-precio"></strong> MXN. El Arrendatario, para apartar la fecha, deberá de dar un anticipo del 30% del total de la renta (<strong id="out-anticipo"></strong>). El saldo restante deberá liquidarse en su totalidad antes de ingresar a la propiedad.</p>
 
-  <p><span class="clausula-header">CUARTA. DEPÓSITO EN GARANTÍA</span> Al momento del ingreso, El Arrendatario entregará la cantidad de $1,000.00 MXN en concepto de depósito de garantía. Dicho monto será devuelto íntegramente al finalizar la estancia, siempre que no se presenten daños en el inmueble, faltantes en el mobiliario o incumplimiento de las reglas de limpieza y convivencia.</p>
+  <p><span class="clausula-header">CUARTA. DEPÓSITO EN GARANTÍA</span> Al momento del ingreso, El Arrendatario entregará la cantidad de $1,000.00 MXN en concepto de depósito de garantía. Dicho monto será devuelto en un plazo máximo de 24 horas posteriores a la salida, vía transferencia electrónica, tras una revisión exhaustiva del inmueble y cumplimiento de las reglas.</p>
 
-  <p><span class="clausula-header">QUINTA. CAPACIDAD Y VISITAS</span> La tarifa pactada cubre exclusivamente un máximo de 12 personas (hospedaje). Esta tarifa NO incluye visitas adicionales durante el día. Cualquier persona extra que ingrese a la propiedad, aunque no pernocte, se considera visita y deberá ser cotizada y autorizada previamente por El Arrendador. El exceso de personas sin previo aviso será motivo de cargos adicionales o rescisión del contrato.</p>
+  <p><span class="clausula-header">QUINTA. CAPACIDAD Y PERSONAS EXTRA</span> La tarifa pactada cubre un máximo de 12 personas para hospedaje. <br>
+  • Visitas adicionales (solo día): $250.00 MXN por persona. <br>
+  • Huéspedes adicionales (pernoctan): $500.00 MXN por persona. <br>
+  Cualquier persona extra debe ser autorizada. El ingreso de personas no registradas será motivo de descuento del depósito.</p>
 
-  <p><span class="clausula-header">SEXTA. CUIDADO DE LAS INSTALACIONES</span> El Arrendatario se compromete a entregar el inmueble en las mismas condiciones en que lo recibió. Cualquier daño que exceda el monto del depósito será responsabilidad de El Arrendatario, quien deberá cubrir el costo total antes de retirarse.</p>
+  <p><span class="clausula-header">SEXTA. CUIDADO DE LAS INSTALACIONES Y ALBERCA</span> El Arrendatario se compromete a entregar el inmueble en las mismas condiciones. En caso de que la alberca se ensucie por uso negligente (comida, aceites o desechos), se aplicará un cargo extra de recuperación de agua que se descontará del depósito.</p>
 
-  <p><span class="clausula-header">SÉPTIMA. POLÍTICA DE CANCELACIÓN</span> En caso de cancelación por parte de El Arrendatario, se aplicarán las siguientes retenciones sobre el anticipo:<br>
-  • Con más de 30 días de anticipación: Se reembolsa el 80%.<br>
-  • Entre 11 y 30 días de anticipación: Se reembolsa el 50%.<br>
-  • Con 10 días o menos de anticipación: No habrá reembolso.</p>
+  <p><span class="clausula-header">SÉPTIMA. EXENCIÓN DE RESPONSABILIDAD (DESLINDE)</span> El Arrendador no se hace responsable por accidentes, lesiones o fallecimientos que ocurran dentro de la propiedad, especialmente en el área de alberca. Es responsabilidad exclusiva del Arrendatario la supervisión de menores. El Arrendatario libera de toda responsabilidad civil o penal al Arrendador.</p>
 
-  <p><span class="clausula-header">OCTAVA. REGLAS DE CONVIVENCIA</span> Se debe respetar el reglamento del fraccionamiento, evitando música a volumen excesivo. No se permiten mascotas.</p>
+  <p><span class="clausula-header">OCTAVA. OBJETOS OLVIDADOS</span> El Arrendador no se hace responsable por la pérdida, robo u olvido de objetos de valor dejados en la propiedad.</p>
 
-  <p><span class="clausula-header">NOVENA. ACTIVIDADES PROHIBIDAS</span> Queda prohibido el consumo de sustancias ilícitas o cualquier actividad ilegal. El incumplimiento causará el desalojo inmediato y aviso a las autoridades.</p>
+  <p><span class="clausula-header">NOVENA. POLÍTICA DE CANCELACIÓN</span> Retenciones sobre el anticipo: <br>
+  • Más de 30 días: 80% reembolso. <br>
+  • Entre 11 y 30 días: 50% reembolso. <br>
+  • 10 días o menos: No habrá reembolso.</p>
 
-  <p><span class="clausula-header">DÉCIMA. LIMPIEZA</span> La propiedad debe entregarse en condiciones aceptables. Suciedad extrema o exceso de basura generarán un cargo extra por limpieza profunda que podrá descontarse del depósito.</p>
+  <p><span class="clausula-header">DÉCIMA. REGLAS Y LIMPIEZA</span> Respetar reglamento del fraccionamiento. No se permiten mascotas. Suciedad extrema generará un cargo extra por limpieza profunda.</p>
+
+  <p><span class="clausula-header">DÉCIMA PRIMERA. ACTIVIDADES PROHIBIDAS</span> Queda prohibido el consumo de sustancias ilícitas. El incumplimiento causará el desalojo inmediato sin derecho a reembolso.</p>
 
   <div class="firmas-container">
     <div class="firmas-grid">
@@ -137,27 +142,26 @@
   </div>
   
   <div class="no-print-area">
-      <p style="color: #666; font-size: 0.8rem; margin-bottom: 10px;">Revisa que los datos sean correctos antes de imprimir.</p>
-      <button class="btn-print" onclick="window.print()">Imprimir Contrato (o Guardar PDF)</button>
+      <button class="btn-print" onclick="window.print()">Imprimir o Guardar PDF</button>
   </div>
 </div>
 
 <script>
   function generarContrato() {
-    const nombre = document.getElementById('nombreInput').value;
-    const entrada = document.getElementById('entradaInput').value;
-    const salida = document.getElementById('salidaInput').value;
-    const precio = document.getElementById('precioInput').value;
-    const anticipo = document.getElementById('anticipoInput').value;
+    const n = document.getElementById('nombreInput').value;
+    const e = document.getElementById('entradaInput').value;
+    const s = document.getElementById('salidaInput').value;
+    const p = document.getElementById('precioInput').value;
+    const a = document.getElementById('anticipoInput').value;
 
-    if(!nombre) { alert("Por favor ingresa el nombre del arrendatario"); return; }
+    if(!n) { alert("Nombre requerido"); return; }
 
-    document.getElementById('out-nombre').innerText = nombre;
-    document.getElementById('out-nombre2').innerText = nombre;
-    document.getElementById('out-entrada').innerText = entrada || "________________";
-    document.getElementById('out-salida').innerText = salida || "________________";
-    document.getElementById('out-precio').innerText = precio || "________________";
-    document.getElementById('out-anticipo').innerText = anticipo || "________________";
+    document.getElementById('out-nombre').innerText = n;
+    document.getElementById('out-nombre2').innerText = n;
+    document.getElementById('out-entrada').innerText = e;
+    document.getElementById('out-salida').innerText = s;
+    document.getElementById('out-precio').innerText = p;
+    document.getElementById('out-anticipo').innerText = a;
 
     document.getElementById('contrato-final').style.display = 'block';
     window.scrollTo({ top: document.getElementById('contrato-final').offsetTop, behavior: 'smooth' });
