@@ -1,4 +1,19 @@
-<style>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quinta Bugambilia – Disponibilidad 2026</title>
+  <link rel="manifest" href="manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js');
+      });
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     :root {
       --sand:#ddeef7; --cream:#f2f9f4; --charcoal:#1e3a2f; --warm:#4a7fa5;
@@ -7,13 +22,13 @@
     }
     body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--charcoal); min-height:100vh; }
 
-    /* --- HEADER MEJORADO PARA MÓVIL --- */
+    /* --- HEADER OPTIMIZADO PARA MÓVIL --- */
     header { 
       background:var(--charcoal); 
       color:#fff; 
-      padding:0.5rem 1rem; 
+      padding:0.8rem 1rem; 
       display:flex; 
-      flex-direction: column; /* Apilado en móvil por defecto */
+      flex-direction: column; 
       align-items:center; 
       gap: 0.8rem;
       position:sticky; 
@@ -29,20 +44,21 @@
       letter-spacing:.1em; 
       text-align: center;
     }
+    .logo span { color: var(--gold); opacity: 0.8; font-size: 1rem; }
     
     .nav-container {
       display: flex;
       gap: 0.5rem;
       width: 100%;
       justify-content: center;
-      flex-wrap: wrap; /* Permite que los botones bajen si no caben */
+      flex-wrap: wrap;
     }
 
     .nav-link, #sync-btn { 
       background:none; 
       border:1.5px solid var(--gold); 
       color:var(--gold); 
-      padding:.4rem .8rem; 
+      padding:.5rem 0.8rem; 
       border-radius:20px; 
       font-family:'DM Sans',sans-serif; 
       font-size:.75rem; 
@@ -55,26 +71,21 @@
     }
 
     .nav-link:hover, #sync-btn:hover { background:var(--gold); color:#fff; }
-    #sync-btn { background: var(--gold); color: white; border-color: var(--gold); } /* Destacar actualizar */
+    #sync-btn { background: var(--gold); color: white; border-color: var(--gold); font-weight: 500; }
 
-    /* Estilos para pantallas grandes (PC) */
+    /* Ajustes PC */
     @media(min-width: 850px) {
-      header { 
-        flex-direction: row; 
-        justify-content: space-between; 
-        height: 64px; 
-        padding: 0 2rem;
-      }
+      header { flex-direction: row; justify-content: space-between; height: 64px; padding: 0 2rem; }
       .nav-container { width: auto; }
       .logo { font-size: 1.9rem; }
     }
 
-    /* Estilos para pantallas pequeñas (Celulares) */
+    /* Ajustes Celular */
     @media(max-width: 500px) {
-      .logo span { display: none; } /* Ocultar "Real del 14" en móviles */
-      .nav-link span { display: none; } /* Ocultar texto de botones, dejar solo iconos si es muy pequeño */
-      .nav-link { padding: 0.5rem; border-radius: 50%; width: 36px; height: 36px; justify-content: center; }
-      #sync-btn { padding: 0.5rem 1rem; border-radius: 20px; width: auto; } /* Mantener texto en Actualizar */
+      .logo span { display: none; }
+      .nav-link span { display: none; }
+      .nav-link { padding: 0.6rem; border-radius: 50%; width: 42px; height: 42px; justify-content: center; }
+      #sync-btn { padding: 0.5rem 1.2rem; border-radius: 20px; width: auto; }
       #sync-btn span { display: inline; }
     }
 
@@ -83,8 +94,41 @@
     @keyframes spin { to { transform:rotate(360deg); } }
     /* --- FIN HEADER --- */
 
-    main { max-width:1100px; margin:0 auto; padding:2.5rem 1.5rem 4rem; }
-    /* ... resto de tus estilos ... */
+    main { max-width:1100px; margin:0 auto; padding:2rem 1rem 4rem; }
+    h1 { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:300; margin-bottom:.3rem; text-align: center; }
+    .subtitle { color:var(--warm); font-size:.85rem; margin-bottom:2rem; text-align: center; }
+
+    .legend { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem; padding:1rem; background:var(--sand); border-radius:10px; border:1px solid var(--border); justify-content: center; }
+    .legend-item { display:flex; align-items:center; gap:.4rem; font-size:.75rem; }
+    .dot { width:12px; height:12px; border-radius:50%; }
+    .dot-free{background:var(--green);} .dot-busy{background:var(--red);} .dot-partial{background:var(--amber);}
+
+    .year-nav { display:flex; gap:.4rem; overflow-x: auto; padding-bottom: 10px; margin-bottom:1.5rem; scrollbar-width: none; }
+    .year-nav::-webkit-scrollbar { display: none; }
+    .month-btn { flex-shrink: 0; background:none; border:1.5px solid var(--border); padding:.5rem 1rem; border-radius:20px; font-size:.8rem; cursor:pointer; color:var(--warm); }
+    .month-btn.active { background:var(--charcoal); border-color:var(--charcoal); color:#fff; }
+
+    #calendar-wrap { background:#fff; border-radius:14px; border:1px solid var(--border); overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,.06); }
+    .cal-header { background:var(--charcoal); color:#fff; padding:1rem; text-align: center; }
+    .cal-month-title { font-family:'Cormorant Garamond',serif; font-size:1.6rem; letter-spacing:.05em; text-transform:capitalize; margin-bottom: 10px; }
+    .cal-stats { display:flex; justify-content: center; gap:1.5rem; }
+    .stat-num { font-size:1.2rem; font-weight:500; }
+    .stat-lbl { font-size:.6rem; opacity:.7; text-transform:uppercase; }
+
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); }
+    .cal-day-name { background:var(--sand); padding:.5rem 0; text-align:center; font-size:.65rem; font-weight:600; color:var(--warm); border-bottom:1px solid var(--border); }
+    .cal-cell { border-right:1px solid var(--border); border-bottom:1px solid var(--border); min-height:85px; padding:.3rem; position:relative; }
+    .cal-cell:nth-child(7n){border-right:none;}
+    .cal-cell.empty{background:var(--sand);opacity:.4;}
+    .day-num { font-size:.8rem; font-weight:500; width:24px; height:24px; display:flex; align-items:center; justify-content:center; }
+    .cal-cell.today .day-num { background:var(--gold); color:#fff; border-radius:50%; }
+
+    .session-tags { display:flex; flex-direction:column; gap:2px; margin-top:4px; }
+    .session-tag { font-size:.5rem; padding:1px 3px; border-radius:3px; font-weight:500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tag-busy { background:rgba(185,64,64,.1); color:var(--red); }
+    .tag-partial { background:rgba(74,127,165,.1); color:var(--amber); }
+
+    footer { text-align:center; padding:2rem; font-size:.7rem; color:var(--warm); opacity: 0.8; }
   </style>
 </head>
 <body>
@@ -113,3 +157,136 @@
     </button>
   </div>
 </header>
+
+<main>
+  <h1>Disponibilidad 2026</h1>
+  <p class="subtitle">Calendario sincronizado en tiempo real</p>
+
+  <div class="legend">
+    <div class="legend-item"><div class="dot dot-free"></div> Libre</div>
+    <div class="legend-item"><div class="dot dot-busy"></div> Ocupado</div>
+    <div class="legend-item"><div class="dot dot-partial"></div> Parcial</div>
+  </div>
+
+  <div id="error-box"></div>
+  <nav class="year-nav" id="month-nav"></nav>
+
+  <div id="calendar-wrap">
+    <div id="loading"><div class="spinner"></div>Cargando...</div>
+  </div>
+</main>
+
+<footer> Rentas Quinta Bugambilia 2026 </footer>
+
+<script>
+// --- EL RESTO DE TU SCRIPT DE CARGA DE DATOS SIGUE IGUAL ---
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSo8m2mzpqf5Z_Znr_F6ZRDOqbZJ7zXuRzIkKkZHjU5A8ZvD3ejb7t6Pq_6YR28j12cAQCqQCqVFSve/pub?gid=0&single=true&output=csv';
+const MONTH_NAMES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DAY_NAMES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+let calendarData = {};
+let currentMonth = new Date().getMonth();
+const YEAR = 2026;
+
+function parseCSVLine(line) {
+  const cols = []; let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') inQ = !inQ;
+    else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+    else cur += ch;
+  }
+  cols.push(cur.trim()); return cols;
+}
+
+function parseDate(fechaRaw) {
+  if (!fechaRaw) return null;
+  let m;
+  m = fechaRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) return new Date(parseInt(m[3]), parseInt(m[2])-1, parseInt(m[1]));
+  const serial = parseInt(fechaRaw);
+  if (!isNaN(serial) && serial > 40000) return new Date(Date.UTC(1899,11,30) + serial * 86400000);
+  return new Date(fechaRaw);
+}
+
+function parseCSV(text) {
+  const result = {};
+  const lines = text.split('\n');
+  for (const line of lines) {
+    const row = parseCSVLine(line);
+    if (row.length < 2) continue;
+    const dateObj = parseDate(row[0]);
+    if (!dateObj || isNaN(dateObj.getTime()) || dateObj.getFullYear() !== YEAR) continue;
+    const monthKey = `${YEAR}-${String(dateObj.getMonth()+1).padStart(2,'0')}`;
+    const dayKey = `${monthKey}-${String(dateObj.getDate()).padStart(2,'0')}`;
+    if (!result[monthKey]) result[monthKey] = {};
+    result[monthKey][dayKey] = { manana: row[2], tarde: row[3], estado: row[4]||row[3] };
+  }
+  return result;
+}
+
+function getStatus(dayData) {
+  if (!dayData) return 'free';
+  const e = (dayData.estado || '').toLowerCase();
+  if (e.includes('parcial')) return 'partial';
+  if (e.includes('ocup')) return 'busy';
+  return 'free';
+}
+
+async function loadData() {
+  const btn = document.getElementById('sync-btn');
+  btn.classList.add('loading');
+  try {
+    const res = await fetch(CSV_URL + '&t=' + Date.now());
+    const text = await res.text();
+    calendarData = parseCSV(text);
+    renderNav();
+    renderCalendar(currentMonth);
+  } catch(e) {
+    document.getElementById('error-box').innerHTML = 'Error al cargar datos.';
+  }
+  btn.classList.remove('loading');
+}
+
+function renderNav() {
+  const nav = document.getElementById('month-nav');
+  nav.innerHTML = '';
+  MONTH_NAMES.forEach((name, m) => {
+    const btn = document.createElement('button');
+    btn.className = 'month-btn' + (m === currentMonth ? ' active' : '');
+    btn.textContent = name;
+    btn.onclick = () => { currentMonth = m; renderNav(); renderCalendar(m); };
+    nav.appendChild(btn);
+  });
+}
+
+function renderCalendar(month) {
+  const wrap = document.getElementById('calendar-wrap');
+  const monthKey = `${YEAR}-${String(month+1).padStart(2,'0')}`;
+  const monthData = calendarData[monthKey] || {};
+  const daysInMonth = new Date(YEAR, month+1, 0).getDate();
+  const firstWD = new Date(YEAR, month, 1).getDay();
+  const today = new Date();
+
+  let html = `<div class="cal-header"><div class="cal-month-title">${MONTH_NAMES[month]}</div></div><div class="cal-grid">`;
+  DAY_NAMES.forEach(d => html += `<div class="cal-day-name">${d}</div>`);
+  for (let i=0; i<firstWD; i++) html += `<div class="cal-cell empty"></div>`;
+  for (let d=1; d<=daysInMonth; d++) {
+    const dk = `${monthKey}-${String(d).padStart(2,'0')}`;
+    const data = monthData[dk];
+    const status = getStatus(data);
+    const isToday = today.getFullYear()===YEAR && today.getMonth()===month && today.getDate()===d;
+    html += `<div class="cal-cell ${status}${isToday?' today':''}">
+      <div class="day-num">${d}</div>
+      ${data ? `<div class="session-tags">
+        ${data.manana ? `<span class="session-tag tag-busy">☀</span>` : ''}
+        ${data.tarde ? `<span class="session-tag tag-partial">🌙</span>` : ''}
+      </div>` : ''}
+    </div>`;
+  }
+  wrap.innerHTML = html + '</div>';
+}
+
+loadData();
+</script>
+</body>
+</html>
