@@ -22,299 +22,205 @@
     }
     body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--charcoal); min-height:100vh; }
 
-    header { background:var(--charcoal); color:#fff; padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:64px; position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,.25); }
-    .logo { font-family:'Cormorant Garamond',serif; font-size:1.9rem; font-weight:300; letter-spacing:.12em; }
-    .logo span { color:var(--gold); }
-    #sync-btn { background:none; border:1.5px solid var(--gold); color:var(--gold); padding:.45rem 1.1rem; border-radius:20px; font-family:'DM Sans',sans-serif; font-size:.8rem; cursor:pointer; display:flex; align-items:center; gap:.4rem; transition:all .2s; }
-    #sync-btn:hover { background:var(--gold); color:#fff; }
-    #sync-btn svg { width:14px; height:14px; }
-    #sync-btn.loading svg { animation:spin .8s linear infinite; }
-    @keyframes spin { to { transform:rotate(360deg); } }
+    /* HEADER AMIGABLE PARA CELULAR */
+    header { 
+      background:var(--charcoal); color:#fff; padding:0.8rem 1rem; 
+      display:flex; flex-direction: column; align-items:center; gap: 0.8rem;
+      position:sticky; top:0; z-index:100; box-shadow:0 2px 12px rgba(0,0,0,.25); 
+    }
+    .logo { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:300; letter-spacing:.1em; text-align: center; }
+    .logo span { color: var(--gold); opacity: 0.8; font-size: 1rem; }
+    
+    .nav-container { display: flex; gap: 0.5rem; width: 100%; justify-content: center; flex-wrap: wrap; }
+    .nav-link, #sync-btn { 
+      background:none; border:1.5px solid var(--gold); color:var(--gold); padding:.5rem 0.8rem; 
+      border-radius:20px; font-size:.72rem; cursor:pointer; display:flex; align-items:center; gap:.3rem; text-decoration:none; transition:all .2s; 
+    }
+    .nav-link:hover, #sync-btn:hover { background:var(--gold); color:#fff; }
+    #sync-btn { background: var(--gold); color: white; border-color: var(--gold); }
 
-    main { max-width:1100px; margin:0 auto; padding:2.5rem 1.5rem 4rem; }
-    h1 { font-family:'Cormorant Garamond',serif; font-size:2.6rem; font-weight:300; margin-bottom:.3rem; }
-    .subtitle { color:var(--warm); font-size:.88rem; margin-bottom:2rem; }
+    @media(min-width: 850px) {
+      header { flex-direction: row; justify-content: space-between; height: 64px; padding: 0 2rem; }
+      .nav-container { width: auto; }
+      .logo { font-size: 1.9rem; }
+    }
 
-    .legend { display:flex; gap:1.4rem; flex-wrap:wrap; margin-bottom:2.2rem; padding:1rem 1.4rem; background:var(--sand); border-radius:10px; border:1px solid var(--border); align-items:center; }
-    .legend-item { display:flex; align-items:center; gap:.5rem; font-size:.82rem; }
-    .dot { width:13px; height:13px; border-radius:50%; flex-shrink:0; }
+    /* MODO ICONOS PARA CELULAR */
+    @media(max-width: 500px) {
+      .logo span { display: none; }
+      .nav-link span { display: none; } /* Oculta el texto, deja el icono */
+      .nav-link { padding: 0.6rem; border-radius: 50%; width: 40px; height: 40px; justify-content: center; }
+      #sync-btn span { display: inline; } /* Mantiene el texto solo en el botón de actualizar */
+    }
+
+    /* CALENDARIO Y CONTENIDO */
+    main { max-width:1100px; margin:0 auto; padding:2rem 1rem 4rem; }
+    h1 { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:300; text-align: center; margin-bottom: .5rem; }
+    .subtitle { color:var(--warm); font-size:.85rem; text-align: center; margin-bottom: 2rem; }
+
+    .legend { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem; padding:1rem; background:var(--sand); border-radius:10px; border:1px solid var(--border); justify-content: center; }
+    .legend-item { display:flex; align-items:center; gap:.4rem; font-size:.75rem; }
+    .dot { width:12px; height:12px; border-radius:50%; }
     .dot-free{background:var(--green);} .dot-busy{background:var(--red);} .dot-partial{background:var(--amber);}
 
-    .year-nav { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:2rem; }
-    .month-btn { background:none; border:1.5px solid var(--border); padding:.5rem 1.1rem; border-radius:20px; font-family:'DM Sans',sans-serif; font-size:.82rem; cursor:pointer; color:var(--warm); transition:all .15s; }
-    .month-btn:hover { border-color:var(--gold); color:var(--gold); }
+    .year-nav { display:flex; gap:.4rem; overflow-x: auto; padding-bottom: 10px; margin-bottom:1.5rem; scrollbar-width: none; }
+    .year-nav::-webkit-scrollbar { display: none; }
+    .month-btn { flex-shrink: 0; background:none; border:1.5px solid var(--border); padding:.5rem 1rem; border-radius:20px; font-size:.8rem; cursor:pointer; color:var(--warm); }
     .month-btn.active { background:var(--charcoal); border-color:var(--charcoal); color:#fff; }
 
     #calendar-wrap { background:#fff; border-radius:14px; border:1px solid var(--border); overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,.06); }
-
-    .cal-header { background:var(--charcoal); color:#fff; padding:1.2rem 1.6rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
-    .cal-month-title { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:300; letter-spacing:.08em; text-transform:capitalize; }
-    .cal-stats { display:flex; gap:1.2rem; }
-    .stat { text-align:center; }
-    .stat-num { font-size:1.4rem; font-weight:500; }
-    .stat-lbl { font-size:.68rem; letter-spacing:.07em; opacity:.65; text-transform:uppercase; }
-    .stat-num.s-green{color:#7ed4a0;} .stat-num.s-red{color:#f08080;} .stat-num.s-amber{color:#f5c06a;}
-
+    .cal-header { background:var(--charcoal); color:#fff; padding:1.2rem; text-align: center; }
+    .cal-month-title { font-family:'Cormorant Garamond',serif; font-size:1.8rem; text-transform:capitalize; margin-bottom: 10px; }
+    
     .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); }
-    .cal-day-name { background:var(--sand); padding:.6rem 0; text-align:center; font-size:.72rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--warm); border-bottom:1px solid var(--border); }
-
-    .cal-cell { border-right:1px solid var(--border); border-bottom:1px solid var(--border); min-height:96px; padding:.5rem .5rem .4rem; position:relative; }
+    .cal-day-name { background:var(--sand); padding:.6rem 0; text-align:center; font-size:.7rem; font-weight:600; color:var(--warm); border-bottom:1px solid var(--border); }
+    .cal-cell { border-right:1px solid var(--border); border-bottom:1px solid var(--border); min-height:95px; padding:.4rem; position:relative; }
     .cal-cell:nth-child(7n){border-right:none;}
     .cal-cell.empty{background:var(--sand);opacity:.4;}
-    .cal-cell.free{background:var(--green-bg);}
-    .cal-cell.busy{background:var(--red-bg);}
-    .cal-cell.partial{background:var(--amber-bg);}
+    .day-num { font-size:.85rem; font-weight:500; width:26px; height:26px; display:flex; align-items:center; justify-content:center; }
     .cal-cell.today .day-num { background:var(--gold); color:#fff; border-radius:50%; }
 
-    .day-num { font-size:.82rem; font-weight:500; color:var(--charcoal); width:26px; height:26px; display:flex; align-items:center; justify-content:center; margin-bottom:.3rem; }
-    .status-bar { position:absolute; top:0; left:0; right:0; height:3px; }
-    .status-bar.free{background:var(--green);} .status-bar.busy{background:var(--red);} .status-bar.partial{background:var(--amber);}
+    .session-tags { display:flex; flex-direction:column; gap:2px; margin-top:4px; }
+    .session-tag { font-size:.55rem; padding:1px 4px; border-radius:4px; font-weight:500; }
+    .tag-busy { background:rgba(185,64,64,.1); color:var(--red); }
+    .tag-partial { background:rgba(74,127,165,.15); color:var(--amber); }
 
-    .session-tags { display:flex; flex-direction:column; gap:2px; margin-top:2px; }
-    .session-tag { font-size:.6rem; padding:1px 5px; border-radius:4px; font-weight:500; }
-    .tag-free  { background:rgba(58,125,68,.15); color:var(--green); }
-    .tag-busy  { background:rgba(185,64,64,.15); color:var(--red); }
-    .tag-partial { background:rgba(212,136,42,.15); color:var(--amber); }
-
-    .status-badge { display:inline-block; font-size:.58rem; font-weight:500; letter-spacing:.06em; text-transform:uppercase; padding:1px 6px; border-radius:8px; margin-top:4px; }
-    .badge-free{background:var(--green);color:#fff;} .badge-busy{background:var(--red);color:#fff;} .badge-partial{background:var(--amber);color:#fff;}
-
-    #loading { text-align:center; padding:3rem; color:var(--warm); }
-    .spinner { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--gold); border-radius:50%; animation:spin .7s linear infinite; margin:0 auto 1rem; }
-    #error-box { display:none; background:var(--red-bg); border:1px solid #f5c0c0; border-radius:10px; padding:1.2rem 1.6rem; color:var(--red); font-size:.88rem; margin-bottom:1.5rem; }
-
-    footer { text-align:center; padding:2rem; font-size:.75rem; color:var(--warm); border-top:1px solid var(--border); }
-
-    @media(max-width:600px){
-      h1{font-size:1.9rem;}
-      .cal-cell{min-height:72px; padding:.25rem .2rem;}
-      .status-badge{display:none;}
-      .day-num{font-size:.75rem; width:22px; height:22px;}
-      .session-tag{font-size:.48rem; padding:1px 3px;}
-    }
+    #loading { padding: 3rem; text-align: center; color: var(--warm); }
+    .spinner { width:30px; height:30px; border:3px solid var(--border); border-top-color:var(--gold); border-radius:50%; animation:spin .8s linear infinite; margin: 0 auto 10px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    footer { text-align:center; padding:2rem; font-size:.75rem; color:var(--warm); }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">Quinta Bugambilia <span style="font-size:1.1rem;opacity:.6;font-weight:300">· Real del 14</span></div>
-  <div style="display:flex;gap:.7rem;align-items:center;">
-    <a href="ventas.html" style="background:none;border:1.5px solid var(--gold);color:var(--gold);padding:.45rem 1.1rem;border-radius:20px;font-family:DM Sans,sans-serif;font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='var(--gold)';this.style.color='#fff'" onmouseout="this.style.background='none';this.style.color='var(--gold)'">
+  <div class="logo">Quinta Bugambilia <span>· Real del 14</span></div>
+  <div class="nav-container">
+    <a href="ventas.html" class="nav-link" title="Ventas">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      Ventas
+      <span>Ventas</span>
     </a>
-    <a href="contrato_hospedaje.html" style="background:none;border:1.5px solid var(--gold);color:var(--gold);padding:.45rem 1.1rem;border-radius:20px;font-family:DM Sans,sans-serif;font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='var(--gold)';this.style.color='#fff'" onmouseout="this.style.background='none';this.style.color='var(--gold)'">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-      Contratos
+    <a href="contrato_hospedaje.html" class="nav-link" title="Hospedaje">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span>Contratos</span>
     </a>
-    <a href="rentas.html" style="background:none;border:1.5px solid var(--gold);color:var(--gold);padding:.45rem 1.1rem;border-radius:20px;font-family:DM Sans,sans-serif;font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='var(--gold)';this.style.color='#fff'" onmouseout="this.style.background='none';this.style.color='var(--gold)'">
+    <a href="contrato_evento.html" class="nav-link" title="Evento">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      <span>Evento</span>
+    </a>
+    <a href="rentas.html" class="nav-link" title="Rentas">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Rentas
+      <span>Rentas</span>
     </a>
     <button id="sync-btn" onclick="loadData()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M23 4v6h-6M1 20v-6h6"/>
-        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
-      </svg>
-      Actualizar
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+      <span>Actualizar</span>
     </button>
   </div>
 </header>
 
 <main>
   <h1>Disponibilidad 2026</h1>
-  <p class="subtitle">Rentas Q.B. · Calendario de reservaciones sincronizado en tiempo real</p>
+  <p class="subtitle">Calendario sincronizado en tiempo real</p>
 
   <div class="legend">
     <div class="legend-item"><div class="dot dot-free"></div> Disponible</div>
     <div class="legend-item"><div class="dot dot-busy"></div> Ocupado</div>
-    <div class="legend-item"><div class="dot dot-partial"></div> Parcialmente ocupado</div>
-    <div style="margin-left:auto;font-size:.75rem;color:var(--warm);opacity:.7">Mañana / Tarde</div>
+    <div class="legend-item"><div class="dot dot-partial"></div> Parcial</div>
   </div>
 
-  <div id="error-box"></div>
+  <div id="error-box" style="display:none; color:red; text-align:center; margin-bottom:1rem;"></div>
   <nav class="year-nav" id="month-nav"></nav>
 
   <div id="calendar-wrap">
-    <div id="loading"><div class="spinner"></div>Cargando datos…</div>
+    <div id="loading"><div class="spinner"></div>Cargando datos...</div>
   </div>
 </main>
 
-<footer> Rentas Q.B. 2026 · Datos en tiempo real desde Google Sheets</footer>
+<footer> Quinta Bugambilia 2026 </footer>
 
 <script>
-// ── Config ───────────────────────────────────────────────────────────────
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSo8m2mzpqf5Z_Znr_F6ZRDOqbZJ7zXuRzIkKkZHjU5A8ZvD3ejb7t6Pq_6YR28j12cAQCqQCqVFSve/pub?gid=0&single=true&output=csv';
-
-const MONTH_NAMES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio',
-                     'Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const MONTH_NAMES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const DAY_NAMES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 
-// calendarData[monthKey][dayKey] = { manana, tarde, estado }
-// e.g. calendarData["2026-04"]["2026-04-03"] = { manana:"Ocupado", tarde:"Disponible", estado:"Parcialmente disponible" }
 let calendarData = {};
 let currentMonth = new Date().getMonth();
 const YEAR = 2026;
 
-// ── CSV parser ────────────────────────────────────────────────────────────
 function parseCSVLine(line) {
   const cols = []; let cur = '', inQ = false;
   for (let i = 0; i < line.length; i++) {
     const ch = line[i];
-    if (ch === '"') { inQ = !inQ; }
+    if (ch === '"') inQ = !inQ;
     else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-    else { cur += ch; }
+    else cur += ch;
   }
   cols.push(cur.trim());
   return cols;
 }
 
-// ── Parse the sheet ───────────────────────────────────────────────────────
-// Columns: Fecha(0), Día(1), Mañana(2), Tarde(3), Estado del Día(4)
 function parseDate(fechaRaw) {
   if (!fechaRaw) return null;
-  let m, dateObj;
-
-  // DD/MM/YYYY or D/M/YYYY
-  m = fechaRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  let m = fechaRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (m) return new Date(parseInt(m[3]), parseInt(m[2])-1, parseInt(m[1]));
-
-  // YYYY-MM-DD
-  m = fechaRaw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (m) return new Date(parseInt(m[1]), parseInt(m[2])-1, parseInt(m[3]));
-
-  // MM/DD/YYYY (US format fallback)
-  m = fechaRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (m) { dateObj = new Date(parseInt(m[3]), parseInt(m[1])-1, parseInt(m[2])); if (!isNaN(dateObj)) return dateObj; }
-
-  // Excel serial number (e.g. 46000)
   const serial = parseInt(fechaRaw);
-  if (!isNaN(serial) && serial > 40000 && serial < 60000) {
-    // Excel epoch: Dec 30 1899
-    return new Date(Date.UTC(1899,11,30) + serial * 86400000);
-  }
-
-  // Try native parse as last resort
-  dateObj = new Date(fechaRaw);
-  return isNaN(dateObj.getTime()) ? null : dateObj;
+  if (!isNaN(serial) && serial > 40000) return new Date(Date.UTC(1899,11,30) + serial * 86400000);
+  return new Date(fechaRaw);
 }
 
 function parseCSV(text) {
   const result = {};
   const lines = text.split('\n');
-
-  // Debug: store sample of raw data for error reporting
-  window._csvSample = lines.slice(0,5).join(' | ');
-  window._csvTotal  = lines.length;
-
-  let skippedRows = 0;
-
   for (const line of lines) {
     const row = parseCSVLine(line);
     if (row.length < 2) continue;
-
-    const fechaRaw = (row[0] || '').trim();
-    const manana   = (row[2] || '').trim();
-    const tarde    = (row[3] || '').trim();
-    const estado   = (row[4] || row[3] || '').trim();
-
-    const dateObj = parseDate(fechaRaw);
-
-    if (!dateObj || isNaN(dateObj.getTime())) { skippedRows++; continue; }
-    if (dateObj.getFullYear() !== YEAR) continue;
-
-    const mo = dateObj.getMonth() + 1;
-    const da = dateObj.getDate();
-    const monthKey = `${YEAR}-${String(mo).padStart(2,'0')}`;
-    const dayKey   = `${monthKey}-${String(da).padStart(2,'0')}`;
-
+    const dateObj = parseDate(row[0]);
+    if (!dateObj || isNaN(dateObj.getTime()) || dateObj.getFullYear() !== YEAR) continue;
+    const monthKey = `${YEAR}-${String(dateObj.getMonth()+1).padStart(2,'0')}`;
+    const dayKey = `${monthKey}-${String(dateObj.getDate()).padStart(2,'0')}`;
     if (!result[monthKey]) result[monthKey] = {};
-    result[monthKey][dayKey] = { manana, tarde, estado };
+    result[monthKey][dayKey] = { manana: row[2], tarde: row[3], estado: row[4]||row[3] };
   }
-
-  window._csvSkipped = skippedRows;
   return result;
 }
 
-// ── Classify status ───────────────────────────────────────────────────────
 function getStatus(dayData) {
   if (!dayData) return 'free';
-  // Check estado column first (col E)
   const e = (dayData.estado || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   if (e.includes('parcial')) return 'partial';
-  if (e.includes('ocup'))    return 'busy';
-  // Fallback: check manana and tarde (col C and D)
-  const man = (dayData.manana || '').toLowerCase();
-  const tar = (dayData.tarde  || '').toLowerCase();
-  const manOcup = man.includes('ocup');
-  const tarOcup = tar.includes('ocup');
-  if (manOcup && tarOcup) return 'busy';
-  if (manOcup || tarOcup) return 'partial';
+  if (e.includes('ocup')) return 'busy';
   return 'free';
 }
 
-function getLabel(status) {
-  if (status === 'busy')    return ['Ocupado',  'badge-busy'];
-  if (status === 'partial') return ['Parcial',  'badge-partial'];
-  return                           ['Libre',    'badge-free'];
-}
-
-function sessionClass(val) {
-  const v = (val||'').toLowerCase();
-  if (v.includes('ocup'))   return 'tag-busy';
-  if (v.includes('parcial')) return 'tag-partial';
-  if (v.includes('disp'))   return 'tag-free';
-  return 'tag-free';
-}
-
-// ── Load data ─────────────────────────────────────────────────────────────
 async function loadData() {
   const btn = document.getElementById('sync-btn');
   btn.classList.add('loading');
-  document.getElementById('error-box').style.display = 'none';
-  document.getElementById('calendar-wrap').innerHTML =
-    '<div id="loading"><div class="spinner"></div>Cargando datos…</div>';
-
   try {
     const res = await fetch(CSV_URL + '&t=' + Date.now());
-    if (!res.ok) throw new Error('HTTP ' + res.status);
     const text = await res.text();
     calendarData = parseCSV(text);
-
-    const total = Object.values(calendarData).reduce((a,m)=>a+Object.keys(m).length,0);
-    if (total === 0) {
-      const sample = window._csvSample ? `<br><br><small style="opacity:.7">Primeras filas del CSV: <code>${window._csvSample.replace(/</g,'&lt;')}</code></small>` : '';
-      const hint = window._csvSkipped > 0
-        ? `Se leyeron ${window._csvTotal} líneas pero no se pudo interpretar el formato de fecha.`
-        : 'El CSV puede estar vacío o la pestaña publicada puede ser incorrecta.';
-      throw new Error(`No se encontraron fechas para ${YEAR}. ${hint} Verifica que la pestaña publicada sea "Disponibilidad" y que las fechas estén en formato DD/MM/YYYY.${sample}`);
-    }
-
+    renderNav();
+    renderCalendar(currentMonth);
   } catch(e) {
-    const eb = document.getElementById('error-box');
-    eb.style.display = 'block';
-    eb.innerHTML = '⚠️ ' + e.message;
+    document.getElementById('error-box').style.display = 'block';
+    document.getElementById('error-box').innerText = 'Error al cargar los datos.';
   }
-
-  renderNav();
-  renderCalendar(currentMonth);
   btn.classList.remove('loading');
 }
 
-// ── Render nav ────────────────────────────────────────────────────────────
 function renderNav() {
   const nav = document.getElementById('month-nav');
   nav.innerHTML = '';
-  for (let m = 0; m < 12; m++) {
+  MONTH_NAMES.forEach((name, m) => {
     const btn = document.createElement('button');
     btn.className = 'month-btn' + (m === currentMonth ? ' active' : '');
-    btn.textContent = MONTH_NAMES[m];
+    btn.textContent = name;
     btn.onclick = () => { currentMonth = m; renderNav(); renderCalendar(m); };
     nav.appendChild(btn);
-  }
+  });
 }
 
-// ── Render calendar ───────────────────────────────────────────────────────
 function renderCalendar(month) {
   const wrap = document.getElementById('calendar-wrap');
   const monthKey = `${YEAR}-${String(month+1).padStart(2,'0')}`;
@@ -323,23 +229,9 @@ function renderCalendar(month) {
   const firstWD = new Date(YEAR, month, 1).getDay();
   const today = new Date();
 
-  let free=0, busy=0, partial=0;
-  for (let d=1; d<=daysInMonth; d++) {
-    const dk = `${monthKey}-${String(d).padStart(2,'0')}`;
-    const s = getStatus(monthData[dk]);
-    if (s==='free') free++; else if (s==='busy') busy++; else partial++;
-  }
-
   let html = `
-  <div class="cal-header">
-    <div class="cal-month-title">${MONTH_NAMES[month]} ${YEAR}</div>
-    <div class="cal-stats">
-      <div class="stat"><div class="stat-num s-green">${free}</div><div class="stat-lbl">Libres</div></div>
-      <div class="stat"><div class="stat-num s-red">${busy}</div><div class="stat-lbl">Ocupados</div></div>
-      <div class="stat"><div class="stat-num s-amber">${partial}</div><div class="stat-lbl">Parciales</div></div>
-    </div>
-  </div>
-  <div class="cal-grid">`;
+    <div class="cal-header"><div class="cal-month-title">${MONTH_NAMES[month]}</div></div>
+    <div class="cal-grid">`;
 
   DAY_NAMES.forEach(d => html += `<div class="cal-day-name">${d}</div>`);
   for (let i=0; i<firstWD; i++) html += `<div class="cal-cell empty"></div>`;
@@ -348,32 +240,20 @@ function renderCalendar(month) {
     const dk = `${monthKey}-${String(d).padStart(2,'0')}`;
     const data = monthData[dk];
     const status = getStatus(data);
-    const [label, badgeClass] = getLabel(status);
     const isToday = today.getFullYear()===YEAR && today.getMonth()===month && today.getDate()===d;
 
-    let sessionHTML = '';
-    if (data && (data.manana || data.tarde)) {
-      sessionHTML = `<div class="session-tags">
-        ${data.manana ? `<span class="session-tag ${sessionClass(data.manana)}">☀ ${data.manana}</span>` : ''}
-        ${data.tarde  ? `<span class="session-tag ${sessionClass(data.tarde)}">🌙 ${data.tarde}</span>`  : ''}
-      </div>`;
-    }
-
     html += `<div class="cal-cell ${status}${isToday?' today':''}">
-      <div class="status-bar ${status}"></div>
       <div class="day-num">${d}</div>
-      ${sessionHTML}
-      ${status !== 'free' ? `<span class="status-badge ${badgeClass}">${label}</span>` : ''}
+      ${data ? `<div class="session-tags">
+        ${data.manana && data.manana.toLowerCase().includes('ocup') ? '<span class="session-tag tag-busy">☀ Ocupado</span>' : ''}
+        ${data.tarde && data.tarde.toLowerCase().includes('ocup') ? '<span class="session-tag tag-busy">🌙 Ocupado</span>' : ''}
+        ${(data.estado && data.estado.toLowerCase().includes('parcial')) ? '<span class="session-tag tag-partial">⚠ Parcial</span>' : ''}
+      </div>` : ''}
     </div>`;
   }
-
-  const rem = (firstWD + daysInMonth) % 7;
-  if (rem) for (let i=0; i<7-rem; i++) html += `<div class="cal-cell empty"></div>`;
-  html += '</div>';
-  wrap.innerHTML = html;
+  wrap.innerHTML = html + '</div>';
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────
 loadData();
 </script>
 </body>
