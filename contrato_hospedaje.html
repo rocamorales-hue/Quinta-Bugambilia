@@ -3,61 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contrato de Hospedaje - Quinta Bugambilia</title>
+  <title>Contrato Quinta Bugambilia</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --charcoal: #1e3a2f; --gold: #5db87a; --warm: #4a7fa5; --cream: #f2f9f4; --border: #b8d9c8;
     }
-    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); margin: 0; padding: 20px; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); margin: 0; padding: 10px; }
     
     .form-container { 
-        max-width: 850px; margin: 0 auto 30px; background: #fff; padding: 2rem; 
+        max-width: 500px; margin: 0 auto 20px; background: #fff; padding: 1.5rem; 
         border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
-    h1 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; margin-bottom: 1.5rem; color: var(--charcoal); border-bottom: 1px solid var(--gold); padding-bottom: 10px; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    .field { display: flex; flex-direction: column; margin-bottom: 10px; }
-    label { font-size: 0.8rem; font-weight: 600; margin-bottom: 5px; color: var(--warm); text-transform: uppercase; letter-spacing: 0.05em; }
-    input { padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; margin-bottom: 1.2rem; color: var(--charcoal); text-align: center; border-bottom: 1px solid var(--gold); padding-bottom: 10px; }
     
-    .input-with-btn { display: flex; gap: 5px; }
-    .input-with-btn input { flex: 1; }
+    .field { display: flex; flex-direction: column; margin-bottom: 15px; }
+    label { font-size: 0.75rem; font-weight: 600; margin-bottom: 5px; color: var(--warm); text-transform: uppercase; }
+    input { padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 1rem; width: 100%; box-sizing: border-box; }
+    
+    .calc-box { margin-top: 5px; }
     .btn-calc { 
-        background: var(--gold); color: white; border: none; border-radius: 6px; 
-        padding: 0 10px; cursor: pointer; font-size: 0.7rem; font-weight: bold;
-        transition: opacity 0.2s;
+        width: 100%; background: var(--gold); color: white; border: none; border-radius: 8px; 
+        padding: 10px; cursor: pointer; font-size: 0.8rem; font-weight: bold; margin-top: 5px;
     }
-    .btn-calc:hover { opacity: 0.8; }
 
     .btn-generar { 
-        grid-column: span 2; padding: 18px; background: var(--charcoal); color: white; 
-        border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1rem;
-        margin-top: 15px; transition: all 0.2s;
+        width: 100%; padding: 18px; background: var(--charcoal); color: white; 
+        border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1.1rem;
+        margin-top: 10px; transition: background 0.2s;
     }
-    .btn-generar:hover { background: var(--gold); }
+    .btn-generar:hover { background: #2c5443; }
 
-    /* Estilos del Contrato Real */
+    /* Estilos del Contrato (Vista Previa) */
     #contrato-final { 
-        max-width: 850px; margin: 0 auto; background: white; padding: 50px 70px; 
+        max-width: 850px; margin: 0 auto; background: white; padding: 30px 20px; 
         box-shadow: 0 0 20px rgba(0,0,0,0.1); line-height: 1.4; font-size: 10pt; color: #000;
         display: none; text-align: justify;
     }
-    .header-contrato { text-align: center; margin-bottom: 25px; }
-    .header-contrato h2 { font-family: 'Cormorant Garamond', serif; margin: 0; font-size: 1.4rem; text-decoration: underline; }
+    .header-contrato { text-align: center; margin-bottom: 20px; }
+    .header-contrato h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; text-decoration: underline; }
     .clausula-header { font-weight: bold; display: block; margin-top: 10px; text-decoration: underline; }
     
-    .firmas-container { margin-top: 50px; }
-    .firmas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; text-align: center; }
-    .linea-firma { margin-top: 40px; border-top: 1px solid #000; padding-top: 8px; }
+    .firmas-container { margin-top: 40px; }
+    .firmas-box { text-align: center; margin-bottom: 30px; }
+    .linea-firma { margin: 30px auto 10px; border-top: 1px solid #000; width: 80%; padding-top: 5px; }
 
-    .no-print-area { text-align: center; margin-top: 30px; }
-    .btn-print { background: #3a8f5e; color: white; padding: 12px 25px; border: none; border-radius: 20px; cursor: pointer; font-weight: 500; }
+    .no-print-area { text-align: center; margin-top: 20px; padding-bottom: 40px; }
+    .btn-print { background: #3a8f5e; color: white; padding: 15px 30px; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; width: 100%; max-width: 300px; }
 
     @media print {
       .form-container, .no-print-area { display: none !important; }
       body { background: white; padding: 0; }
-      #contrato-final { display: block !important; box-shadow: none; padding: 0; width: 100%; margin: 0; }
+      #contrato-final { display: block !important; box-shadow: none; padding: 0; width: 100%; margin: 0; font-size: 10pt; }
+      .firmas-grid-print { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
       @page { margin: 1cm; }
     }
   </style>
@@ -65,33 +63,37 @@
 <body>
 
 <div class="form-container">
-  <h1>Generar Contrato Quinta Bugambilia</h1>
-  <div class="grid">
-    <div class="field" style="grid-column: span 2;">
-      <label>Nombre del Arrendatario</label>
-      <input type="text" id="nombreInput" placeholder="Nombre completo">
-    </div>
-    <div class="field">
-      <label>Fecha y Hora Check-in</label>
-      <input type="text" id="entradaInput" placeholder="Ej. Sábado 14 de Marzo - 10:00 AM">
-    </div>
-    <div class="field">
-      <label>Fecha y Hora Check-out</label>
-      <input type="text" id="salidaInput" placeholder="Ej. Lunes 16 de Marzo - 4:00 PM">
-    </div>
-    <div class="field">
-      <label>Precio Total</label>
-      <input type="text" id="precioInput" placeholder="0.00" onkeyup="formatCurrency(this)">
-    </div>
-    <div class="field">
-      <label>Anticipo (30%)</label>
-      <div class="input-with-btn">
-          <input type="text" id="anticipoInput" placeholder="0.00" onkeyup="formatCurrency(this)">
-          <button class="btn-calc" onclick="calcularAnticipo()">CALCULAR 30%</button>
-      </div>
-    </div>
-    <button class="btn-generar" onclick="generarContrato()">Generar Contrato Completo</button>
+  <h1>Nueva Renta</h1>
+  
+  <div class="field">
+    <label>Nombre del Arrendatario</label>
+    <input type="text" id="nombreInput" placeholder="Ej. Juan Pérez">
   </div>
+
+  <div class="field">
+    <label>Entrada (Día y Hora)</label>
+    <input type="text" id="entradaInput" placeholder="Sábado 10:00 AM">
+  </div>
+
+  <div class="field">
+    <label>Salida (Día y Hora)</label>
+    <input type="text" id="salidaInput" placeholder="Lunes 4:00 PM">
+  </div>
+
+  <div class="field">
+    <label>Precio Total</label>
+    <input type="text" id="precioInput" placeholder="$0.00" onkeyup="formatCurrency(this)" inputmode="decimal">
+  </div>
+
+  <div class="field">
+    <label>Anticipo (30%)</label>
+    <input type="text" id="anticipoInput" placeholder="$0.00" onkeyup="formatCurrency(this)" inputmode="decimal">
+    <div class="calc-box">
+        <button class="btn-calc" onclick="calcularAnticipo()">AUTO-CALCULAR 30% DEL TOTAL</button>
+    </div>
+  </div>
+
+  <button class="btn-generar" onclick="generarContrato()">VER CONTRATO</button>
 </div>
 
 <div id="contrato-final">
@@ -99,109 +101,77 @@
     <h2>CONTRATO DE ARRENDAMIENTO TEMPORAL: QUINTA BUGAMBILIA</h2>
   </div>
 
-  <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que celebran, por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> en representación de <strong>QUINTA BUGAMBILIA</strong> (en adelante "El Arrendador") y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong> (en adelante "El Arrendatario"), de acuerdo con las siguientes:</p>
+  <p>Conste por el presente documento el Contrato que celebran, por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> (Arrendador) y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong> (Arrendatario), bajo las siguientes:</p>
 
-  <h3 style="text-align: center; margin: 10px 0; font-size: 11pt;">CLÁUSULAS</h3>
+  <p style="text-align: center; font-weight: bold; margin: 10px 0;">CLÁUSULAS</p>
   
-  <p><span class="clausula-header">PRIMERA. EL INMUEBLE</span> El Arrendador da en renta temporal la propiedad ubicada en el Fraccionamiento Real del Catorce, en Hermosillo, Sonora. Su uso es exclusivamente para descanso y convivencia familiar. El Arrendatario declara recibir el inmueble en buen estado y con las instalaciones (incluida la alberca) funcionando correctamente.</p>
+  <p><span class="clausula-header">PRIMERA. EL INMUEBLE</span> Renta temporal en Fraccionamiento Real del Catorce, Hermosillo, Sonora. Uso exclusivo para descanso familiar. Se recibe en buen estado y con alberca funcionando.</p>
 
-  <p><span class="clausula-header">SEGUNDA. FECHAS Y HORARIOS</span> El periodo de renta ampara la estancia bajo los siguientes horarios estrictos:<br>
-  <strong>Entrada (Check-in):</strong> <span id="out-entrada"></span>.<br>
-  <strong>Salida (Check-out):</strong> <span id="out-salida"></span>.<br>
-  <em>Nota: El incumplimiento en la hora de salida generará un cargo de $300.00 MXN por cada hora o fracción de retraso.</em></p>
+  <p><span class="clausula-header">SEGUNDA. FECHAS Y HORARIOS</span> Horarios estrictos:<br>
+  <strong>Check-in:</strong> <span id="out-entrada"></span>.<br>
+  <strong>Check-out:</strong> <span id="out-salida"></span>.<br>
+  <em>*Retraso en salida: $300.00 MXN por hora.</em></p>
 
-  <p><span class="clausula-header">TERCERA. PRECIO Y FORMA DE PAGO</span> El costo total por la estancia base es de <strong id="out-precio"></strong> MXN. El Arrendatario, para apartar la fecha, deberá de dar un anticipo del 30% del total de la renta (<strong id="out-anticipo"></strong>). El saldo restante deberá liquidarse en su totalidad antes de ingresar a la propiedad.</p>
+  <p><span class="clausula-header">TERCERA. PAGO</span> Costo base: <strong id="out-precio"></strong> MXN. Anticipo: <strong id="out-anticipo"></strong>. Saldo pendiente se liquida antes de ingresar.</p>
 
-  <p><span class="clausula-header">CUARTA. DEPÓSITO EN GARANTÍA</span> Al momento del ingreso, El Arrendatario entregará la cantidad de $1,000.00 MXN en concepto de depósito de garantía. Dicho monto será devuelto en un plazo máximo de 24 horas posteriores a la salida, vía transferencia electrónica, tras una revisión exhaustiva del inmueble y cumplimiento de las reglas.</p>
+  <p><span class="clausula-header">CUARTA. DEPÓSITO</span> $1,000.00 MXN de garantía. Se devuelve en máximo 24h vía transferencia tras revisión.</p>
 
-  <p><span class="clausula-header">QUINTA. CAPACIDAD Y PERSONAS EXTRA</span> La tarifa pactada cubre un máximo de 12 personas para hospedaje. <br>
-  • Visitas adicionales (solo día): $250.00 MXN por persona. <br>
-  • Huéspedes adicionales (pernoctan): $500.00 MXN por persona. <br>
-  Cualquier persona extra debe ser autorizada. El ingreso de personas no registradas será motivo de descuento del depósito.</p>
+  <p><span class="clausula-header">QUINTA. CAPACIDAD</span> Máximo 12 personas hospedadas. Visita día: $250.00 MXN. Huésped extra: $500.00 MXN.</p>
 
-  <p><span class="clausula-header">SEXTA. CUIDADO DE LAS INSTALACIONES Y ALBERCA</span> El Arrendatario se compromete a entregar el inmueble en las mismas condiciones. En caso de que la alberca se ensucie por uso negligente (comida, aceites o desechos), se aplicará un cargo extra de recuperación de agua que se descontará del depósito.</p>
+  <p><span class="clausula-header">SEXTA. ALBERCA</span> Uso negligente (comida, aceites, desechos) generará cargo extra de limpieza profundo descontado del depósito.</p>
 
-  <p><span class="clausula-header">SÉPTIMA. EXENCIÓN DE RESPONSABILIDAD (DESLINDE)</span> El Arrendador no se hace responsable por accidentes, lesiones o fallecimientos que ocurran dentro de la propiedad, especialmente en el área de alberca. Es responsabilidad exclusiva del Arrendatario la supervisión de menores. El Arrendatario libera de toda responsabilidad civil o penal al Arrendador.</p>
+  <p><span class="clausula-header">SÉPTIMA. DESLINDE</span> El Arrendador no se hace responsable por accidentes o lesiones. La supervisión de menores en alberca es responsabilidad total del Arrendatario.</p>
 
-  <p><span class="clausula-header">OCTAVA. OBJETOS OLVIDADOS</span> El Arrendador no se hace responsable por la pérdida, robo u olvido de objetos de valor dejados en la propiedad.</p>
+  <p><span class="clausula-header">OCTAVA Y NOVENA. CANCELACIÓN</span> Más de 30 días: 80% reembolso. 11-30 días: 50%. 10 días o menos: No hay reembolso.</p>
 
-  <p><span class="clausula-header">NOVENA. POLÍTICA DE CANCELACIÓN</span> Retenciones sobre el anticipo: <br>
-  • Más de 30 días: 80% reembolso. <br>
-  • Entre 11 y 30 días: 50% reembolso. <br>
-  • 10 días o menos: No habrá reembolso.</p>
+  <p><span class="clausula-header">DÉCIMA. REGLAS</span> Música moderada, no mascotas, entrega en condiciones aceptables de limpieza.</p>
 
-  <p><span class="clausula-header">DÉCIMA. REGLAS Y LIMPIEZA</span> Respetar reglamento del fraccionamiento. No se permiten mascotas. Suciedad extrema generará un cargo extra por limpieza profunda.</p>
-
-  <p><span class="clausula-header">DÉCIMA PRIMERA. ACTIVIDADES PROHIBIDAS</span> Queda prohibido el consumo de sustancias ilícitas. El incumplimiento causará el desalojo inmediato sin derecho a reembolso.</p>
-
-  <div class="firmas-container">
-    <div class="firmas-grid">
-      <div>
-        <p><strong>EL ARRENDADOR</strong></p>
-        <div class="linea-firma">
-          JAVIER ANTONIO MORALES<br>
-          Firma
-        </div>
-      </div>
-      <div>
-        <p><strong>EL ARRENDATARIO</strong></p>
-        <div class="linea-firma">
-          <span id="out-nombre2"></span><br>
-          Firma
-        </div>
-      </div>
+  <div class="firmas-container firmas-grid-print">
+    <div class="firmas-box">
+      <div class="linea-firma"></div>
+      <strong>EL ARRENDADOR</strong><br>JAVIER ANTONIO MORALES
+    </div>
+    <div class="firmas-box">
+      <div class="linea-firma"></div>
+      <strong>EL ARRENDATARIO</strong><br><span id="out-nombre2"></span>
     </div>
   </div>
   
   <div class="no-print-area">
-      <button class="btn-print" onclick="window.print()">Imprimir o Guardar PDF</button>
+      <button class="btn-print" onclick="window.print()">GUARDAR PDF / IMPRIMIR</button>
   </div>
 </div>
 
 <script>
-  // Función para dar formato de moneda mientras se escribe
   function formatCurrency(input) {
     let value = input.value.replace(/\D/g, "");
-    value = (value/100).toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD'
+    if (value === "") { input.value = ""; return; }
+    value = (parseFloat(value) / 100).toLocaleString('en-US', {
+      style: 'currency', currency: 'USD'
     });
-    input.value = value === "$0.00" ? "" : value;
+    input.value = value;
   }
 
-  // Función para calcular el 30% automáticamente
   function calcularAnticipo() {
-    const precioStr = document.getElementById('precioInput').value;
-    if (!precioStr) {
-        alert("Primero ingresa el Precio Total");
-        return;
-    }
-    // Convertir string de moneda a número
-    const precioNum = parseFloat(precioStr.replace(/[$,]/g, ""));
-    const anticipo = precioNum * 0.30;
-    
-    // Poner el resultado con formato en el cuadro de anticipo
-    document.getElementById('anticipoInput').value = anticipo.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD'
+    const pStr = document.getElementById('precioInput').value;
+    if (!pStr) return alert("Pon el precio total primero");
+    const pNum = parseFloat(pStr.replace(/[$,]/g, ""));
+    const ant = pNum * 0.30;
+    document.getElementById('anticipoInput').value = ant.toLocaleString('en-US', {
+      style: 'currency', currency: 'USD'
     });
   }
 
   function generarContrato() {
     const n = document.getElementById('nombreInput').value;
-    const e = document.getElementById('entradaInput').value;
-    const s = document.getElementById('salidaInput').value;
-    const p = document.getElementById('precioInput').value;
-    const a = document.getElementById('anticipoInput').value;
-
-    if(!n) { alert("Nombre requerido"); return; }
-
+    if(!n) return alert("Escribe el nombre");
+    
     document.getElementById('out-nombre').innerText = n;
     document.getElementById('out-nombre2').innerText = n;
-    document.getElementById('out-entrada').innerText = e;
-    document.getElementById('out-salida').innerText = s;
-    document.getElementById('out-precio').innerText = p;
-    document.getElementById('out-anticipo').innerText = a;
+    document.getElementById('out-entrada').innerText = document.getElementById('entradaInput').value || "___";
+    document.getElementById('out-salida').innerText = document.getElementById('salidaInput').value || "___";
+    document.getElementById('out-precio').innerText = document.getElementById('precioInput').value || "___";
+    document.getElementById('out-anticipo').innerText = document.getElementById('anticipoInput').value || "___";
 
     document.getElementById('contrato-final').style.display = 'block';
     window.scrollTo({ top: document.getElementById('contrato-final').offsetTop, behavior: 'smooth' });
