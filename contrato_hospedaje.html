@@ -21,6 +21,15 @@
     label { font-size: 0.8rem; font-weight: 600; margin-bottom: 5px; color: var(--warm); text-transform: uppercase; letter-spacing: 0.05em; }
     input { padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; }
     
+    .input-with-btn { display: flex; gap: 5px; }
+    .input-with-btn input { flex: 1; }
+    .btn-calc { 
+        background: var(--gold); color: white; border: none; border-radius: 6px; 
+        padding: 0 10px; cursor: pointer; font-size: 0.7rem; font-weight: bold;
+        transition: opacity 0.2s;
+    }
+    .btn-calc:hover { opacity: 0.8; }
+
     .btn-generar { 
         grid-column: span 2; padding: 18px; background: var(--charcoal); color: white; 
         border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 1rem;
@@ -71,12 +80,15 @@
       <input type="text" id="salidaInput" placeholder="Ej. Lunes 16 de Marzo - 4:00 PM">
     </div>
     <div class="field">
-      <label>Precio Total ($)</label>
-      <input type="text" id="precioInput" placeholder="Ej. $4,500.00">
+      <label>Precio Total</label>
+      <input type="text" id="precioInput" placeholder="0.00" onkeyup="formatCurrency(this)">
     </div>
     <div class="field">
       <label>Anticipo (30%)</label>
-      <input type="text" id="anticipoInput" placeholder="Ej. $1,350.00">
+      <div class="input-with-btn">
+          <input type="text" id="anticipoInput" placeholder="0.00" onkeyup="formatCurrency(this)">
+          <button class="btn-calc" onclick="calcularAnticipo()">CALCULAR 30%</button>
+      </div>
     </div>
     <button class="btn-generar" onclick="generarContrato()">Generar Contrato Completo</button>
   </div>
@@ -147,6 +159,34 @@
 </div>
 
 <script>
+  // Función para dar formato de moneda mientras se escribe
+  function formatCurrency(input) {
+    let value = input.value.replace(/\D/g, "");
+    value = (value/100).toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    });
+    input.value = value === "$0.00" ? "" : value;
+  }
+
+  // Función para calcular el 30% automáticamente
+  function calcularAnticipo() {
+    const precioStr = document.getElementById('precioInput').value;
+    if (!precioStr) {
+        alert("Primero ingresa el Precio Total");
+        return;
+    }
+    // Convertir string de moneda a número
+    const precioNum = parseFloat(precioStr.replace(/[$,]/g, ""));
+    const anticipo = precioNum * 0.30;
+    
+    // Poner el resultado con formato en el cuadro de anticipo
+    document.getElementById('anticipoInput').value = anticipo.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    });
+  }
+
   function generarContrato() {
     const n = document.getElementById('nombreInput').value;
     const e = document.getElementById('entradaInput').value;
