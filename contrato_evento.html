@@ -20,18 +20,26 @@
     .field { display: flex; flex-direction: column; margin-bottom: 15px; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
     label { font-size: 0.75rem; font-weight: 600; margin-bottom: 5px; color: var(--warm); text-transform: uppercase; }
-    input, textarea, select { padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 1rem; width: 100%; box-sizing: border-box; background: white; -webkit-appearance: none; }
     
-    .extras-container {
-        background: var(--cream); padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;
-    }
-    .extra-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
-    .extra-item input { width: auto; height: 20px; width: 20px; cursor: pointer; }
+    input, textarea, select { padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 1rem; width: 100%; box-sizing: border-box; background: white; -webkit-appearance: none; }
 
-    .btn-calc { 
-        width: 100%; background: var(--gold); color: white; border: none; border-radius: 8px; 
-        padding: 12px; cursor: pointer; font-size: 0.85rem; font-weight: bold; margin-top: 8px;
+    /* SECCIÓN ADICIONALES MEJORADA */
+    .extras-container {
+        background: #f9fdfb; padding: 10px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 15px;
     }
+    .extra-item { 
+        display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; 
+        transition: background 0.2s;
+    }
+    .extra-item:last-child { border-bottom: none; }
+    .extra-item:active { background: #eef7f2; }
+    
+    .extra-item input[type="checkbox"] { 
+        width: 24px; height: 24px; margin-right: 12px; flex-shrink: 0; cursor: pointer;
+        accent-color: var(--gold);
+    }
+    .extra-label { flex-grow: 1; font-size: 0.95rem; cursor: pointer; }
+    .extra-price { font-weight: bold; color: var(--charcoal); font-size: 0.9rem; }
 
     .btn-generar { 
         width: 100%; padding: 18px; background: var(--charcoal); color: white; 
@@ -39,21 +47,15 @@
         margin-top: 10px; box-shadow: 0 4px 10px rgba(30, 58, 47, 0.2);
     }
 
-    #contrato-final { 
-        max-width: 800px; margin: 0 auto; background: white; padding: 40px 30px; 
-        box-shadow: 0 0 20px rgba(0,0,0,0.1); line-height: 1.5; font-size: 10.5pt; color: #000;
-        display: none; text-align: justify;
-    }
+    /* Estilos del Contrato e Impresión (Iguales a los anteriores) */
+    #contrato-final { max-width: 800px; margin: 0 auto; background: white; padding: 40px 30px; box-shadow: 0 0 20px rgba(0,0,0,0.1); line-height: 1.5; font-size: 10.5pt; display: none; text-align: justify; }
     .header-contrato { text-align: center; margin-bottom: 25px; }
     .header-contrato h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; text-decoration: underline; }
     .clausula-header { font-weight: bold; display: block; margin-top: 15px; text-decoration: underline; }
-    
     #notas-seccion-contrato { margin-top: 20px; padding: 15px; border: 1px dashed #ccc; background: #fafafa; border-radius: 5px; }
-
     .firmas-container { margin-top: 50px; }
     .firmas-box { text-align: center; margin-bottom: 40px; }
     .linea-firma { margin: 40px auto 10px; border-top: 1px solid #000; width: 70%; padding-top: 5px; }
-
     .no-print-area { text-align: center; margin-top: 30px; padding-bottom: 50px; }
     .btn-print { background: #3a8f5e; color: white; padding: 18px 30px; border: none; border-radius: 40px; cursor: pointer; font-weight: bold; width: 100%; max-width: 320px; }
 
@@ -83,32 +85,63 @@
     </div>
     <div class="field">
       <label>Paquete Contratado</label>
-      <select id="paqueteSelect" onchange="actualizarPrecioPaquete()">
+      <select id="paqueteSelect" onchange="calcularTotal()">
         <option value="0" data-price="0">Seleccionar Paquete</option>
-        <option value="20" data-price="4600">20 personas — $4,600</option>
-        <option value="30" data-price="6540">30 personas — $6,540</option>
-        <option value="40" data-price="8240">40 personas — $8,240</option>
-        <option value="50" data-price="9700">50 personas — $9,700</option>
-        <option value="60" data-price="10420">60 personas — $10,420</option>
-        <option value="70" data-price="11140">70 personas — $11,140</option>
-        <option value="80" data-price="11860">80 personas — $11,860</option>
-        <option value="90" data-price="12580">90 personas — $12,580</option>
-        <option value="100" data-price="13900">100 personas — $13,900</option>
+        <option value="20" data-price="4600">20 pers — $4,600</option>
+        <option value="30" data-price="6540">30 pers — $6,540</option>
+        <option value="40" data-price="8240">40 pers — $8,240</option>
+        <option value="50" data-price="9700">50 pers — $9,700</option>
+        <option value="60" data-price="10420">60 pers — $10,420</option>
+        <option value="70" data-price="11140">70 pers — $11,140</option>
+        <option value="80" data-price="11860">80 pers — $11,860</option>
+        <option value="90" data-price="12580">90 pers — $12,580</option>
+        <option value="100" data-price="13900">100 pers — $13,900</option>
       </select>
     </div>
   </div>
 
-  <label>Contrataciones Adicionales</label>
+  <label>🌟 Contrataciones Adicionales</label>
   <div class="extras-container">
-    <div class="extra-item"><span>Calentón ambiental ($480)</span> <input type="checkbox" class="extra-cb" data-name="Calentón ambiental" value="480" onchange="calcularTotal()"></div>
-    <div class="extra-item"><span>Aerocooler portátil ($480)</span> <input type="checkbox" class="extra-cb" data-name="Aerocooler portátil" value="480" onchange="calcularTotal()"></div>
-    <div class="extra-item"><span>Mesa para snacks ($350)</span> <input type="checkbox" class="extra-cb" data-name="Mesa para snacks" value="350" onchange="calcularTotal()"></div>
-    <div class="extra-item"><span>Torre de luces y humo ($650)</span> <input type="checkbox" class="extra-cb" data-name="Torre de luces y humo" value="650" onchange="calcularTotal()"></div>
-    <hr style="margin:10px 0; opacity:0.2">
-    <div class="extra-item"><span>Casa (Acceso completo) ($1,500)</span> <input type="checkbox" class="extra-cb" data-name="Casa Principal (acceso completo)" value="1500" onchange="calcularTotal()"></div>
-    <div class="extra-item"><span>Casa (Sin cuartos) ($1,000)</span> <input type="checkbox" class="extra-cb" data-name="Casa Principal (sin acceso a cuartos)" value="1000" onchange="calcularTotal()"></div>
-    <div class="extra-item"><span>Depto. Independiente ($1,000)</span> <input type="checkbox" class="extra-cb" data-name="Departamento Independiente" value="1000" onchange="calcularTotal()"></div>
-    <div class="extra-item"><span>Salón Entretenimiento ($1,200)</span> <input type="checkbox" class="extra-cb" data-name="Salón de entretenimiento" value="1200" onchange="calcularTotal()"></div>
+    <label class="extra-item">
+        <input type="checkbox" class="extra-cb" data-name="Calentón ambiental" value="480" onchange="calcularTotal()">
+        <span class="extra-label">Calentón ambiental</span>
+        <span class="extra-price">$480</span>
+    </label>
+    <label class="extra-item">
+        <input type="checkbox" class="extra-cb" data-name="Aerocooler portátil" value="480" onchange="calcularTotal()">
+        <span class="extra-label">Aerocooler portátil</span>
+        <span class="extra-price">$480</span>
+    </label>
+    <label class="extra-item">
+        <input type="checkbox" class="extra-cb" data-name="Mesa para snacks" value="350" onchange="calcularTotal()">
+        <span class="extra-label">Mesa para snacks</span>
+        <span class="extra-price">$350</span>
+    </label>
+    <label class="extra-item">
+        <input type="checkbox" class="extra-cb" data-name="Torre de luces y humo" value="650" onchange="calcularTotal()">
+        <span class="extra-label">Torre de luces y humo</span>
+        <span class="extra-price">$650</span>
+    </label>
+    <label class="extra-item">
+        <input type="checkbox" class="extra-cb" data-name="Casa (Acceso completo)" value="1500" onchange="calcularTotal()">
+        <span class="extra-label">Casa (Acceso completo)</span>
+        <span class="extra-price">$1,500</span>
+    </label>
+    <label class="extra-item">
+        <input type="checkbox" class="extra-cb" data-name="Casa (Sin cuartos)" value="1000" onchange="calcularTotal()">
+        <span class="extra-label">Casa (Sin cuartos)</span>
+        <span class="extra-price">$1,000</span>
+    </label>
+    <label class="extra-item">
+        <input type="checkbox" class="extra-cb" data-name="Depto. Independiente" value="1000" onchange="calcularTotal()">
+        <span class="extra-label">Depto. Independiente</span>
+        <span class="extra-price">$1,000</span>
+    </label>
+    <label class="extra-item">
+        <input type="checkbox" class="extra-cb" data-name="Salón Entretenimiento" value="1200" onchange="calcularTotal()">
+        <span class="extra-label">Salón Entretenimiento</span>
+        <span class="extra-price">$1,200</span>
+    </label>
   </div>
 
   <div class="row">
@@ -124,13 +157,13 @@
 
   <div class="field">
     <label>Precio Total (Auto)</label>
-    <input type="text" id="precioInput" placeholder="$0.00" onkeyup="formatCurrency(this)" inputmode="decimal">
+    <input type="text" id="precioInput" readonly style="background:#f0f0f0; font-weight:bold; color:var(--charcoal);">
   </div>
 
   <div class="row">
     <div class="field">
       <label>Anticipo (30%)</label>
-      <input type="text" id="anticipoInput" placeholder="$0.00" inputmode="decimal">
+      <input type="text" id="anticipoInput" readonly style="background:#f0f0f0;">
     </div>
     <div class="field">
       <label>Depósito</label>
@@ -145,48 +178,25 @@
   <div class="header-contrato">
     <h2>CONTRATO DE ARRENDAMIENTO TEMPORAL PARA EVENTOS: QUINTA BUGAMBILIA</h2>
   </div>
-
-  <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que celebran, por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> en representación de <strong>QUINTA BUGAMBILIA</strong> (en adelante "El Arrendador") y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong> (en adelante "El Arrendatario"), de acuerdo con las siguientes:</p>
+  <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que celebran, por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> en representación de <strong>QUINTA BUGAMBILIA</strong> y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong>.</p>
 
   <p style="text-align: center; font-weight: bold; margin: 15px 0;">CLÁUSULAS</p>
+  <p><span class="clausula-header">PRIMERA. OBJETO</span> Uso temporal para fines recreativos en Fracc. Real del Catorce, Hermosillo, Sonora.</p>
+  <p><span class="clausula-header">SEGUNDA. FECHA Y HORARIOS</span> <strong>Fecha:</strong> <span id="out-entrada"></span>. <strong>Entrada:</strong> <span id="out-hora-e"></span>. <strong>Salida:</strong> <span id="out-hora-s"></span>.</p>
+  <p><span class="clausula-header">TERCERA. COSTO Y PAQUETE</span> El costo total es de <strong id="out-precio"></strong> MXN por el paquete de <strong id="out-personas"></strong> personas.</p>
+  <p><span class="clausula-header">CUARTA. PAGO</span> Anticipo del 30% (<strong id="out-anticipo"></strong>). El saldo se liquida antes de entrar.</p>
+  <p><span class="clausula-header">QUINTA. DEPÓSITO</span> Garantía de <strong id="out-deposito"></strong> MXN devuelto en 24h tras verificar daños.</p>
   
-  <p><span class="clausula-header">PRIMERA. OBJETO Y UBICACIÓN</span> El Arrendador otorga el uso temporal del inmueble ubicado en el Fraccionamiento Real del Catorce, Hermosillo, Sonora. El uso es exclusivamente para fines recreativos y de esparcimiento familiar.</p>
-
-  <p><span class="clausula-header">SEGUNDA. FECHA Y HORARIOS</span> La vigencia del presente contrato se limita a:<br><br>
-  <strong>Fecha del evento:</strong> <span id="out-entrada"></span> a las <span id="out-hora-e"></span>.<br>
-  <strong>Horario de salida:</strong> <span id="out-hora-s"></span>.<br><br>
-  <em>Nota: Cualquier exceso en el tiempo de salida generará un cargo de $300.00 MXN por cada hora o fracción adicional.</em></p>
-
-  <p><span class="clausula-header">TERCERA. COSTO Y PAQUETE</span> El costo total por la estancia es de <strong id="out-precio"></strong> MXN. El Arrendatario contrata el paquete de <strong id="out-personas"></strong> personas. El exceso de ocupación sin previo aviso será motivo de rescisión inmediata del contrato o cargos extra.</p>
-
-  <p><span class="clausula-header">CUARTA. FORMA DE PAGO</span> El Arrendatario deberá cubrir un anticipo del 30% (<strong id="out-anticipo"></strong>) para asegurar la fecha. El saldo restante deberá liquidarse en su totalidad antes de ingresar al inmueble.</p>
-
-  <p><span class="clausula-header">QUINTA. DEPÓSITO DE GARANTÍA</span> El Arrendatario entregará la cantidad de <strong id="out-deposito"></strong> MXN en concepto de depósito de garantía. Dicho monto será devuelto en un plazo de 24 horas posteriores al evento vía transferencia, tras verificar que no existan daños.</p>
-
-  <p><span class="clausula-header">SEXTA. EXENCIÓN DE RESPONSABILIDAD (ALBERCA E INSTALACIONES)</span> El Arrendador no se hace responsable por accidentes, lesiones o fallecimientos. Es responsabilidad exclusiva del Arrendatario la vigilancia de menores de edad.</p>
-
-  <p><span class="clausula-header">SÉPTIMA. CANCELACIONES</span> En caso de cancelación se retendrá:<br>
-  • +20 días: Reembolso 80%. | • 11-19 días: Reembolso 50%. | • -10 días: Sin reembolso.</p>
-
   <div id="notas-seccion-contrato" style="display:none;">
-    <p><strong>ADICIONALES Y NOTAS:</strong></p>
+    <p><strong>ADICIONALES CONTRATADOS:</strong></p>
     <p id="out-notas" style="font-style: italic;"></p>
   </div>
 
   <div class="firmas-container firmas-print-grid">
-    <div class="firmas-box">
-      <div class="linea-firma"></div>
-      <strong>EL ARRENDADOR</strong><br>JAVIER ANTONIO MORALES MIZQUEZ
-    </div>
-    <div class="firmas-box">
-      <div class="linea-firma"></div>
-      <strong>EL ARRENDATARIO</strong><br><span id="out-nombre2"></span>
-    </div>
+    <div class="firmas-box"><div class="linea-firma"></div><strong>EL ARRENDADOR</strong></div>
+    <div class="firmas-box"><div class="linea-firma"></div><strong>EL ARRENDATARIO</strong><br><span id="out-nombre2"></span></div>
   </div>
-  
-  <div class="no-print-area">
-      <button class="btn-print" onclick="window.print()">GUARDAR COMO PDF / IMPRIMIR</button>
-  </div>
+  <div class="no-print-area"><button class="btn-print" onclick="window.print()">GUARDAR / IMPRIMIR</button></div>
 </div>
 
 <script>
@@ -197,25 +207,21 @@
     input.value = value;
   }
 
-  function actualizarPrecioPaquete() {
-    calcularTotal();
-  }
-
   function calcularTotal() {
     const select = document.getElementById('paqueteSelect');
     const basePrice = parseFloat(select.options[select.selectedIndex].getAttribute('data-price')) || 0;
     
     let extrasTotal = 0;
-    document.querySelectorAll('.extra-cb:checked').forEach(cb => {
+    const checkboxes = document.querySelectorAll('.extra-cb:checked');
+    checkboxes.forEach(cb => {
       extrasTotal += parseFloat(cb.value);
     });
 
     const total = basePrice + extrasTotal;
-    document.getElementById('precioInput').value = total.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     
-    // Auto calcular anticipo
-    const ant = total * 0.30;
-    document.getElementById('anticipoInput').value = ant.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    // Actualizar campos de solo lectura
+    document.getElementById('precioInput').value = total.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    document.getElementById('anticipoInput').value = (total * 0.30).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
   }
 
   function formatDate(dateStr) {
@@ -235,7 +241,8 @@
 
   function generarContrato() {
     const n = document.getElementById('nombreInput').value;
-    if(!n) return alert("Ingresa el nombre del Arrendatario");
+    const p = document.getElementById('paqueteSelect').value;
+    if(!n || p == "0") return alert("Ingresa el nombre y selecciona un paquete");
     
     document.getElementById('out-nombre').innerText = n;
     document.getElementById('out-nombre2').innerText = n;
@@ -245,16 +252,16 @@
     document.getElementById('out-precio').innerText = document.getElementById('precioInput').value;
     document.getElementById('out-anticipo').innerText = document.getElementById('anticipoInput').value;
     document.getElementById('out-deposito').innerText = document.getElementById('depositoInput').value;
-    document.getElementById('out-personas').innerText = document.getElementById('paqueteSelect').value;
+    document.getElementById('out-personas').innerText = p;
 
     let extrasDesc = [];
     document.querySelectorAll('.extra-cb:checked').forEach(cb => {
-      extrasDesc.push(cb.getAttribute('data-name'));
+      extrasDesc.push(cb.getAttribute('data-name') + " ($" + cb.value + ")");
     });
 
     const seccionNotas = document.getElementById('notas-seccion-contrato');
     if(extrasDesc.length > 0) {
-        document.getElementById('out-notas').innerText = "Servicios adicionales incluidos: " + extrasDesc.join(", ");
+        document.getElementById('out-notas').innerText = extrasDesc.join(", ");
         seccionNotas.style.display = "block";
     } else {
         seccionNotas.style.display = "none";
