@@ -15,175 +15,496 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --sand: #ddeef7; --cream: #f2f9f4; --charcoal: #1e3a2f; --warm: #4a7fa5;
-      --gold: #5db87a; --green: #3a8f5e; --red: #b94040; --amber: #4a7fa5;
-      --green-bg: #e8f5ee; --red-bg: #faeaea; --amber-bg: #ddeef7; --border: #b8d9c8;
+      --sand: #ddeef7;
+      --cream: #f2f9f4;
+      --charcoal: #1e3a2f;
+      --warm: #4a7fa5;
+      --gold: #5db87a;
+      --green: #3a8f5e;
+      --red: #b94040;
+      --amber: #4a7fa5;
+      --green-bg: #e8f5ee;
+      --red-bg: #faeaea;
+      --amber-bg: #ddeef7;
+      --border: #b8d9c8;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
-    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); min-height: 100vh; }
-
-    /* --- HEADER AMIGABLE PARA CELULAR --- */
-    header { 
-      background: var(--charcoal); color: #fff; padding: 0.8rem 1rem; 
-      display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
-      position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,.25); 
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--charcoal);
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; letter-spacing: .1em; text-align: center; }
-    .logo span { color: var(--gold); opacity: 0.8; font-size: 1rem; }
-    
-    .nav-container { display: flex; gap: 0.5rem; width: 100%; justify-content: center; flex-wrap: wrap; }
+    /* ── HEADER ── */
+    header {
+      background: var(--charcoal);
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 12px rgba(0,0,0,.3);
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      height: 52px;
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 300;
+      letter-spacing: .08em;
+      display: flex;
+      align-items: baseline;
+      gap: .4rem;
+    }
+    .logo-sub { font-size: .75rem; color: var(--gold); opacity: .85; }
 
-    .nav-link, #sync-btn { 
-      background: none; border: 1.5px solid var(--gold); color: var(--gold); padding: .5rem 0.8rem; 
-      border-radius: 20px; font-size: .72rem; cursor: pointer; display: flex; align-items: center; 
-      gap: .3rem; text-decoration: none; transition: all .2s; 
+    .header-actions { display: flex; gap: .4rem; align-items: center; }
+    .icon-btn {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,.75);
+      cursor: pointer;
+      padding: .5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s;
+      min-width: 40px;
+      min-height: 40px;
+    }
+    .icon-btn:hover, .icon-btn:active { background: rgba(255,255,255,.12); }
+    .icon-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .sync-btn {
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: .4rem .9rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .78rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+      transition: opacity .2s;
+      min-height: 36px;
+    }
+    .sync-btn:active { opacity: .8; }
+    .sync-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
+
+    /* ── NAV DRAWER (hamburger) ── */
+    .nav-drawer {
+      background: var(--charcoal);
+      border-top: 1px solid rgba(255,255,255,.1);
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height .3s ease;
+    }
+    .nav-drawer.open { max-height: 300px; }
+    .nav-links {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,.08);
+    }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .85rem 1.1rem;
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+      font-size: .84rem;
+      background: var(--charcoal);
+      transition: background .15s;
+    }
+    .nav-link:active { background: rgba(255,255,255,.08); }
+    .nav-link svg { width: 18px; height: 18px; stroke: var(--gold); fill: none; stroke-width: 2; flex-shrink: 0; }
+
+    /* ── MONTH STRIP ── */
+    .month-strip-wrap {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      position: sticky;
+      top: 52px;
+      z-index: 100;
+    }
+    .month-strip-wrap::-webkit-scrollbar { display: none; }
+    .month-strip {
+      display: flex;
+      padding: .5rem .75rem;
+      gap: .4rem;
+      min-width: max-content;
+    }
+    .month-pill {
+      background: none;
+      border: 1.5px solid var(--border);
+      padding: .35rem .85rem;
+      border-radius: 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .78rem;
+      cursor: pointer;
+      color: var(--warm);
+      white-space: nowrap;
+      transition: all .15s;
+      min-height: 36px;
+    }
+    .month-pill.active {
+      background: var(--charcoal);
+      border-color: var(--charcoal);
+      color: #fff;
     }
 
-    .nav-link:hover, #sync-btn:hover { background: var(--gold); color: #fff; }
-    #sync-btn { background: var(--gold); color: white; border-color: var(--gold); }
+    /* ── MAIN ── */
+    main { max-width: 700px; margin: 0 auto; padding: 1rem .75rem calc(2rem + var(--safe-bottom)); }
 
-    @media(min-width: 850px) {
-      header { flex-direction: row; justify-content: space-between; height: 64px; padding: 0 2rem; }
-      .nav-container { width: auto; }
-      .logo { font-size: 1.9rem; }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      margin-bottom: .2rem;
     }
+    .subtitle { color: var(--warm); font-size: .82rem; margin-bottom: 1rem; }
 
-    @media(max-width: 500px) {
-      .logo span { display: none; }
-      .nav-link span { display: none; }
-      .nav-link { padding: 0.6rem; border-radius: 50%; width: 40px; height: 40px; justify-content: center; }
-      #sync-btn span { display: inline; }
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: .7rem 1rem;
+      background: var(--sand);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+      align-items: center;
     }
+    .legend-item { display: flex; align-items: center; gap: .4rem; font-size: .78rem; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+    .dot-free { background: var(--green); }
+    .dot-busy { background: var(--red); }
+    .dot-partial { background: var(--amber); }
 
-    /* --- CALENDARIO --- */
-    main { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-    h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 300; margin-bottom: .3rem; }
-    .subtitle { color: var(--warm); font-size: .88rem; margin-bottom: 2rem; }
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .5rem;
+      margin-bottom: 1rem;
+    }
+    .stat-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .6rem .75rem;
+      text-align: center;
+    }
+    .stat-num { font-size: 1.5rem; font-weight: 500; line-height: 1; }
+    .stat-lbl { font-size: .65rem; letter-spacing: .07em; text-transform: uppercase; color: var(--warm); margin-top: 2px; }
+    .s-green { color: var(--green); }
+    .s-red { color: var(--red); }
+    .s-amber { color: var(--amber); }
 
-    .legend { display: flex; gap: 1.4rem; flex-wrap: wrap; margin-bottom: 2.2rem; padding: 1rem 1.4rem; background: var(--sand); border-radius: 10px; border: 1px solid var(--border); align-items: center; }
-    .legend-item { display: flex; align-items: center; gap: .5rem; font-size: .82rem; }
-    .dot { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; }
-    .dot-free{background:var(--green);} .dot-busy{background:var(--red);} .dot-partial{background:var(--amber);}
-
-    .year-nav { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 2rem; }
-    .month-btn { background: none; border: 1.5px solid var(--border); padding: .5rem 1.1rem; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: .82rem; cursor: pointer; color: var(--warm); transition: all .15s; }
-    .month-btn:hover { border-color: var(--gold); color: var(--gold); }
-    .month-btn.active { background: var(--charcoal); border-color: var(--charcoal); color: #fff; }
-
-    #calendar-wrap { background: #fff; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,.06); }
-
-    .cal-header { background: var(--charcoal); color: #fff; padding: 1.2rem 1.6rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-    .cal-month-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; letter-spacing: .08em; text-transform: capitalize; }
-    .cal-stats { display: flex; gap: 1.2rem; }
-    .stat { text-align: center; }
-    .stat-num { font-size: 1.4rem; font-weight: 500; }
-    .stat-lbl { font-size: .68rem; letter-spacing: .07em; opacity: .65; text-transform: uppercase; }
-    .stat-num.s-green{color:#7ed4a0;} .stat-num.s-red{color:#f08080;} .stat-num.s-amber{color:#f5c06a;}
-
+    /* ── CALENDAR GRID ── */
+    .cal-wrap {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(0,0,0,.05);
+    }
+    .cal-title-row {
+      background: var(--charcoal);
+      color: #fff;
+      padding: .8rem 1rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 300;
+      letter-spacing: .08em;
+      text-transform: capitalize;
+    }
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
-    .cal-day-name { background: var(--sand); padding: .6rem 0; text-align: center; font-size: .72rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--warm); border-bottom: 1px solid var(--border); }
+    .cal-day-name {
+      background: var(--sand);
+      padding: .5rem 0;
+      text-align: center;
+      font-size: .68rem;
+      font-weight: 500;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--warm);
+      border-bottom: 1px solid var(--border);
+    }
 
-    .cal-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-height: 96px; padding: .5rem; position: relative; cursor: pointer; transition: background 0.2s; }
-    .cal-cell:nth-child(7n){border-right:none;}
-    .cal-cell.empty{background:var(--sand);opacity:.4; cursor: default;}
-    .cal-cell.free{background:var(--green-bg);}
-    .cal-cell.busy{background:var(--red-bg);}
-    .cal-cell.partial{background:var(--amber-bg);}
-    .cal-cell.today .day-num { background: var(--gold); color: #fff; border-radius: 50%; }
+    /* Mobile-first cell: compact, tap-friendly */
+    .cal-cell {
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      min-height: 52px;
+      padding: .25rem .2rem .2rem;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      transition: filter .1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cal-cell:nth-child(7n) { border-right: none; }
+    .cal-cell.empty { background: var(--sand); opacity: .4; cursor: default; pointer-events: none; }
+    .cal-cell.free  { background: var(--green-bg); }
+    .cal-cell.busy  { background: var(--red-bg); }
+    .cal-cell.partial { background: var(--amber-bg); }
+    .cal-cell:active:not(.empty) { filter: brightness(.93); }
 
-    .day-num { font-size: .82rem; font-weight: 500; color: var(--charcoal); width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; margin-bottom: .3rem; }
-    .status-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-    .status-bar.free{background:var(--green);} .status-bar.busy{background:var(--red);} .status-bar.partial{background:var(--amber);}
+    .status-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 0; }
+    .status-bar.free   { background: var(--green); }
+    .status-bar.busy   { background: var(--red); }
+    .status-bar.partial { background: var(--amber); }
 
-    .session-tags { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
-    .session-tag { font-size: .6rem; padding: 1px 5px; border-radius: 4px; font-weight: 500; }
-    .tag-free  { background: rgba(58, 125, 68, .15); color: var(--green); }
-    .tag-busy  { background: rgba(185, 64, 64, .15); color: var(--red); }
-    .tag-partial { background: rgba(212, 136, 42, .15); color: var(--amber); }
+    .day-num {
+      font-size: .78rem;
+      font-weight: 500;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .cal-cell.today .day-num { background: var(--gold); color: #fff; }
 
-    .status-badge { display: inline-block; font-size: .58rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; padding: 1px 6px; border-radius: 8px; margin-top: 4px; }
-    .badge-free{background:var(--green);color:#fff;} .badge-busy{background:var(--red);color:#fff;} .badge-partial{background:var(--amber);color:#fff;}
+    /* Status indicator dots shown inside cell (replaces verbose text on mobile) */
+    .cell-dots { display: flex; gap: 2px; }
+    .cell-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+    }
+    .cell-dot.m-free   { background: var(--green); }
+    .cell-dot.m-busy   { background: var(--red); }
+    .cell-dot.m-partial { background: var(--amber); }
 
+    /* ── BOTTOM SHEET (day detail) ── */
+    .sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.35);
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+    }
+    .sheet-backdrop.visible { opacity: 1; pointer-events: all; }
+
+    .sheet {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      z-index: 301;
+      padding: 0 1.25rem calc(1.5rem + var(--safe-bottom));
+      transform: translateY(100%);
+      transition: transform .3s cubic-bezier(.4,0,.2,1);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .sheet.open { transform: translateY(0); }
+
+    .sheet-handle {
+      width: 40px; height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: .75rem auto 1rem;
+    }
+    .sheet-date {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: var(--charcoal);
+      margin-bottom: .75rem;
+      text-transform: capitalize;
+    }
+    .sheet-row {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .65rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .sheet-row:last-child { border-bottom: none; }
+    .sheet-icon { font-size: 1.2rem; width: 28px; text-align: center; }
+    .sheet-info { flex: 1; }
+    .sheet-label { font-size: .72rem; color: var(--warm); text-transform: uppercase; letter-spacing: .06em; }
+    .sheet-value { font-size: .92rem; font-weight: 500; margin-top: 1px; }
+    .sheet-badge {
+      display: inline-block;
+      font-size: .68rem;
+      font-weight: 500;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .badge-free    { background: var(--green); color: #fff; }
+    .badge-busy    { background: var(--red); color: #fff; }
+    .badge-partial { background: var(--amber); color: #fff; }
+
+    /* ── LOADING / ERROR ── */
     #loading { text-align: center; padding: 3rem; color: var(--warm); }
-    .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 1rem; }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto 1rem;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
-    
-    footer { text-align: center; padding: 2rem; font-size: .75rem; color: var(--warm); border-top: 1px solid var(--border); }
+    #error-box { display: none; color: red; text-align: center; margin-bottom: 1rem; font-size: .85rem; }
 
-    @media(max-width: 600px) {
-      h1{font-size:1.9rem;}
-      .cal-cell{min-height:85px;}
-      .status-badge{display:none;}
-      .day-num{font-size:.75rem; width:22px; height:22px;}
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: .72rem;
+      color: var(--warm);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── DESKTOP ENHANCEMENTS ── */
+    @media (min-width: 640px) {
+      .cal-cell {
+        min-height: 90px;
+        padding: .5rem .4rem;
+        align-items: flex-start;
+      }
+      .day-num { font-size: .82rem; }
+      .cell-dots { margin-top: auto; padding-bottom: 4px; }
+    }
+
+    @media (min-width: 700px) {
+      .header-top { height: 60px; padding: 0 1.5rem; }
+      .logo { font-size: 1.6rem; }
+      .page-title { font-size: 2.4rem; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">Quinta Bugambilia <span>· Real del 14</span></div>
-  <div class="nav-container">
-    <a href="ventas.html" class="nav-link" title="Ventas">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      <span>Ventas</span>
-    </a>
-    <a href="contrato_hospedaje.html" class="nav-link" title="Hospedaje">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      <span>Contratos</span>
-    </a>
-    <a href="contrato_evento.html" class="nav-link" title="Evento">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-      <span>Evento</span>
-    </a>
-    <a href="rentas.html" class="nav-link" title="Rentas">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span>Rentas</span>
-    </a>
-    <button id="sync-btn" onclick="loadData()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-      <span>Actualizar</span>
-    </button>
+  <div class="header-top">
+    <div class="logo">
+      Quinta Bugambilia <span class="logo-sub">· Real del 14</span>
+    </div>
+    <div class="header-actions">
+      <button class="sync-btn" id="sync-btn" onclick="loadData()">
+        <svg viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+        Actualizar
+      </button>
+      <button class="icon-btn" id="menu-btn" aria-label="Menú" onclick="toggleNav()">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="nav-drawer" id="nav-drawer">
+    <div class="nav-links">
+      <a href="ventas.html" class="nav-link">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Ventas
+      </a>
+      <a href="contrato_hospedaje.html" class="nav-link">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Hospedaje
+      </a>
+      <a href="contrato_evento.html" class="nav-link">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Evento
+      </a>
+      <a href="rentas.html" class="nav-link">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Rentas
+      </a>
+    </div>
   </div>
 </header>
 
+<!-- Sticky month strip -->
+<div class="month-strip-wrap" id="month-strip-wrap">
+  <div class="month-strip" id="month-nav"></div>
+</div>
+
 <main>
-  <h1>Disponibilidad 2026</h1>
-  <p class="subtitle">Calendario de reservaciones sincronizado en tiempo real</p>
+  <h1 class="page-title">Disponibilidad 2026</h1>
+  <p class="subtitle">Rentas Q.B. · Sincronizado en tiempo real</p>
 
   <div class="legend">
     <div class="legend-item"><div class="dot dot-free"></div> Disponible</div>
     <div class="legend-item"><div class="dot dot-busy"></div> Ocupado</div>
-    <div class="legend-item"><div class="dot dot-partial"></div> Parcialmente ocupado</div>
+    <div class="legend-item"><div class="dot dot-partial"></div> Parcial</div>
   </div>
 
-  <div id="error-box" style="display:none; color:red; text-align:center; margin-bottom:1rem;"></div>
-  <nav class="year-nav" id="month-nav"></nav>
+  <div id="error-box"></div>
+  <div class="stats-bar" id="stats-bar" style="display:none;">
+    <div class="stat-card"><div class="stat-num s-green" id="s-free">–</div><div class="stat-lbl">Libres</div></div>
+    <div class="stat-card"><div class="stat-num s-red" id="s-busy">–</div><div class="stat-lbl">Ocupados</div></div>
+    <div class="stat-card"><div class="stat-num s-amber" id="s-partial">–</div><div class="stat-lbl">Parciales</div></div>
+  </div>
 
-  <div id="calendar-wrap">
+  <div class="cal-wrap" id="calendar-wrap">
     <div id="loading"><div class="spinner"></div>Cargando datos…</div>
   </div>
 </main>
 
-<footer> Rentas Quinta Bugambilia 2026 </footer>
+<footer>Rentas Quinta Bugambilia 2026</footer>
+
+<!-- Bottom sheet -->
+<div class="sheet-backdrop" id="sheet-backdrop" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-date" id="sheet-date"></div>
+  <div id="sheet-body"></div>
+</div>
 
 <script>
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSo8m2mzpqf5Z_Znr_F6ZRDOqbZJ7zXuRzIkKkZHjU5A8ZvD3ejb7t6Pq_6YR28j12cAQCqQCqVFSve/pub?gid=0&single=true&output=csv';
 
 const MONTH_NAMES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-const DAY_NAMES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MONTH_SHORT = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const DAY_NAMES   = ['D','L','M','X','J','V','S'];
+const DAY_FULL    = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const YEAR = 2026;
 
 let calendarData = {};
 let currentMonth = new Date().getMonth();
-const YEAR = 2026;
+let navOpen = false;
+
+function toggleNav() {
+  navOpen = !navOpen;
+  document.getElementById('nav-drawer').classList.toggle('open', navOpen);
+}
 
 function parseCSVLine(line) {
   const cols = []; let cur = '', inQ = false;
   for (let i = 0; i < line.length; i++) {
     const ch = line[i];
-    if (ch === '"') inQ = !inQ;
+    if (ch === '"') { inQ = !inQ; }
     else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-    else cur += ch;
+    else { cur += ch; }
   }
   cols.push(cur.trim());
   return cols;
@@ -194,136 +515,191 @@ function parseDate(fechaRaw) {
   let m = fechaRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (m) return new Date(parseInt(m[3]), parseInt(m[2])-1, parseInt(m[1]));
   const serial = parseInt(fechaRaw);
-  if (!isNaN(serial) && serial > 40000) return new Date(Date.UTC(1899,11,30) + serial * 86400000);
+  if (!isNaN(serial) && serial > 40000)
+    return new Date(Date.UTC(1899,11,30) + serial * 86400000);
   return new Date(fechaRaw);
 }
 
 function parseCSV(text) {
   const result = {};
-  const lines = text.split('\n');
-  for (const line of lines) {
+  for (const line of text.split('\n')) {
     const row = parseCSVLine(line);
     if (row.length < 2) continue;
-    const dateObj = parseDate(row[0]);
-    if (!dateObj || isNaN(dateObj.getTime()) || dateObj.getFullYear() !== YEAR) continue;
-    const monthKey = `${YEAR}-${String(dateObj.getMonth()+1).padStart(2,'0')}`;
-    const dayKey = `${monthKey}-${String(dateObj.getDate()).padStart(2,'0')}`;
-    if (!result[monthKey]) result[monthKey] = {};
-    result[monthKey][dayKey] = { manana: row[2], tarde: row[3], estado: row[4]||row[3] };
+    const d = parseDate(row[0]);
+    if (!d || isNaN(d.getTime()) || d.getFullYear() !== YEAR) continue;
+    const mo = d.getMonth() + 1, da = d.getDate();
+    const mKey = `${YEAR}-${String(mo).padStart(2,'0')}`;
+    const dKey = `${mKey}-${String(da).padStart(2,'0')}`;
+    if (!result[mKey]) result[mKey] = {};
+    result[mKey][dKey] = { manana: row[2], tarde: row[3], estado: row[4]||row[3] };
   }
   return result;
 }
 
 function getStatus(dayData) {
   if (!dayData) return 'free';
-  const e = (dayData.estado || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const e = (dayData.estado||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   if (e.includes('parcial')) return 'partial';
   if (e.includes('ocup')) return 'busy';
   return 'free';
 }
 
-function getLabel(status) {
-  if (status === 'busy') return ['Ocupado', 'badge-busy'];
-  if (status === 'partial') return ['Parcial', 'badge-partial'];
-  return ['Libre', 'badge-free'];
-}
-
-function sessionClass(val) {
+function sessionStatus(val) {
   const v = (val||'').toLowerCase();
-  if (v.includes('ocup')) return 'tag-busy';
-  if (v.includes('disp')) return 'tag-free';
-  return 'tag-free';
+  if (v.includes('ocup')) return 'busy';
+  if (v.includes('parcial')) return 'partial';
+  return 'free';
 }
 
 async function loadData() {
   const btn = document.getElementById('sync-btn');
-  btn.classList.add('loading');
+  btn.style.opacity = '.6';
+  btn.style.pointerEvents = 'none';
   try {
     const res = await fetch(CSV_URL + '&t=' + Date.now());
     const text = await res.text();
     calendarData = parseCSV(text);
     renderNav();
     renderCalendar(currentMonth);
+    document.getElementById('stats-bar').style.display = 'grid';
   } catch(e) {
-    document.getElementById('error-box').style.display = 'block';
-    document.getElementById('error-box').innerText = 'Error al cargar los datos.';
+    const eb = document.getElementById('error-box');
+    eb.style.display = 'block';
+    eb.textContent = 'Error al cargar datos. Verifica tu conexión.';
+    document.getElementById('calendar-wrap').innerHTML = '';
   }
-  btn.classList.remove('loading');
+  btn.style.opacity = '';
+  btn.style.pointerEvents = '';
+}
+
+function scrollMonthIntoView(idx) {
+  const strip = document.getElementById('month-nav');
+  const pills = strip.querySelectorAll('.month-pill');
+  if (pills[idx]) {
+    pills[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
 }
 
 function renderNav() {
   const nav = document.getElementById('month-nav');
   nav.innerHTML = '';
-  MONTH_NAMES.forEach((name, m) => {
+  for (let m = 0; m < 12; m++) {
     const btn = document.createElement('button');
-    btn.className = 'month-btn' + (m === currentMonth ? ' active' : '');
-    btn.textContent = name;
-    btn.onclick = () => { currentMonth = m; renderNav(); renderCalendar(m); };
+    btn.className = 'month-pill' + (m === currentMonth ? ' active' : '');
+    btn.textContent = MONTH_SHORT[m];
+    btn.onclick = () => { currentMonth = m; renderNav(); renderCalendar(m); scrollMonthIntoView(m); };
     nav.appendChild(btn);
-  });
+  }
+  scrollMonthIntoView(currentMonth);
 }
 
 function renderCalendar(month) {
   const wrap = document.getElementById('calendar-wrap');
-  const monthKey = `${YEAR}-${String(month + 1).padStart(2, '0')}`;
+  const monthKey = `${YEAR}-${String(month+1).padStart(2,'0')}`;
   const monthData = calendarData[monthKey] || {};
-  const daysInMonth = new Date(YEAR, month + 1, 0).getDate();
+  const daysInMonth = new Date(YEAR, month+1, 0).getDate();
   const firstWD = new Date(YEAR, month, 1).getDay();
   const today = new Date();
 
-  // Estadísticas del mes
-  let free = 0, busy = 0, partial = 0;
-  for (let d = 1; d <= daysInMonth; d++) {
-    const dk = `${monthKey}-${String(d).padStart(2, '0')}`;
-    const data = monthData[dk];
-    const st = getStatus(data);
-    if (st === 'busy') busy++;
-    else if (st === 'partial') partial++;
-    else free++;
+  let free=0, busy=0, partial=0;
+  for (let d=1; d<=daysInMonth; d++) {
+    const dk = `${monthKey}-${String(d).padStart(2,'0')}`;
+    const s = getStatus(monthData[dk]);
+    if (s==='free') free++; else if (s==='busy') busy++; else partial++;
   }
+  document.getElementById('s-free').textContent = free;
+  document.getElementById('s-busy').textContent = busy;
+  document.getElementById('s-partial').textContent = partial;
 
-  let html = `
-    <div class="cal-header">
-      <div class="cal-month-title">${MONTH_NAMES[month]}</div>
-      <div class="cal-stats">
-        <div class="stat"><div class="stat-num s-green">${free}</div><div class="stat-lbl">Libres</div></div>
-        <div class="stat"><div class="stat-num s-red">${busy}</div><div class="stat-lbl">Ocupados</div></div>
-        <div class="stat"><div class="stat-num s-amber">${partial}</div><div class="stat-lbl">Parciales</div></div>
-      </div>
-    </div>
-    <div class="cal-grid">`;
-
+  let html = `<div class="cal-title-row">${MONTH_NAMES[month]} ${YEAR}</div><div class="cal-grid">`;
   DAY_NAMES.forEach(d => html += `<div class="cal-day-name">${d}</div>`);
-  for (let i = 0; i < firstWD; i++) html += `<div class="cal-cell empty"></div>`;
+  for (let i=0; i<firstWD; i++) html += `<div class="cal-cell empty"></div>`;
 
-  for (let d = 1; d <= daysInMonth; d++) {
-    const dk = `${monthKey}-${String(d).padStart(2, '0')}`;
+  for (let d=1; d<=daysInMonth; d++) {
+    const dk = `${monthKey}-${String(d).padStart(2,'0')}`;
     const data = monthData[dk];
     const status = getStatus(data);
-    const [label, badgeClass] = getLabel(status);
-    const isToday = today.getFullYear() === YEAR && today.getMonth() === month && today.getDate() === d;
+    const isToday = today.getFullYear()===YEAR && today.getMonth()===month && today.getDate()===d;
+    const mSt = data ? sessionStatus(data.manana) : 'free';
+    const tSt = data && data.tarde ? sessionStatus(data.tarde) : null;
 
-    let sessionHTML = '';
+    let dotsHtml = '';
     if (data && (data.manana || data.tarde)) {
-      sessionHTML = `<div class="session-tags">
-        ${data.manana ? `<span class="session-tag ${sessionClass(data.manana)}">☀ ${data.manana}</span>` : ''}
-        ${data.tarde ? `<span class="session-tag ${sessionClass(data.tarde)}">🌙 ${data.tarde}</span>` : ''}
+      dotsHtml = `<div class="cell-dots">
+        ${data.manana ? `<div class="cell-dot m-${mSt}" title="${data.manana}"></div>` : ''}
+        ${tSt ? `<div class="cell-dot m-${tSt}" title="${data.tarde}"></div>` : ''}
       </div>`;
     }
 
-    html += `<div class="cal-cell ${status}${isToday ? ' today' : ''}">
+    html += `<div class="cal-cell ${status}${isToday?' today':''}" 
+      onclick="openSheet(${d},${month},'${monthKey}')"
+      role="button" tabindex="0" aria-label="Día ${d}">
       <div class="status-bar ${status}"></div>
       <div class="day-num">${d}</div>
-      ${sessionHTML}
-      ${status !== 'free' ? `<span class="status-badge ${badgeClass}">${label}</span>` : ''}
+      ${dotsHtml}
     </div>`;
   }
-
-  const rem = (firstWD + daysInMonth) % 7;
-  if (rem) for (let i = 0; i < 7 - rem; i++) html += `<div class="cal-cell empty"></div>`;
-  html += '</div>';
-  wrap.innerHTML = html;
+  wrap.innerHTML = html + '</div>';
 }
+
+function openSheet(day, month, monthKey) {
+  const data = (calendarData[monthKey]||{})[`${monthKey}-${String(day).padStart(2,'0')}`];
+  const status = getStatus(data);
+  const dow = new Date(YEAR, month, day).getDay();
+  const labels = { free:'Libre', busy:'Ocupado', partial:'Parcial' };
+  const badgeClass = { free:'badge-free', busy:'badge-busy', partial:'badge-partial' };
+
+  document.getElementById('sheet-date').textContent =
+    `${DAY_FULL[dow]}, ${day} de ${MONTH_NAMES[month]}`;
+
+  let body = `
+    <div class="sheet-row">
+      <div class="sheet-icon">📋</div>
+      <div class="sheet-info">
+        <div class="sheet-label">Estado general</div>
+        <div class="sheet-value"><span class="sheet-badge ${badgeClass[status]}">${labels[status]}</span></div>
+      </div>
+    </div>`;
+
+  if (data && data.manana) {
+    const st = sessionStatus(data.manana);
+    body += `
+      <div class="sheet-row">
+        <div class="sheet-icon">☀️</div>
+        <div class="sheet-info">
+          <div class="sheet-label">Mañana</div>
+          <div class="sheet-value"><span class="sheet-badge ${badgeClass[st]}">${data.manana}</span></div>
+        </div>
+      </div>`;
+  }
+  if (data && data.tarde) {
+    const st = sessionStatus(data.tarde);
+    body += `
+      <div class="sheet-row">
+        <div class="sheet-icon">🌙</div>
+        <div class="sheet-info">
+          <div class="sheet-label">Tarde / Noche</div>
+          <div class="sheet-value"><span class="sheet-badge ${badgeClass[st]}">${data.tarde}</span></div>
+        </div>
+      </div>`;
+  }
+  if (!data || (!data.manana && !data.tarde)) {
+    body += `<div class="sheet-row"><div class="sheet-icon">✅</div><div class="sheet-info"><div class="sheet-value" style="color:var(--green)">Disponible todo el día</div></div></div>`;
+  }
+
+  document.getElementById('sheet-body').innerHTML = body;
+  document.getElementById('sheet-backdrop').classList.add('visible');
+  document.getElementById('sheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSheet() {
+  document.getElementById('sheet-backdrop').classList.remove('visible');
+  document.getElementById('sheet').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 
 loadData();
 </script>
