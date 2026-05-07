@@ -21,50 +21,47 @@
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
     label { font-size: 0.75rem; font-weight: 600; margin-bottom: 5px; color: var(--warm); text-transform: uppercase; }
     
-    input, textarea, select { padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 1rem; width: 100%; box-sizing: border-box; background: white; -webkit-appearance: none; }
+    input, textarea, select { padding: 14px; border: 1px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 1rem; width: 100%; box-sizing: border-box; background: white; }
 
-    /* SECCIÓN ADICIONALES MEJORADA */
+    /* ESTILOS DE ADICIONALES CORREGIDOS */
     .extras-container {
-        background: #f9fdfb; padding: 10px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 15px;
+        background: #f9fdfb; padding: 5px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 15px;
     }
     .extra-item { 
-        display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; 
-        transition: background 0.2s;
+        display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; cursor: pointer;
     }
     .extra-item:last-child { border-bottom: none; }
-    .extra-item:active { background: #eef7f2; }
     
+    /* Casilla de verificación visible */
     .extra-item input[type="checkbox"] { 
-        width: 24px; height: 24px; margin-right: 12px; flex-shrink: 0; cursor: pointer;
-        accent-color: var(--gold);
+        width: 22px; height: 22px; margin-right: 15px; flex-shrink: 0; 
+        accent-color: #3a8f5e; /* Color verde fuerte para la palomita */
+        cursor: pointer;
+        -webkit-appearance: checkbox; /* Asegura que se vea en iPhone/Android */
     }
-    .extra-label { flex-grow: 1; font-size: 0.95rem; cursor: pointer; }
-    .extra-price { font-weight: bold; color: var(--charcoal); font-size: 0.9rem; }
+    
+    .extra-label { flex-grow: 1; font-size: 0.95rem; }
+    .extra-price { font-weight: bold; color: var(--gold); font-size: 0.9rem; }
 
     .btn-generar { 
         width: 100%; padding: 18px; background: var(--charcoal); color: white; 
         border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1.1rem;
-        margin-top: 10px; box-shadow: 0 4px 10px rgba(30, 58, 47, 0.2);
+        margin-top: 10px;
     }
 
-    /* Estilos del Contrato e Impresión (Iguales a los anteriores) */
-    #contrato-final { max-width: 800px; margin: 0 auto; background: white; padding: 40px 30px; box-shadow: 0 0 20px rgba(0,0,0,0.1); line-height: 1.5; font-size: 10.5pt; display: none; text-align: justify; }
+    #contrato-final { max-width: 800px; margin: 0 auto; background: white; padding: 40px 30px; line-height: 1.5; font-size: 10.5pt; display: none; text-align: justify; }
     .header-contrato { text-align: center; margin-bottom: 25px; }
     .header-contrato h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; text-decoration: underline; }
-    .clausula-header { font-weight: bold; display: block; margin-top: 15px; text-decoration: underline; }
-    #notas-seccion-contrato { margin-top: 20px; padding: 15px; border: 1px dashed #ccc; background: #fafafa; border-radius: 5px; }
     .firmas-container { margin-top: 50px; }
     .firmas-box { text-align: center; margin-bottom: 40px; }
     .linea-firma { margin: 40px auto 10px; border-top: 1px solid #000; width: 70%; padding-top: 5px; }
     .no-print-area { text-align: center; margin-top: 30px; padding-bottom: 50px; }
-    .btn-print { background: #3a8f5e; color: white; padding: 18px 30px; border: none; border-radius: 40px; cursor: pointer; font-weight: bold; width: 100%; max-width: 320px; }
+    .btn-print { background: #3a8f5e; color: white; padding: 18px 30px; border: none; border-radius: 40px; cursor: pointer; font-weight: bold; width: 100%; }
 
     @media print {
       .form-container, .no-print-area { display: none !important; }
-      body { background: white; padding: 0; }
-      #contrato-final { display: block !important; box-shadow: none; padding: 0; width: 100%; margin: 0; }
-      .firmas-print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 60px; }
-      @page { margin: 1.5cm; }
+      #contrato-final { display: block !important; width: 100%; margin: 0; }
+      .firmas-print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     }
   </style>
 </head>
@@ -144,20 +141,9 @@
     </label>
   </div>
 
-  <div class="row">
-    <div class="field">
-      <label>Hora Entrada</label>
-      <input type="time" id="horaEntrada" value="14:00">
-    </div>
-    <div class="field">
-      <label>Hora Salida</label>
-      <input type="time" id="horaSalida" value="22:00">
-    </div>
-  </div>
-
   <div class="field">
     <label>Precio Total (Auto)</label>
-    <input type="text" id="precioInput" readonly style="background:#f0f0f0; font-weight:bold; color:var(--charcoal);">
+    <input type="text" id="precioInput" readonly style="background:#f0f0f0; font-weight:bold;">
   </div>
 
   <div class="row">
@@ -178,16 +164,16 @@
   <div class="header-contrato">
     <h2>CONTRATO DE ARRENDAMIENTO TEMPORAL PARA EVENTOS: QUINTA BUGAMBILIA</h2>
   </div>
-  <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que celebran, por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> en representación de <strong>QUINTA BUGAMBILIA</strong> y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong>.</p>
+  <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que celebran, por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong>.</p>
 
   <p style="text-align: center; font-weight: bold; margin: 15px 0;">CLÁUSULAS</p>
-  <p><span class="clausula-header">PRIMERA. OBJETO</span> Uso temporal para fines recreativos en Fracc. Real del Catorce, Hermosillo, Sonora.</p>
-  <p><span class="clausula-header">SEGUNDA. FECHA Y HORARIOS</span> <strong>Fecha:</strong> <span id="out-entrada"></span>. <strong>Entrada:</strong> <span id="out-hora-e"></span>. <strong>Salida:</strong> <span id="out-hora-s"></span>.</p>
-  <p><span class="clausula-header">TERCERA. COSTO Y PAQUETE</span> El costo total es de <strong id="out-precio"></strong> MXN por el paquete de <strong id="out-personas"></strong> personas.</p>
-  <p><span class="clausula-header">CUARTA. PAGO</span> Anticipo del 30% (<strong id="out-anticipo"></strong>). El saldo se liquida antes de entrar.</p>
-  <p><span class="clausula-header">QUINTA. DEPÓSITO</span> Garantía de <strong id="out-deposito"></strong> MXN devuelto en 24h tras verificar daños.</p>
+  <p><strong>PRIMERA. OBJETO:</strong> Uso temporal recreativo en Fracc. Real del Catorce, Hermosillo.</p>
+  <p><strong>SEGUNDA. FECHA:</strong> <span id="out-entrada"></span>.</p>
+  <p><strong>TERCERA. COSTO:</strong> <strong id="out-precio"></strong> MXN por el paquete de <strong id="out-personas"></strong> personas.</p>
+  <p><strong>CUARTA. PAGO:</strong> Anticipo del 30% (<strong id="out-anticipo"></strong>). El saldo se liquida antes de entrar.</p>
+  <p><strong>QUINTA. DEPÓSITO:</strong> Garantía de <strong id="out-deposito"></strong> MXN.</p>
   
-  <div id="notas-seccion-contrato" style="display:none;">
+  <div id="notas-seccion-contrato" style="display:none; margin-top:20px; padding:10px; border:1px dashed #000;">
     <p><strong>ADICIONALES CONTRATADOS:</strong></p>
     <p id="out-notas" style="font-style: italic;"></p>
   </div>
@@ -219,7 +205,6 @@
 
     const total = basePrice + extrasTotal;
     
-    // Actualizar campos de solo lectura
     document.getElementById('precioInput').value = total.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     document.getElementById('anticipoInput').value = (total * 0.30).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
   }
@@ -231,14 +216,6 @@
     return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
-  function formatTime(timeStr) {
-    if(!timeStr) return "____";
-    let [hh, mm] = timeStr.split(':');
-    let ampm = hh >= 12 ? 'PM' : 'AM';
-    hh = hh % 12 || 12;
-    return `${hh}:${mm} ${ampm}`;
-  }
-
   function generarContrato() {
     const n = document.getElementById('nombreInput').value;
     const p = document.getElementById('paqueteSelect').value;
@@ -247,8 +224,6 @@
     document.getElementById('out-nombre').innerText = n;
     document.getElementById('out-nombre2').innerText = n;
     document.getElementById('out-entrada').innerText = formatDate(document.getElementById('fechaEntrada').value);
-    document.getElementById('out-hora-e').innerText = formatTime(document.getElementById('horaEntrada').value);
-    document.getElementById('out-hora-s').innerText = formatTime(document.getElementById('horaSalida').value);
     document.getElementById('out-precio').innerText = document.getElementById('precioInput').value;
     document.getElementById('out-anticipo').innerText = document.getElementById('anticipoInput').value;
     document.getElementById('out-deposito').innerText = document.getElementById('depositoInput').value;
@@ -256,7 +231,7 @@
 
     let extrasDesc = [];
     document.querySelectorAll('.extra-cb:checked').forEach(cb => {
-      extrasDesc.push(cb.getAttribute('data-name') + " ($" + cb.value + ")");
+      extrasDesc.push(cb.getAttribute('data-name'));
     });
 
     const seccionNotas = document.getElementById('notas-seccion-contrato');
