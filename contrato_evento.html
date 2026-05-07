@@ -31,14 +31,10 @@
     }
     .extra-item:last-child { border-bottom: none; }
     
-    /* Casilla de verificación forzada para que siempre sea visible */
     .extra-item input[type="checkbox"] { 
         width: 22px; height: 22px; margin-right: 15px; flex-shrink: 0; 
         accent-color: #3a8f5e; 
         cursor: pointer;
-        display: inline-block !important;
-        opacity: 1 !important;
-        visibility: visible !important;
         -webkit-appearance: checkbox !important;
     }
     
@@ -61,7 +57,7 @@
     
     .clausula-title { font-weight: bold; text-decoration: underline; display: inline; }
     
-    #notas-seccion-contrato { margin-top: 15px; padding: 10px; border: 1px dashed #000; background: #fdfdfd; }
+    #notas-seccion-contrato { margin-top: 15px; padding: 15px; border: 1px dashed #000; background: #fdfdfd; }
 
     .firmas-container { margin-top: 50px; }
     .firmas-box { text-align: center; margin-bottom: 40px; }
@@ -134,22 +130,22 @@
         <span class="extra-price">$650</span>
     </label>
     <label class="extra-item">
-        <input type="checkbox" class="extra-cb" data-name="Casa (Acceso completo)" value="1500" onchange="calcularTotal()">
-        <span class="extra-label">Casa (Acceso completo)</span>
+        <input type="checkbox" class="extra-cb" data-name="Casa Principal (acceso completo)" value="1500" onchange="calcularTotal()">
+        <span class="extra-label">Casa Principal (Acceso completo)</span>
         <span class="extra-price">$1,500</span>
     </label>
     <label class="extra-item">
-        <input type="checkbox" class="extra-cb" data-name="Casa (Sin cuartos)" value="1000" onchange="calcularTotal()">
-        <span class="extra-label">Casa (Sin cuartos)</span>
+        <input type="checkbox" class="extra-cb" data-name="Casa Principal (sin acceso a cuartos)" value="1000" onchange="calcularTotal()">
+        <span class="extra-label">Casa Principal (Sin cuartos)</span>
         <span class="extra-price">$1,000</span>
     </label>
     <label class="extra-item">
-        <input type="checkbox" class="extra-cb" data-name="Depto. Independiente" value="1000" onchange="calcularTotal()">
+        <input type="checkbox" class="extra-cb" data-name="Departamento Independiente" value="1000" onchange="calcularTotal()">
         <span class="extra-label">Depto. Independiente</span>
         <span class="extra-price">$1,000</span>
     </label>
     <label class="extra-item">
-        <input type="checkbox" class="extra-cb" data-name="Salón Entretenimiento" value="1200" onchange="calcularTotal()">
+        <input type="checkbox" class="extra-cb" data-name="Salón de entretenimiento" value="1200" onchange="calcularTotal()">
         <span class="extra-label">Salón Entretenimiento</span>
         <span class="extra-price">$1,200</span>
     </label>
@@ -158,7 +154,7 @@
   <div class="row">
     <div class="field">
       <label>Hora Entrada</label>
-      <input type="time" id="horaEntrada" value="14:00">
+      <input type="time" id="horaEntrada" value="15:00">
     </div>
     <div class="field">
       <label>Hora Salida</label>
@@ -192,27 +188,28 @@
 
   <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que celebran, por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> en representación de <strong>QUINTA BUGAMBILIA</strong> (en adelante "El Arrendador") y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong> (en adelante "El Arrendatario"), bajo las siguientes cláusulas:</p>
 
-  <p><span class="clausula-title">PRIMERA. OBJETO Y UBICACIÓN:</span> El Arrendador otorga el uso temporal del inmueble ubicado en el Fraccionamiento Real del Catorce, Hermosillo, Sonora. El uso es exclusivamente para fines recreativos y de esparcimiento familiar.</p>
+  <p><span class="clausula-title">PRIMERA. OBJETO Y UBICACIÓN:</span> El Arrendador otorga el uso temporal del inmueble ubicado en el Fraccionamiento Real del Catorce, Hermosillo, Sonora. El uso bajo esta modalidad está destinado exclusivamente para áreas exteriores, a menos que se haya contratado algún adicional específico que permita el acceso a interiores.</p>
 
   <p><span class="clausula-title">SEGUNDA. FECHA Y HORARIOS:</span> La vigencia del presente contrato se limita al día <strong><span id="out-entrada"></span></strong>. La hora de entrada será a las <strong><span id="out-hora-e"></span></strong> y la hora de salida a las <strong><span id="out-hora-s"></span></strong> del mismo día. Cualquier exceso en el tiempo de salida generará un cargo de $300.00 MXN por cada hora adicional.</p>
 
   <p><span class="clausula-title">TERCERA. COSTO Y PAQUETE:</span> El costo total por el evento es de <strong id="out-precio"></strong> MXN. El Arrendatario contrata el paquete para un máximo de <strong id="out-personas"></strong> personas. El exceso de ocupación sin previo aviso será motivo de cargos extra.</p>
 
-  <p><span class="clausula-title">CUARTA. FORMA DE PAGO:</span> Se requiere un anticipo del 30% (<strong id="out-anticipo"></strong>) para asegurar la fecha. El saldo restante deberá liquidarse antes de ingresar al inmueble.</p>
+  <p><span class="clausula-title">CUARTA. INCLUSIONES DEL PAQUETE:</span> El paquete contratado incluye el uso de la alberca, mesas y manteles blancos para el número de invitados contratados, así como una hielera grande para su uso durante el evento.</p>
 
-  <p><span class="clausula-title">QUINTA. DEPÓSITO DE GARANTÍA:</span> El Arrendatario entrega <strong id="out-deposito"></strong> MXN como garantía. Este monto se devolverá en un plazo de 24 horas vía transferencia, tras verificar que no existan daños al inmueble o mobiliario.</p>
+  <p><span class="clausula-title">QUINTA. FORMA DE PAGO:</span> Se requiere un anticipo del 30% (<strong id="out-anticipo"></strong>) para asegurar la fecha. El saldo restante deberá liquidarse en su totalidad antes de ingresar al inmueble.</p>
 
-  <p><span class="clausula-title">SEXTA. EXENCIÓN DE RESPONSABILIDAD:</span> El Arrendador no se hace responsable por accidentes, lesiones o fallecimientos dentro de las instalaciones, incluyendo el área de alberca. El uso de las instalaciones es bajo riesgo del Arrendatario.</p>
+  <p><span class="clausula-title">SEXTA. DEPÓSITO DE GARANTÍA:</span> El Arrendatario <strong>deberá dejar como garantía</strong> la cantidad de <strong id="out-deposito"></strong> MXN. Dicho monto será devuelto en un plazo de 24 horas posteriores al evento vía transferencia bancaria, tras verificar que no existan daños al inmueble, mobiliario o equipo.</p>
 
-  <p><span class="clausula-title">SÉPTIMA. REGLAMENTO DE RUIDO Y CONVIVENCIA:</span> El Arrendatario se compromete a mantener un nivel de ruido moderado que no afecte a los vecinos. El incumplimiento de esta norma podrá resultar en la terminación anticipada del evento sin reembolso.</p>
+  <p><span class="clausula-title">SÉPTIMA. SERVICIOS EXTERNOS:</span> Bajo esta modalidad, se acepta la introducción de música, equipo de sonido, servicios de comida o catering por parte del Arrendatario, siendo este el único responsable de su coordinación y retiro al finalizar el horario contratado.</p>
 
-  <p><span class="clausula-title">OCTAVA. LIMPIEZA Y BASURA:</span> El inmueble se entrega limpio y debe devolverse en condiciones razonables. La basura generada debe ser depositada en los contenedores indicados.</p>
+  <p><span class="clausula-title">OCTAVA. EXENCIÓN DE RESPONSABILIDAD:</span> El Arrendador no se hace responsable por accidentes, lesiones o fallecimientos dentro de las instalaciones. El uso de la alberca y áreas comunes es bajo riesgo exclusivo del Arrendatario y sus invitados.</p>
 
-  <p><span class="clausula-title">NOVENA. CANCELACIONES:</span> En caso de cancelación por parte del Arrendatario: +20 días de antelación se reembolsa el 80%; entre 11 y 19 días el 50%; con 10 días o menos no habrá reembolso del anticipo.</p>
+  <p><span class="clausula-title">NOVENA. CANCELACIONES:</span> +20 días de antelación se reembolsa el 80%; entre 11 y 19 días el 50%; con 10 días o menos no habrá reembolso del anticipo.</p>
 
   <div id="notas-seccion-contrato" style="display:none;">
     <p><strong>SERVICIOS ADICIONALES CONTRATADOS:</strong></p>
-    <p id="out-notas" style="font-style: italic;"></p>
+    <div id="out-notas" style="font-style: italic; margin-bottom: 10px;"></div>
+    <p style="font-size: 0.85rem; border-top: 1px solid #000; padding-top: 5px;">* Precios ya incluidos en el total de la cláusula tercera.</p>
   </div>
 
   <div class="firmas-container firmas-print-grid">
@@ -285,12 +282,13 @@
 
     let extrasDesc = [];
     document.querySelectorAll('.extra-cb:checked').forEach(cb => {
-      extrasDesc.push(cb.getAttribute('data-name'));
+      const price = parseFloat(cb.value).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+      extrasDesc.push(`• ${cb.getAttribute('data-name')}: ${price}`);
     });
 
     const seccionNotas = document.getElementById('notas-seccion-contrato');
     if(extrasDesc.length > 0) {
-        document.getElementById('out-notas').innerText = extrasDesc.join(", ");
+        document.getElementById('out-notas').innerHTML = extrasDesc.join("<br>");
         seccionNotas.style.display = "block";
     } else {
         seccionNotas.style.display = "none";
