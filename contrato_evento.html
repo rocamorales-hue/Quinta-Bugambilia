@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --charcoal: #1e3a2f; --gold: #5db87a; --warm: #4a7fa5; --cream: #f2f9f4; --border: #b8d9c8;
+      --charcoal: #1e3a2f; --gold: #5db87a; --warm: #4a7fa5; --cream: #f2f9f4; --border: #b8d9c8; --warning: #d9534f;
     }
     body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); margin: 0; padding: 10px; }
     
@@ -36,7 +36,6 @@
         width: 22px; height: 22px; margin-right: 15px; flex-shrink: 0; 
         accent-color: #3a8f5e; 
         cursor: pointer;
-        -webkit-appearance: checkbox !important;
     }
     
     .extra-label { flex-grow: 1; font-size: 0.95rem; }
@@ -49,10 +48,6 @@
         padding: 10px 12px;
         background: #fff;
         border-top: 1px solid #eee;
-    }
-    .manual-extra input {
-        padding: 8px 10px;
-        font-size: 0.85rem;
     }
 
     .btn-generar { 
@@ -72,10 +67,11 @@
     .clausula-title { font-weight: bold; text-decoration: underline; display: inline; }
     
     .seccion-detalles { margin-top: 15px; padding: 15px; border: 1px dashed #000; background: #fdfdfd; }
+    .warning-box { border: 2px solid #000; background: #fff; padding: 15px; margin-top: 20px; }
 
     .firmas-container { margin-top: 50px; }
     .firmas-box { text-align: center; margin-bottom: 40px; }
-    .linea-firma { margin: 40px auto 50px; border-top: 1px solid #000; width: 70%; padding-top: 5px; }
+    .linea-firma { margin: 40px auto 10px; border-top: 1px solid #000; width: 70%; padding-top: 5px; }
 
     .no-print-area { text-align: center; margin-top: 30px; padding-bottom: 50px; }
     .btn-print { background: #3a8f5e; color: white; padding: 18px 30px; border: none; border-radius: 40px; cursor: pointer; font-weight: bold; width: 100%; max-width: 300px; }
@@ -85,18 +81,18 @@
       body { background: white; padding: 0; }
       #contrato-final { display: block !important; width: 100%; margin: 0; padding: 0; }
       .firmas-print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-      @page { margin: 1.5cm; }
+      @page { margin: 1.2cm; }
     }
   </style>
 </head>
 <body>
 
 <div class="form-container">
-  <h1>Contrato Evento</h1>
+  <h1>Generador de Contrato</h1>
   
   <div class="field">
     <label>Nombre del Arrendatario</label>
-    <input type="text" id="nombreInput" placeholder="Ej. Roberto Morales">
+    <input type="text" id="nombreInput" placeholder="Nombre completo del cliente">
   </div>
 
   <div class="row">
@@ -165,40 +161,26 @@
         <span class="extra-price">$1,500</span>
     </label>
     <label class="extra-item">
-        <input type="checkbox" class="extra-cb" data-name="Casa Principal (sin acceso a cuartos)" value="1000" onchange="calcularTotal()">
-        <span class="extra-label">Casa Principal (Sin cuartos)</span>
-        <span class="extra-price">$1,000</span>
-    </label>
-    <label class="extra-item">
         <input type="checkbox" class="extra-cb" data-name="Departamento Independiente" value="1000" onchange="calcularTotal()">
         <span class="extra-label">Depto. Independiente</span>
         <span class="extra-price">$1,000</span>
-    </label>
-    <label class="extra-item">
-        <input type="checkbox" class="extra-cb" data-name="Salón de entretenimiento" value="1200" onchange="calcularTotal()">
-        <span class="extra-label">Salón Entretenimiento</span>
-        <span class="extra-price">$1,200</span>
     </label>
 
     <div class="manual-extra">
         <input type="text" id="manualNombre1" placeholder="Concepto adicional 1">
         <input type="text" id="manualMonto1" placeholder="$0.00" onkeyup="formatCurrency(this); calcularTotal()">
     </div>
-    <div class="manual-extra">
-        <input type="text" id="manualNombre2" placeholder="Concepto adicional 2">
-        <input type="text" id="manualMonto2" placeholder="$0.00" onkeyup="formatCurrency(this); calcularTotal()">
-    </div>
   </div>
 
   <div class="field">
     <label>📝 Anotaciones Adicionales</label>
-    <textarea id="anotacionesInput" placeholder="Ej. El cliente traerá su propio mobiliario extra..."></textarea>
+    <textarea id="anotacionesInput" placeholder="Ej. El cliente solicita 10 sillas extra..."></textarea>
   </div>
 
   <div class="row">
     <div class="field">
-      <label>Precio Total (Auto)</label>
-      <input type="text" id="precioInput" readonly style="background:#f0f0f0; font-weight:bold; color:#1e3a2f;">
+      <label>Precio Total</label>
+      <input type="text" id="precioInput" readonly style="background:#f0f0f0; font-weight:bold;">
     </div>
     <div class="field">
       <label>Anticipo (30%)</label>
@@ -207,47 +189,51 @@
   </div>
 
   <div class="field">
-      <label>Depósito de Garantía</label>
-      <input type="text" id="depositoInput" value="$1,000.00" onkeyup="formatCurrency(this)">
+      <label>Depósito de Garantía (Reembolsable)</label>
+      <input type="text" id="depositoInput" value="$1,500.00" onkeyup="formatCurrency(this)">
   </div>
 
-  <button class="btn-generar" onclick="generarContrato()">VER CONTRATO COMPLETO</button>
+  <button class="btn-generar" onclick="generarContrato()">VISTA PREVIA DEL CONTRATO</button>
 </div>
 
 <div id="contrato-final">
   <div class="header-contrato">
-    <h2>CONTRATO DE ARRENDAMIENTO TEMPORAL PARA EVENTOS: QUINTA BUGAMBILIA</h2>
+    <h2>CONTRATO DE ARRENDAMIENTO TEMPORAL: QUINTA BUGAMBILIA</h2>
   </div>
 
   <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que celebran, por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> en representación de <strong>QUINTA BUGAMBILIA</strong> (en adelante "El Arrendador") y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong> (en adelante "El Arrendatario"), bajo las siguientes cláusulas:</p>
 
-  <p><span class="clausula-title">PRIMERA. OBJETO Y UBICACIÓN:</span> El Arrendador otorga el uso temporal del inmueble ubicado en el Fraccionamiento Real del Catorce, Hermosillo, Sonora. El uso bajo esta modalidad está destinado exclusivamente para áreas exteriores, a menos que se haya contratado algún adicional específico que permita el acceso a interiores.</p>
+  <p><span class="clausula-title">PRIMERA. UBICACIÓN:</span> El Arrendador otorga el uso temporal del inmueble ubicado en el Fraccionamiento Real del Catorce, Hermosillo, Sonora. El uso está destinado exclusivamente para áreas exteriores, salvo contrataciones adicionales de interiores especificadas en este contrato.</p>
 
-  <p><span class="clausula-title">SEGUNDA. FECHAS Y HORARIOS:</span> La vigencia del presente contrato ampara la estancia desde el día <strong><span id="out-entrada"></span></strong> a las <strong><span id="out-hora-e"></span></strong> hasta el día <strong><span id="out-salida"></span></strong> a las <strong><span id="out-hora-s"></span></strong>. Cualquier exceso en el tiempo de salida generará un cargo de $300.00 MXN por cada hora adicional.</p>
+  <p><span class="clausula-title">SEGUNDA. VIGENCIA:</span> El contrato ampara la estancia desde el día <strong><span id="out-entrada"></span></strong> a las <strong><span id="out-hora-e"></span></strong> hasta el día <strong><span id="out-salida"></span></strong> a las <strong><span id="out-hora-s"></span></strong>.</p>
 
-  <p><span class="clausula-title">TERCERA. COSTO Y PAQUETE:</span> El costo total por el evento es de <strong id="out-precio"></strong> MXN. El Arrendatario contrata el paquete para un máximo de <strong id="out-personas"></strong> personas. El exceso de ocupación sin previo aviso será motivo de cargos extra.</p>
+  <p><span class="clausula-title">TERCERA. COSTO:</span> El costo total es de <strong id="out-precio"></strong> MXN por un paquete de <strong id="out-personas"></strong> personas. El anticipo requerido es de <strong id="out-anticipo"></strong>.</p>
 
-  <p><span class="clausula-title">CUARTA. INCLUSIONES DEL PAQUETE:</span> El paquete contratado incluye el uso de la alberca, palapa, y todas las áreas exteriores de la Quinta además de mesas y manteles blancos para el número de invitados contratados, así como una hielera grande para su uso durante el evento.</p>
+  <p><span class="clausula-title">CUARTA. DEPÓSITO DE GARANTÍA:</span> El Arrendatario deja como garantía <strong id="out-deposito"></strong> MXN. Este monto se devolverá en 24 horas tras verificar que no existan daños al inmueble, mobiliario o equipo.</p>
 
-  <p><span class="clausula-title">QUINTA. FORMA DE PAGO:</span> Se requiere un anticipo del 30% (<strong id="out-anticipo"></strong>) para asegurar la fecha. El saldo restante deberá liquidarse en su totalidad antes de ingresar al inmueble.</p>
+  <p><span class="clausula-title">QUINTA. REGLAMENTO DE ALBERCA:</span> Queda <strong>estrictamente prohibido</strong>: a) Introducir envases de vidrio, comida o bebidas dentro del agua; b) El uso de confeti, polvos de colores, diamantina o pintura que pueda dañar los filtros (el incumplimiento conlleva la pérdida total del depósito); c) Ingresar sin traje de baño.</p>
 
-  <p><span class="clausula-title">SEXTA. DEPÓSITO DE GARANTÍA:</span> El Arrendatario <strong>deberá dejar como garantía</strong> la cantidad de <strong id="out-deposito"></strong> MXN. Dicho monto será devuelto en un plazo de 24 horas posteriores al evento vía transferencia bancaria, tras verificar que no existan daños al inmueble, mobiliario o equipo.</p>
+  <p><span class="clausula-title">SEXTA. CUIDADO DE INSTALACIONES:</span> El Arrendatario se compromete a no mover mobiliario fijo y a cuidar las piezas de madera (parota). Cualquier daño por mal uso, quemaduras de cigarro o vandalismo será cobrado a valor de reposición.</p>
 
-  <p><span class="clausula-title">SÉPTIMA. SERVICIOS EXTERNOS:</span> Bajo esta modalidad, se acepta la introducción de música, equipo de sonido, servicios de comida o catering por parte del Arrendatario, siendo este el único responsable de su coordinación y retiro al finalizar el horario contratado.</p>
-
-  <p><span class="clausula-title">OCTAVA. EXENCIÓN DE RESPONSABILIDAD:</span> El Arrendador no se hace responsable por accidentes, lesiones o fallecimientos dentro de las instalaciones. El uso de la alberca y áreas comunes es bajo riesgo exclusivo del Arrendatario y sus invitados.</p>
-
-  <p><span class="clausula-title">NOVENA. CANCELACIONES:</span> +20 días de antelación se reembolsa el 80%; entre 11 y 19 días el 50%; con 10 días o menos no habrá reembolso del anticipo.</p>
+  <p><span class="clausula-title">SÉPTIMA. RESPONSABILIDAD:</span> El Arrendador no se hace responsable por accidentes o lesiones. El uso de la alberca es responsabilidad exclusiva del Arrendatario y sus invitados.</p>
 
   <div id="seccion-adicionales" class="seccion-detalles" style="display:none;">
-    <p><strong>SERVICIOS ADICIONALES CONTRATADOS:</strong></p>
-    <div id="out-notas" style="font-style: italic; margin-bottom: 10px;"></div>
-    <p style="font-size: 0.85rem; border-top: 1px solid #000; padding-top: 5px;">* Precios ya incluidos en el total de la cláusula tercera.</p>
+    <p><strong>SERVICIOS ADICIONALES:</strong></p>
+    <div id="out-notas" style="font-style: italic;"></div>
   </div>
 
   <div id="seccion-anotaciones" class="seccion-detalles" style="display:none;">
-    <p><strong>ANOTACIONES ADICIONALES:</strong></p>
+    <p><strong>ANOTACIONES:</strong></p>
     <div id="out-anotaciones" style="font-style: italic;"></div>
+  </div>
+
+  <div class="warning-box">
+    <p style="text-align: center; margin: 0; font-weight: bold;">⚠️ REGLAS DE ORO</p>
+    <ul style="font-size: 0.85rem; margin-top: 10px;">
+        <li>No envases de vidrio en área de alberca.</li>
+        <li>Música a volumen moderado según reglamentos municipales.</li>
+        <li>Prohibido el uso de pirotecnia dentro de la propiedad.</li>
+    </ul>
   </div>
 
   <div class="firmas-container firmas-print-grid">
@@ -262,7 +248,7 @@
   </div>
   
   <div class="no-print-area">
-      <button class="btn-print" onclick="window.print()">IMPRIMIR CONTRATO</button>
+      <button class="btn-print" onclick="window.print()">IMPRIMIR / GUARDAR PDF</button>
   </div>
 </div>
 
@@ -282,9 +268,7 @@
     document.querySelectorAll('.extra-cb:checked').forEach(cb => extrasTotal += parseFloat(cb.value));
     
     const m1 = document.getElementById('manualMonto1').value.replace(/[$,]/g, "");
-    const m2 = document.getElementById('manualMonto2').value.replace(/[$,]/g, "");
     if (!isNaN(parseFloat(m1))) extrasTotal += parseFloat(m1);
-    if (!isNaN(parseFloat(m2))) extrasTotal += parseFloat(m2);
 
     const total = basePrice + extrasTotal;
     document.getElementById('precioInput').value = total.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -323,17 +307,11 @@
 
     let extras = [];
     document.querySelectorAll('.extra-cb:checked').forEach(cb => {
-      const price = parseFloat(cb.value).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-      extras.push(`• ${cb.getAttribute('data-name')}: ${price}`);
+      extras.push(`• ${cb.getAttribute('data-name')}`);
     });
 
     const nom1 = document.getElementById('manualNombre1').value;
-    const mon1 = document.getElementById('manualMonto1').value;
-    if(nom1 && mon1 !== "$0.00") extras.push(`• ${nom1}: ${mon1}`);
-    
-    const nom2 = document.getElementById('manualNombre2').value;
-    const mon2 = document.getElementById('manualMonto2').value;
-    if(nom2 && mon2 !== "$0.00") extras.push(`• ${nom2}: ${mon2}`);
+    if(nom1) extras.push(`• ${nom1}`);
     
     const seccionExtras = document.getElementById('seccion-adicionales');
     if(extras.length > 0) {
