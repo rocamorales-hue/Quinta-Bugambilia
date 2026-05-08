@@ -41,6 +41,20 @@
     .extra-label { flex-grow: 1; font-size: 0.95rem; }
     .extra-price { font-weight: bold; color: var(--gold); font-size: 0.9rem; }
 
+    /* Estilos para los campos manuales */
+    .manual-extra {
+        display: grid;
+        grid-template-columns: 1fr 120px;
+        gap: 10px;
+        padding: 10px 12px;
+        background: #fff;
+        border-top: 1px solid #eee;
+    }
+    .manual-extra input {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+
     .btn-generar { 
         width: 100%; padding: 18px; background: var(--charcoal); color: white; 
         border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1.1rem;
@@ -148,6 +162,15 @@
         <span class="extra-label">Salón Entretenimiento</span>
         <span class="extra-price">$1,200</span>
     </label>
+
+    <div class="manual-extra">
+        <input type="text" id="manualNombre1" placeholder="Concepto adicional 1">
+        <input type="text" id="manualMonto1" placeholder="$0.00" onkeyup="formatCurrency(this); calcularTotal()" inputmode="decimal">
+    </div>
+    <div class="manual-extra">
+        <input type="text" id="manualNombre2" placeholder="Concepto adicional 2">
+        <input type="text" id="manualMonto2" placeholder="$0.00" onkeyup="formatCurrency(this); calcularTotal()" inputmode="decimal">
+    </div>
   </div>
 
   <div class="row">
@@ -240,9 +263,18 @@
     const basePrice = parseFloat(select.options[select.selectedIndex].getAttribute('data-price')) || 0;
     
     let extrasTotal = 0;
+    
+    // Sumar checkboxes
     document.querySelectorAll('.extra-cb:checked').forEach(cb => {
       extrasTotal += parseFloat(cb.value);
     });
+
+    // Sumar montos manuales
+    const m1 = document.getElementById('manualMonto1').value.replace(/[$,]/g, "");
+    const m2 = document.getElementById('manualMonto2').value.replace(/[$,]/g, "");
+    
+    if (!isNaN(parseFloat(m1))) extrasTotal += parseFloat(m1);
+    if (!isNaN(parseFloat(m2))) extrasTotal += parseFloat(m2);
 
     const total = basePrice + extrasTotal;
     document.getElementById('precioInput').value = total.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -280,10 +312,21 @@
     document.getElementById('out-personas').innerText = p;
 
     let extrasDesc = [];
+    
+    // Checkboxes
     document.querySelectorAll('.extra-cb:checked').forEach(cb => {
       const price = parseFloat(cb.value).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
       extrasDesc.push(`• ${cb.getAttribute('data-name')}: ${price}`);
     });
+
+    // Manuales
+    const nom1 = document.getElementById('manualNombre1').value;
+    const mon1 = document.getElementById('manualMonto1').value;
+    const nom2 = document.getElementById('manualNombre2').value;
+    const mon2 = document.getElementById('manualMonto2').value;
+
+    if(nom1 && mon1 !== "$0.00") extrasDesc.push(`• ${nom1}: ${mon1}`);
+    if(nom2 && mon2 !== "$0.00") extrasDesc.push(`• ${nom2}: ${mon2}`);
 
     const seccionNotas = document.getElementById('notas-seccion-contrato');
     if(extrasDesc.length > 0) {
