@@ -61,6 +61,7 @@
         margin-top: 10px;
     }
 
+    /* ESTILOS DEL CONTRATO FINAL */
     #contrato-final { 
         max-width: 800px; margin: 0 auto; background: white; padding: 45px; 
         line-height: 1.4; font-size: 10pt; display: none; text-align: justify; color: #000;
@@ -191,7 +192,7 @@
 
   <div class="field">
     <label>📝 Anotaciones Adicionales</label>
-    <textarea id="anotacionesInput" placeholder="Ej. El cliente traerá su propio proyector..."></textarea>
+    <textarea id="anotacionesInput" placeholder="Ej. El cliente traerá su propio mobiliario extra..."></textarea>
   </div>
 
   <div class="row">
@@ -220,21 +221,28 @@
 
   <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que celebran, por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> en representación de <strong>QUINTA BUGAMBILIA</strong> (en adelante "El Arrendador") y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong> (en adelante "El Arrendatario"), bajo las siguientes cláusulas:</p>
 
-  <p><span class="clausula-title">PRIMERA. OBJETO Y UBICACIÓN:</span> El Arrendador otorga el uso temporal del inmueble ubicado en el Fraccionamiento Real del Catorce, Hermosillo, Sonora.</p>
+  <p><span class="clausula-title">PRIMERA. OBJETO Y UBICACIÓN:</span> El Arrendador otorga el uso temporal del inmueble ubicado en el Fraccionamiento Real del Catorce, Hermosillo, Sonora. El uso bajo esta modalidad está destinado exclusivamente para áreas exteriores, a menos que se haya contratado algún adicional específico que permita el acceso a interiores.</p>
 
-  <p><span class="clausula-title">SEGUNDA. FECHAS Y HORARIOS:</span> El Arrendatario hará uso del inmueble desde el día <strong><span id="out-entrada"></span></strong> a las <strong><span id="out-hora-e"></span></strong> hasta el día <strong><span id="out-salida"></span></strong> a las <strong><span id="out-hora-s"></span></strong>. Cualquier exceso en el tiempo pactado generará un cargo adicional.</p>
+  <p><span class="clausula-title">SEGUNDA. FECHAS Y HORARIOS:</span> La vigencia del presente contrato ampara la estancia desde el día <strong><span id="out-entrada"></span></strong> a las <strong><span id="out-hora-e"></span></strong> hasta el día <strong><span id="out-salida"></span></strong> a las <strong><span id="out-hora-s"></span></strong>. Cualquier exceso en el tiempo de salida generará un cargo de $300.00 MXN por cada hora adicional.</p>
 
-  <p><span class="clausula-title">TERCERA. COSTO Y PAQUETE:</span> El costo total por el evento es de <strong id="out-precio"></strong> MXN. El Arrendatario contrata el paquete para un máximo de <strong id="out-personas"></strong> personas.</p>
+  <p><span class="clausula-title">TERCERA. COSTO Y PAQUETE:</span> El costo total por el evento es de <strong id="out-precio"></strong> MXN. El Arrendatario contrata el paquete para un máximo de <strong id="out-personas"></strong> personas. El exceso de ocupación sin previo aviso será motivo de cargos extra.</p>
 
-  <p><span class="clausula-title">CUARTA. FORMA DE PAGO:</span> Se requiere un anticipo de <strong id="out-anticipo"></strong> para asegurar la fecha. El saldo restante deberá liquidarse antes de ingresar al inmueble.</p>
+  <p><span class="clausula-title">CUARTA. INCLUSIONES DEL PAQUETE:</span> El paquete contratado incluye el uso de la alberca, palapa, y todas las áreas exteriores de la Quinta además de mesas y manteles blancos para el número de invitados contratados, así como una hielera grande para su uso durante el evento.</p>
 
-  <p><span class="clausula-title">QUINTA. DEPÓSITO DE GARANTÍA:</span> El Arrendatario deja como garantía la cantidad de <strong id="out-deposito"></strong> MXN, reembolsable tras verificar el estado del inmueble.</p>
+  <p><span class="clausula-title">QUINTA. FORMA DE PAGO:</span> Se requiere un anticipo del 30% (<strong id="out-anticipo"></strong>) para asegurar la fecha. El saldo restante deberá liquidarse en su totalidad antes de ingresar al inmueble.</p>
 
-  <p><span class="clausula-title">SEXTA. EXENCIÓN DE RESPONSABILIDAD:</span> El Arrendador no se hace responsable por accidentes o pérdidas dentro de las instalaciones. El uso de áreas comunes y alberca es bajo riesgo exclusivo del Arrendatario.</p>
+  <p><span class="clausula-title">SEXTA. DEPÓSITO DE GARANTÍA:</span> El Arrendatario <strong>deberá dejar como garantía</strong> la cantidad de <strong id="out-deposito"></strong> MXN. Dicho monto será devuelto en un plazo de 24 horas posteriores al evento vía transferencia bancaria, tras verificar que no existan daños al inmueble, mobiliario o equipo.</p>
+
+  <p><span class="clausula-title">SÉPTIMA. SERVICIOS EXTERNOS:</span> Bajo esta modalidad, se acepta la introducción de música, equipo de sonido, servicios de comida o catering por parte del Arrendatario, siendo este el único responsable de su coordinación y retiro al finalizar el horario contratado.</p>
+
+  <p><span class="clausula-title">OCTAVA. EXENCIÓN DE RESPONSABILIDAD:</span> El Arrendador no se hace responsable por accidentes, lesiones o fallecimientos dentro de las instalaciones. El uso de la alberca y áreas comunes es bajo riesgo exclusivo del Arrendatario y sus invitados.</p>
+
+  <p><span class="clausula-title">NOVENA. CANCELACIONES:</span> +20 días de antelación se reembolsa el 80%; entre 11 y 19 días el 50%; con 10 días o menos no habrá reembolso del anticipo.</p>
 
   <div id="seccion-adicionales" class="seccion-detalles" style="display:none;">
     <p><strong>SERVICIOS ADICIONALES CONTRATADOS:</strong></p>
     <div id="out-notas" style="font-style: italic; margin-bottom: 10px;"></div>
+    <p style="font-size: 0.85rem; border-top: 1px solid #000; padding-top: 5px;">* Precios ya incluidos en el total de la cláusula tercera.</p>
   </div>
 
   <div id="seccion-anotaciones" class="seccion-detalles" style="display:none;">
@@ -299,7 +307,8 @@
 
   function generarContrato() {
     const n = document.getElementById('nombreInput').value;
-    if(!n || document.getElementById('paqueteSelect').value == "0") return alert("Llena el nombre y paquete.");
+    const pkg = document.getElementById('paqueteSelect').value;
+    if(!n || pkg == "0") return alert("Por favor llena el nombre y selecciona un paquete.");
     
     document.getElementById('out-nombre').innerText = n;
     document.getElementById('out-nombre2').innerText = n;
@@ -310,19 +319,38 @@
     document.getElementById('out-precio').innerText = document.getElementById('precioInput').value;
     document.getElementById('out-anticipo').innerText = document.getElementById('anticipoInput').value;
     document.getElementById('out-deposito').innerText = document.getElementById('depositoInput').value;
-    document.getElementById('out-personas').innerText = document.getElementById('paqueteSelect').value;
+    document.getElementById('out-personas').innerText = pkg;
 
     let extras = [];
-    document.querySelectorAll('.extra-cb:checked').forEach(cb => extras.push(`• ${cb.getAttribute('data-name')}`));
-    if(document.getElementById('manualNombre1').value) extras.push(`• ${document.getElementById('manualNombre1').value}`);
-    if(document.getElementById('manualNombre2').value) extras.push(`• ${document.getElementById('manualNombre2').value}`);
+    document.querySelectorAll('.extra-cb:checked').forEach(cb => {
+      const price = parseFloat(cb.value).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+      extras.push(`• ${cb.getAttribute('data-name')}: ${price}`);
+    });
+
+    const nom1 = document.getElementById('manualNombre1').value;
+    const mon1 = document.getElementById('manualMonto1').value;
+    if(nom1 && mon1 !== "$0.00") extras.push(`• ${nom1}: ${mon1}`);
     
-    document.getElementById('seccion-adicionales').style.display = extras.length ? 'block' : 'none';
-    document.getElementById('out-notas').innerHTML = extras.join("<br>");
+    const nom2 = document.getElementById('manualNombre2').value;
+    const mon2 = document.getElementById('manualMonto2').value;
+    if(nom2 && mon2 !== "$0.00") extras.push(`• ${nom2}: ${mon2}`);
+    
+    const seccionExtras = document.getElementById('seccion-adicionales');
+    if(extras.length > 0) {
+        document.getElementById('out-notas').innerHTML = extras.join("<br>");
+        seccionExtras.style.display = "block";
+    } else {
+        seccionExtras.style.display = "none";
+    }
 
     const anotaciones = document.getElementById('anotacionesInput').value;
-    document.getElementById('seccion-anotaciones').style.display = anotaciones ? 'block' : 'none';
-    document.getElementById('out-anotaciones').innerText = anotaciones;
+    const seccionAnots = document.getElementById('seccion-anotaciones');
+    if(anotaciones.trim() !== "") {
+        document.getElementById('out-anotaciones').innerText = anotaciones;
+        seccionAnots.style.display = "block";
+    } else {
+        seccionAnots.style.display = "none";
+    }
 
     document.getElementById('contrato-final').style.display = 'block';
     window.scrollTo({ top: document.getElementById('contrato-final').offsetTop, behavior: 'smooth' });
