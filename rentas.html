@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     /* ==========================================================================
-       RESET & VARIABLES GLOBALES (Alineado con Index)
+       RESET & VARIABLES GLOBALES
        ========================================================================== */
     *, *::before, *::after { 
       box-sizing: border-box; 
@@ -39,7 +39,7 @@
     }
 
     /* ==========================================================================
-       HEADER & NAVIGATION (Solo Home y Actualizar)
+       HEADER & NAVIGATION
        ========================================================================== */
     header { 
       background: rgba(30, 58, 47, 0.95); 
@@ -144,7 +144,6 @@
       text-align: center;
     }
 
-    /* Barra de filtros unificada */
     .filters-bar {
       display: flex;
       flex-direction: column;
@@ -166,7 +165,6 @@
 
     .filter-label { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--warm); }
 
-    /* Contenedor horizontal de meses móvil */
     .filter-scroll-container {
       position: relative;
       width: 100%;
@@ -206,7 +204,6 @@
     }
     .search-input:focus { border-color: var(--warm); background: #fff; }
 
-    /* Toggles de vista */
     .view-toggle { display: flex; gap: .3rem; }
     .view-btn { 
       background: #fff; border: 1px solid var(--border); width: 36px; height: 36px; 
@@ -247,7 +244,6 @@
     .field-val.money { font-weight: 600; color: var(--green); }
     .field-val.empty { color: var(--border); font-style: italic; font-size: .75rem; }
 
-    /* Vista de Tabla Adaptativa */
     .table-wrap { display: none; background: #fff; border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; box-shadow: 0 4px 16px rgba(0,0,0,.04); -webkit-overflow-scrolling: touch; }
     .table-wrap.visible { display: block; }
 
@@ -259,7 +255,6 @@
     td.money-cell { font-weight: 600; color: var(--green); }
     td.empty-cell { color: var(--border); font-style: italic; }
 
-    /* Estados de Carga */
     #loading { text-align: center; padding: 3rem; color: var(--warm); font-size: 0.9rem; }
     .spinner { width: 28px; height: 28px; border: 2.5px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 0.8rem; }
     .empty-state { text-align: center; padding: 3rem 1rem; color: var(--warm); font-size: .85rem; width: 100%; }
@@ -336,7 +331,6 @@
     </div>
 
     <div class="summary-bar" id="summary-bar"></div>
-
     <div class="cards-grid" id="cards-grid"></div>
 
     <div class="table-wrap" id="table-wrap">
@@ -358,7 +352,7 @@
 <script>
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSo8m2mzpqf5Z_Znr_F6ZRDOqbZJ7zXuRzIkKkZHjU5A8ZvD3ejb7t6Pq_6YR28j12cAQCqQCqVFSve/pub?gid=652812646&single=true&output=csv';
 const COL_START = 3;
-const COL_END   = 13;
+const COL_END   = 8; // Rango acotado para evitar columnas fantasmas o notas externas de la derecha
 const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const MESES_LOW = MESES.map(m => m.toLowerCase());
 
@@ -448,7 +442,13 @@ function parseData(text) {
     const fields = [];
     let hasData = false;
     for (let ci = COL_START; ci <= COL_END && ci < row.length; ci++) {
-      const v = (row[ci]||'').trim();
+      let v = (row[ci]||'').trim();
+      
+      // Filtro anti-basura de rastreo del sistema o celdas fantasma externas
+      if (v.toLowerCase().includes('cite') || v.includes(':')) {
+        v = ''; 
+      }
+
       fields.push(v);
       if (v) hasData = true;
     }
@@ -518,7 +518,7 @@ function renderSummary(rows) {
 function renderCards(rows) {
   const grid = document.getElementById('cards-grid');
   if (!rows.length) {
-    grid.innerHTML = `<div class="empty-state"><p>No se encontraron reservaciones para el criterio seleccionado.</p></div>`;
+    grid.innerHTML = `<div class="empty-state"><p>No se encontraron reservaciones.</p></div>`;
     return;
   }
 
