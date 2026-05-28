@@ -2,153 +2,343 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title> Rentas 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Quinta Bugambilia – Rentas 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{
-      --sand:#ddeef7;--cream:#f2f9f4;--charcoal:#1e3a2f;--warm:#4a7fa5;
-      --gold:#5db87a;--green:#3a8f5e;--red:#b94040;--amber:#4a7fa5;
-      --green-bg:#e8f5ee;--red-bg:#faeaea;--amber-bg:#ddeef7;--border:#b8d9c8;
-      --teal:#3a8f7e;--sky:#a8c8e0;
+    /* ==========================================================================
+       RESET & VARIABLES GLOBALES (Alineado con Index)
+       ========================================================================== */
+    *, *::before, *::after { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
     }
-    body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--charcoal);min-height:100vh;}
 
-    /* ── HEADER ── */
-    header{background:var(--charcoal);color:#fff;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25);}
-    .logo{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:300;letter-spacing:.12em;}
-    .logo span{color:var(--gold);}
-    .header-btns{display:flex;gap:.7rem;align-items:center;}
-    .btn-outline{background:none;border:1.5px solid var(--gold);color:var(--gold);padding:.45rem 1.1rem;border-radius:20px;font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;transition:all .2s;text-decoration:none;}
-    .btn-outline:hover{background:var(--gold);color:#fff;}
-    .btn-outline svg{width:14px;height:14px;}
-    .btn-outline.loading svg{animation:spin .8s linear infinite;}
-    @keyframes spin{to{transform:rotate(360deg);}}
+    :root {
+      --sand: #ddeef7; 
+      --cream: #f2f9f4; 
+      --charcoal: #1e3a2f; 
+      --warm: #4a7fa5;
+      --gold: #5db87a; 
+      --green: #3a8f5e; 
+      --red: #b94040; 
+      --amber: #4a7fa5;
+      --green-bg: #e8f5ee; 
+      --red-bg: #faeaea; 
+      --amber-bg: #ddeef7; 
+      --border: #b8d9c8;
+    }
 
-    main{max-width:1200px;margin:0 auto;padding:2.5rem 1.5rem 4rem;}
-    h1{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:300;margin-bottom:.3rem;}
-    .subtitle{color:var(--warm);font-size:.88rem;margin-bottom:2rem;}
+    body { 
+      font-family: 'DM Sans', sans-serif; 
+      background: var(--cream); 
+      color: var(--charcoal); 
+      min-height: 100vh; 
+      overflow-x: hidden; 
+    }
 
-    /* ── FILTERS BAR ── */
-    .filters-bar{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;margin-bottom:2rem;padding:1rem 1.4rem;background:#fff;border-radius:12px;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.04);}
-    .filter-label{font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--warm);margin-right:.4rem;}
-    .filter-btn{background:none;border:1.5px solid var(--border);padding:.35rem .9rem;border-radius:16px;font-family:'DM Sans',sans-serif;font-size:.78rem;cursor:pointer;color:var(--charcoal);transition:all .15s;}
-    .filter-btn:hover{border-color:var(--gold);color:var(--green);}
-    .filter-btn.active{background:var(--green);border-color:var(--green);color:#fff;}
-    .search-input{margin-left:auto;border:1.5px solid var(--border);border-radius:20px;padding:.35rem 1rem;font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--charcoal);outline:none;width:200px;transition:border-color .2s;}
-    .search-input:focus{border-color:var(--gold);}
+    /* ==========================================================================
+       HEADER & NAVIGATION (Solo Home y Actualizar)
+       ========================================================================== */
+    header { 
+      background: rgba(30, 58, 47, 0.95); 
+      backdrop-filter: blur(12px); 
+      -webkit-backdrop-filter: blur(12px);
+      color: #fff; 
+      padding: 1rem; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 0.8rem;
+      position: sticky; 
+      top: 0; 
+      z-index: 100; 
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
 
-    /* ── SUMMARY BAR ── */
-    .summary-bar{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;}
-    .sum-chip{background:#fff;border:1px solid var(--border);border-radius:10px;padding:.6rem 1.1rem;font-size:.8rem;color:var(--warm);display:flex;align-items:center;gap:.5rem;box-shadow:0 1px 4px rgba(0,0,0,.04);}
-    .sum-chip strong{color:var(--charcoal);font-size:1rem;font-family:'Cormorant Garamond',serif;}
+    .logo { 
+      font-family: 'Cormorant Garamond', serif; 
+      font-size: 1.4rem; 
+      font-weight: 400; 
+      letter-spacing: .05em; 
+      text-align: center;
+    }
+    .logo span { 
+      color: var(--gold); 
+      opacity: 0.9; 
+      font-size: 0.8rem; 
+      font-family: 'DM Sans', sans-serif;
+      margin-left: 0.3rem;
+      font-weight: 300;
+    }
+    
+    .nav-container { 
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.4rem; 
+      width: 100%; 
+    }
 
-    /* ── CARDS GRID ── */
-    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.2rem;}
-    @media(max-width:600px){.cards-grid{grid-template-columns:1fr;}}
+    .nav-link, #sync-btn { 
+      background: rgba(255, 255, 255, 0.05); 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
+      color: #fff; 
+      padding: 0.65rem 0.5rem; 
+      border-radius: 10px; 
+      font-size: 0.8rem; 
+      font-weight: 500;
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 0.4rem; 
+      text-decoration: none; 
+      transition: all 0.2s ease-in-out; 
+      -webkit-tap-highlight-color: transparent; 
+    }
 
-    .renta-card{background:#fff;border-radius:16px;border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.05);overflow:hidden;transition:transform .2s,box-shadow .2s;position:relative;}
-    .renta-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(58,143,94,.12);}
-    .renta-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--green),var(--warm));}
+    .nav-link svg, #sync-btn svg {
+      opacity: 0.85;
+      flex-shrink: 0;
+      width: 14px;
+      height: 14px;
+    }
 
-    .card-head{padding:1.1rem 1.4rem .8rem;display:flex;justify-content:space-between;align-items:flex-start;gap:.8rem;}
-    .card-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--charcoal);line-height:1.2;}
-    .card-index{font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--warm);opacity:.6;margin-top:.15rem;}
+    #sync-btn { 
+      background: var(--gold); 
+      color: #1e3a2f; 
+      border: none;
+      font-weight: 600;
+    }
 
-    .card-badge{flex-shrink:0;font-size:.65rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:.25rem .7rem;border-radius:20px;white-space:nowrap;}
-    .badge-green{background:var(--green-bg);color:var(--green);}
-    .badge-blue{background:var(--amber-bg);color:var(--warm);}
-    .badge-gray{background:var(--sand);color:#6b8fa3;}
+    .nav-link:active, .nav-link:hover { 
+      background: rgba(255, 255, 255, 0.15); 
+      border-color: rgba(255, 255, 255, 0.25);
+    }
 
-    .card-divider{height:1px;background:var(--border);margin:0 1.4rem;}
+    #sync-btn:active, #sync-btn:hover { 
+      background: #4ca667; 
+      box-shadow: 0 4px 12px rgba(93, 184, 122, 0.2);
+    }
+    .btn-outline.loading svg { animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .card-fields{padding:.9rem 1.4rem 1.1rem;display:flex;flex-direction:column;gap:.55rem;}
-    .field-row{display:flex;align-items:baseline;gap:.5rem;}
-    .field-key{font-size:.68rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--warm);opacity:.75;min-width:110px;flex-shrink:0;}
-    .field-val{font-size:.85rem;color:var(--charcoal);}
-    .field-val.money{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--green);}
-    .field-val.empty{color:var(--border);font-style:italic;font-size:.78rem;}
+    /* ==========================================================================
+       MAIN CONTENT & FILTERS SYSTEM
+       ========================================================================== */
+    main { max-width: 1100px; margin: 0 auto; padding: 1rem 0.5rem 3rem; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; margin-bottom: .2rem; text-align: center; }
+    .subtitle { color: var(--warm); font-size: .8rem; margin-bottom: 1.5rem; text-align: center; }
 
-    /* ── EMPTY / LOADING ── */
-    #loading{text-align:center;padding:4rem;color:var(--warm);}
-    .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 1rem;}
-    #error-box{display:none;background:var(--red-bg);border:1px solid #f5c0c0;border-radius:10px;padding:1.2rem;color:var(--red);font-size:.88rem;margin-bottom:1.5rem;}
-    .empty-state{text-align:center;padding:4rem 2rem;color:var(--warm);font-size:.9rem;}
-    .empty-state svg{width:48px;height:48px;opacity:.3;margin-bottom:1rem;}
+    #error-box {
+      display: none;
+      background: var(--red-bg);
+      border: 1px solid rgba(185, 64, 64, 0.2);
+      border-radius: 10px;
+      padding: 1rem;
+      color: var(--red);
+      font-size: .8rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
 
-    /* ── TABLE VIEW (toggle) ── */
-    .view-toggle{display:flex;gap:.4rem;margin-left:auto;}
-    .view-btn{background:none;border:1.5px solid var(--border);width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
-    .view-btn.active{background:var(--green);border-color:var(--green);}
-    .view-btn svg{width:15px;height:15px;stroke:var(--warm);}
-    .view-btn.active svg{stroke:#fff;}
+    /* Barra de filtros unificada */
+    .filters-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(0,0,0,.03);
+      margin-bottom: 1rem;
+    }
 
-    .table-wrap{display:none;background:#fff;border-radius:14px;border:1px solid var(--border);overflow:auto;box-shadow:0 2px 12px rgba(0,0,0,.05);}
-    .table-wrap.visible{display:block;}
-    .cards-grid.hidden{display:none;}
+    .filters-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
 
-    table{width:100%;border-collapse:collapse;font-size:.82rem;}
-    thead th{background:var(--charcoal);color:#fff;padding:.7rem 1rem;text-align:left;font-size:.68rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap;}
-    tbody tr{border-bottom:1px solid var(--border);transition:background .12s;}
-    tbody tr:last-child{border-bottom:none;}
-    tbody tr:hover{background:var(--sand);}
-    td{padding:.6rem 1rem;color:var(--charcoal);white-space:nowrap;}
-    td.money-cell{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--green);}
-    td.empty-cell{color:var(--border);font-style:italic;font-size:.75rem;}
+    .filter-label { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--warm); }
 
-    footer{text-align:center;padding:2rem;font-size:.75rem;color:var(--warm);border-top:1px solid var(--border);}
+    /* Contenedor horizontal de meses móvil */
+    .filter-scroll-container {
+      position: relative;
+      width: 100%;
+    }
+    .filter-scroll-container::after {
+      content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 20px;
+      background: linear-gradient(90deg, transparent, #fff); pointer-events: none;
+    }
+
+    #month-filters {
+      display: flex;
+      gap: 0.4rem;
+      overflow-x: auto;
+      padding-bottom: 0.4rem;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    #month-filters::-webkit-scrollbar { display: none; }
+
+    .filter-btn { 
+      flex-shrink: 0; background: #fff; border: 1px solid var(--border); padding: .4rem .9rem; 
+      border-radius: 20px; font-size: .75rem; cursor: pointer; color: var(--warm); -webkit-tap-highlight-color: transparent;
+    }
+    .filter-btn.active { background: var(--charcoal); border-color: var(--charcoal); color: #fff; }
+
+    .search-input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .85rem;
+      color: var(--charcoal);
+      outline: none;
+      background: var(--cream);
+      transition: border-color .2s;
+    }
+    .search-input:focus { border-color: var(--warm); background: #fff; }
+
+    /* Toggles de vista */
+    .view-toggle { display: flex; gap: .3rem; }
+    .view-btn { 
+      background: #fff; border: 1px solid var(--border); width: 36px; height: 36px; 
+      border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; 
+      transition: all .15s; -webkit-tap-highlight-color: transparent;
+    }
+    .view-btn.active { background: var(--charcoal); border-color: var(--charcoal); }
+    .view-btn svg { width: 16px; height: 16px; stroke: var(--warm); fill: none; }
+    .view-btn.active svg { stroke: #fff; }
+
+    /* ==========================================================================
+       SUMMARY & CARDS DATA ARCHITECTURE
+       ========================================================================== */
+    .summary-bar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; justify-content: center; }
+    .sum-chip { background: var(--sand); border: 1px solid var(--border); border-radius: 20px; padding: .4rem .9rem; font-size: .7rem; color: var(--charcoal); display: flex; align-items: center; gap: .3rem; }
+    .sum-chip strong { font-size: .85rem; font-weight: 600; }
+
+    .cards-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    .cards-grid.hidden { display: none; }
+
+    .renta-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,.04); overflow: hidden; position: relative; }
+    .renta-card::before { content:''; position: absolute; top:0; left:0; right:0; height:3px; background: var(--warm); }
+
+    .card-head { padding: 1rem 1rem 0.6rem; display: flex; justify-content: space-between; align-items: flex-start; gap: .5rem; }
+    .card-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--charcoal); line-height: 1.2; }
+    .card-index { font-size: .6rem; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--warm); margin-top: .1rem; opacity: 0.7; }
+
+    .card-badge { flex-shrink: 0; font-size: .6rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; padding: .2rem .6rem; border-radius: 20px; white-space: nowrap; }
+    .badge-green { background: var(--green-bg); color: var(--green); }
+
+    .card-divider { height: 1px; background: var(--cream); margin: 0 1rem; }
+
+    .card-fields { padding: 0.6rem 1rem 1rem; display: flex; flex-direction: column; gap: .4rem; }
+    .field-row { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; border-bottom: 1px dashed var(--cream); padding-bottom: 2px; }
+    .field-row:last-child { border-bottom: none; }
+    .field-key { font-size: .65rem; font-weight: 500; text-transform: uppercase; color: var(--warm); opacity: .8; }
+    .field-val { font-size: .8rem; color: var(--charcoal); text-align: right; }
+    .field-val.money { font-weight: 600; color: var(--green); }
+    .field-val.empty { color: var(--border); font-style: italic; font-size: .75rem; }
+
+    /* Vista de Tabla Adaptativa */
+    .table-wrap { display: none; background: #fff; border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; box-shadow: 0 4px 16px rgba(0,0,0,.04); -webkit-overflow-scrolling: touch; }
+    .table-wrap.visible { display: block; }
+
+    table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    thead th { background: var(--charcoal); color: #fff; padding: .6rem .8rem; text-align: left; font-size: .65rem; font-weight: 500; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; }
+    tbody tr { border-bottom: 1px solid var(--cream); }
+    tbody tr:last-child { border-bottom: none; }
+    td { padding: .6rem .8rem; color: var(--charcoal); white-space: nowrap; }
+    td.money-cell { font-weight: 600; color: var(--green); }
+    td.empty-cell { color: var(--border); font-style: italic; }
+
+    /* Estados de Carga */
+    #loading { text-align: center; padding: 3rem; color: var(--warm); font-size: 0.9rem; }
+    .spinner { width: 28px; height: 28px; border: 2.5px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 0.8rem; }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--warm); font-size: .85rem; width: 100%; }
+
+    footer { text-align: center; padding: 1.5rem; font-size: .7rem; color: var(--warm); border-top: 1px solid var(--border); margin-top: 2rem; }
+
+    /* ==========================================================================
+       MEDIA QUERY: OPTIMIZACIÓN DESKTOP & TABLETS
+       ========================================================================== */
+    @media(min-width: 768px) {
+      header { flex-direction: row; justify-content: space-between; padding: 0 2rem; height: 65px; }
+      .nav-container { display: flex; width: auto; gap: 0.5rem; }
+      .logo { font-size: 1.6rem; }
+      main { padding: 1.5rem 1rem 4rem; }
+      h1 { font-size: 2.2rem; }
+      .subtitle { font-size: .88rem; }
+      
+      .filters-bar { flex-direction: row; padding: 0.8rem 1.2rem; }
+      .filters-header-row { width: auto; gap: 1rem; }
+      .filter-scroll-container { width: auto; max-width: 500px; }
+      .filter-scroll-container::after { display: none; }
+      #month-filters { padding-bottom: 0; }
+      .search-input { width: 220px; margin-left: auto; padding: 0.45rem 1rem; }
+
+      .cards-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.2rem; }
+      .renta-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.06); transition: all 0.2s; }
+      .field-row { justify-content: flex-start; }
+      .field-key { min-width: 110px; }
+      .field-val { text-align: left; }
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">Quinta Bugambilia <span style="font-size:1.1rem;opacity:.6;font-weight:300">· Real del 14</span></div>
-  <div class="header-btns">
-    <a href="index.html" class="btn-outline">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-      Calendario
+  <div class="logo">Quinta Bugambilia <span>· Real del 14</span></div>
+  <div class="nav-container">
+    <a href="index.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Inicio</span>
     </a>
-    <a href="ventas.html" class="btn-outline">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      Ventas
-    </a>
-    <button class="btn-outline" id="sync-btn" onclick="loadData()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-      Actualizar
+    <button id="sync-btn" onclick="loadData()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10"/></svg>
+      <span>Actualizar</span>
     </button>
   </div>
 </header>
 
 <main>
   <h1>Rentas 2026</h1>
-  <p class="subtitle">Rentas Q.B. · Detalle de reservaciones sincronizado en tiempo real</p>
+  <p class="subtitle">Detalle de reservaciones sincronizado en tiempo real</p>
 
   <div id="error-box"></div>
 
   <div id="ui" style="display:none">
-    <!-- Filters -->
     <div class="filters-bar">
-      <span class="filter-label">Mes</span>
-      <div id="month-filters" style="display:flex;gap:.5rem;flex-wrap:wrap;"></div>
-      <div class="view-toggle">
-        <button class="view-btn active" id="btn-cards" onclick="setView('cards')" title="Tarjetas">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        </button>
-        <button class="view-btn" id="btn-table" onclick="setView('table')" title="Tabla">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
+      <div class="filters-header-row">
+        <span class="filter-label">Mes</span>
+        <div class="view-toggle">
+          <button class="view-btn active" id="btn-cards" onclick="setView('cards')" title="Tarjetas">
+            <svg viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          </button>
+          <button class="view-btn" id="btn-table" onclick="setView('table')" title="Tabla">
+            <svg viewBox="0 0 24 24" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
       </div>
-      <input class="search-input" id="search" placeholder="Buscar…" oninput="applyFilters()"/>
+      
+      <div class="filter-scroll-container">
+        <div id="month-filters"></div>
+      </div>
+
+      <input class="search-input" id="search" placeholder="Buscar reservación..." oninput="applyFilters()"/>
     </div>
 
-    <!-- Summary -->
     <div class="summary-bar" id="summary-bar"></div>
 
-    <!-- Cards -->
     <div class="cards-grid" id="cards-grid"></div>
 
-    <!-- Table -->
     <div class="table-wrap" id="table-wrap">
       <table>
         <thead id="table-head"></thead>
@@ -157,27 +347,26 @@
     </div>
   </div>
 
-  <div id="loading"><div class="spinner"></div>Cargando datos…</div>
+  <div id="loading">
+    <div class="spinner"></div>
+    Configurando registros...
+  </div>
 </main>
 
-<footer> Rentas Q.B. 2026 · Datos sincronizados con Google Sheets</footer>
+<footer> Rentas Quinta Bugambilia 2026 · Sincronizado con Google Sheets </footer>
 
 <script>
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSo8m2mzpqf5Z_Znr_F6ZRDOqbZJ7zXuRzIkKkZHjU5A8ZvD3ejb7t6Pq_6YR28j12cAQCqQCqVFSve/pub?gid=652812646&single=true&output=csv';
-
-// Columns D–N = indices 3–13
 const COL_START = 3;
-const COL_END   = 13; // inclusive
-
+const COL_END   = 13;
 const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const MESES_LOW = MESES.map(m => m.toLowerCase());
 
-let allRows = [];       // parsed row objects
-let headers = [];       // column headers D–N
+let allRows = [];       
+let headers = [];       
 let activeMonth = 'all';
 let currentView = 'cards';
 
-// ── CSV parser ──────────────────────────────────────────────────────────────
 function parseCSVLine(line) {
   const cols=[]; let cur='',inQ=false;
   for(let i=0;i<line.length;i++){
@@ -213,28 +402,23 @@ function formatMXN(val) {
   return '$' + val.toLocaleString('es-MX', {minimumFractionDigits:0, maximumFractionDigits:0});
 }
 
-// ── Detect which month a row belongs to (scanning all cols) ─────────────────
 function detectMonth(row) {
   for (const cell of row) {
     const c = (cell||'').trim().toLowerCase().replace(/^\d+\.\s*/,'');
     const hit = MESES_LOW.find(m => c === m || c.startsWith(m + ' ') || c.startsWith(m + ','));
     if (hit) return MESES[MESES_LOW.indexOf(hit)];
-    // Date pattern DD/MM/YYYY
     const dm = cell.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
     if (dm) return MESES[parseInt(dm[2]) - 1];
-    // YYYY-MM-DD
     const ym = cell.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (ym) return MESES[parseInt(ym[2]) - 1];
   }
   return null;
 }
 
-// ── Parse the full CSV ───────────────────────────────────────────────────────
 function parseData(text) {
   const lines = text.split('\n').filter(l => l.trim());
   if (!lines.length) return;
 
-  // Find header row: the row that has the most non-empty text cells in D–N
   let headerRowIdx = 0;
   let bestScore = -1;
   for (let i = 0; i < Math.min(10, lines.length); i++) {
@@ -253,18 +437,14 @@ function parseData(text) {
     headers.push((headerRow[ci]||'').trim() || `Col ${ci+1}`);
   }
 
-  // Parse data rows
   allRows = [];
   let currentMonth = null;
 
   for (let i = headerRowIdx + 1; i < lines.length; i++) {
     const row = parseCSVLine(lines[i]);
-
-    // Detect month from any column
     const rowMonth = detectMonth(row);
     if (rowMonth) currentMonth = rowMonth;
 
-    // Extract cols D–N
     const fields = [];
     let hasData = false;
     for (let ci = COL_START; ci <= COL_END && ci < row.length; ci++) {
@@ -274,7 +454,6 @@ function parseData(text) {
     }
     if (!hasData) continue;
 
-    // Skip if all fields are just numbers that look like totals without context
     const allNumeric = fields.every(f => !f || isMoney(f) || !isNaN(parseFloat(f)));
     if (allNumeric && fields.filter(Boolean).length <= 2) continue;
 
@@ -282,7 +461,6 @@ function parseData(text) {
   }
 }
 
-// ── Render filters ───────────────────────────────────────────────────────────
 function renderFilters() {
   const months = [...new Set(allRows.map(r => r.month).filter(Boolean))];
   const container = document.getElementById('month-filters');
@@ -303,12 +481,9 @@ function renderFilters() {
   });
 }
 
-// ── Apply filters + search ───────────────────────────────────────────────────
 function applyFilters() {
-  // Update active button styles
   document.querySelectorAll('.filter-btn').forEach(b => {
-    b.classList.toggle('active',
-      b.textContent === (activeMonth==='all'?'Todos':activeMonth));
+    b.classList.toggle('active', b.textContent === (activeMonth==='all'?'Todos':activeMonth));
   });
 
   const q = (document.getElementById('search').value||'').toLowerCase();
@@ -323,64 +498,50 @@ function applyFilters() {
   renderTable(filtered);
 }
 
-// ── Summary bar ──────────────────────────────────────────────────────────────
 function renderSummary(rows) {
   const total = rows.length;
-  // Try to find money values across all rows
   let totalMoney = 0;
   rows.forEach(r => {
     r.fields.forEach(f => {
       const v = parseMoney(f);
-      if (v > 1000) totalMoney += v; // threshold to avoid counting small numbers
+      if (v > 1000) totalMoney += v; 
     });
   });
 
   const months = new Set(rows.map(r=>r.month).filter(Boolean));
-  let html = `<div class="sum-chip"><strong>${total}</strong> registros</div>`;
-  if (months.size > 0) html += `<div class="sum-chip"><strong>${months.size}</strong> ${months.size===1?'mes':'meses'}</div>`;
+  let html = `<div class="sum-chip"><strong>${total}</strong> Eventos</div>`;
+  if (months.size > 0) html += `<div class="sum-chip"><strong>${months.size}</strong> ${months.size===1?'Mes':'Meses'}</div>`;
   if (totalMoney > 0) html += `<div class="sum-chip">Total: <strong>${formatMXN(totalMoney)}</strong></div>`;
   document.getElementById('summary-bar').innerHTML = html;
 }
 
-// ── Render cards ─────────────────────────────────────────────────────────────
 function renderCards(rows) {
   const grid = document.getElementById('cards-grid');
   if (!rows.length) {
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <div>Sin resultados</div></div>`;
+    grid.innerHTML = `<div class="empty-state"><p>No se encontraron reservaciones para el criterio seleccionado.</p></div>`;
     return;
   }
 
   grid.innerHTML = rows.map((r, idx) => {
-    // First non-empty field = "name/title"
     const nameIdx = r.fields.findIndex(f => f && !isMoney(f) && isNaN(parseFloat(f)));
     const name = nameIdx >= 0 ? r.fields[nameIdx] : (r.fields[0] || `Renta ${idx+1}`);
+    const badgeHtml = r.month ? `<span class="card-badge badge-green">${r.month}</span>` : '';
 
-    // Badge: month
-    const badgeHtml = r.month
-      ? `<span class="card-badge badge-green">${r.month}</span>`
-      : '';
-
-    // Fields (skip the name field to avoid duplication)
     const fieldRows = headers.map((h, i) => {
       const val = r.fields[i] || '';
-      if (i === nameIdx) return ''; // already shown as title
+      if (i === nameIdx) return ''; 
       if (!val) return `<div class="field-row"><span class="field-key">${h}</span><span class="field-val empty">—</span></div>`;
       const moneyVal = parseMoney(val);
       const valClass = (moneyVal > 0 && isMoney(val)) ? 'money' : '';
       const display = (moneyVal > 0 && isMoney(val)) ? formatMXN(moneyVal) : val;
-      return `<div class="field-row">
-        <span class="field-key">${h}</span>
-        <span class="field-val ${valClass}">${display}</span>
-      </div>`;
+      return `<div class="field-row"><span class="field-key">${h}</span><span class="field-val ${valClass}">${display}</span></div>`;
     }).join('');
 
-    return `<div class="renta-card" style="animation:fadeUp .4s ease ${idx*0.04}s both">
+    return `<div class="renta-card">
       <div class="card-head">
         <div>
           <div class="card-name">${name}</div>
-          <div class="card-index"># ${idx+1}</div>
+          <div class="card-index">ID #${idx+1}</div>
         </div>
         ${badgeHtml}
       </div>
@@ -390,7 +551,6 @@ function renderCards(rows) {
   }).join('');
 }
 
-// ── Render table ─────────────────────────────────────────────────────────────
 function renderTable(rows) {
   const thead = document.getElementById('table-head');
   const tbody = document.getElementById('table-body');
@@ -409,11 +569,10 @@ function renderTable(rows) {
       if (moneyVal > 0 && isMoney(f)) return `<td class="money-cell">${formatMXN(moneyVal)}</td>`;
       return `<td>${f}</td>`;
     }).join('');
-    return `<tr><td style="color:var(--warm);font-size:.75rem">${idx+1}</td><td>${r.month||'—'}</td>${cells}</tr>`;
+    return `<tr><td style="color:var(--warm);font-size:.7rem">${idx+1}</td><td>${r.month||'—'}</td>${cells}</tr>`;
   }).join('');
 }
 
-// ── View toggle ──────────────────────────────────────────────────────────────
 function setView(view) {
   currentView = view;
   document.getElementById('cards-grid').classList.toggle('hidden', view==='table');
@@ -422,7 +581,6 @@ function setView(view) {
   document.getElementById('btn-table').classList.toggle('active', view==='table');
 }
 
-// ── Load data ────────────────────────────────────────────────────────────────
 async function loadData() {
   const btn = document.getElementById('sync-btn');
   btn.classList.add('loading');
@@ -436,7 +594,7 @@ async function loadData() {
     const text = await res.text();
     parseData(text);
 
-    if (!allRows.length) throw new Error('No se encontraron datos en la pestaña. Verifica que esté publicada.');
+    if (!allRows.length) throw new Error('No se encontraron datos válidos.');
 
     renderFilters();
     applyFilters();
@@ -444,16 +602,11 @@ async function loadData() {
     document.getElementById('loading').style.display='none';
   } catch(e) {
     document.getElementById('error-box').style.display='block';
-    document.getElementById('error-box').textContent='⚠️ Error al cargar: ' + e.message;
+    document.getElementById('error-box').textContent='⚠️ Error al sincronizar: ' + e.message;
     document.getElementById('loading').style.display='none';
   }
   btn.classList.remove('loading');
 }
-
-// ── Fade animation ───────────────────────────────────────────────────────────
-const style = document.createElement('style');
-style.textContent = `@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}`;
-document.head.appendChild(style);
 
 loadData();
 </script>
