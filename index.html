@@ -48,15 +48,15 @@
        HEADER & NAVIGATION (MOBILE-FIRST OPTIMIZED)
        ========================================================================== */
     header { 
-      background: rgba(30, 58, 47, 0.92); /* Un toque más opaco para legibilidad móvil */
+      background: rgba(30, 58, 47, 0.95); 
       backdrop-filter: blur(12px); 
       -webkit-backdrop-filter: blur(12px);
       color: #fff; 
-      padding: 1.2rem 1rem; 
+      padding: 1rem; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
-      gap: 1rem;
+      gap: 0.8rem;
       position: sticky; 
       top: 0; 
       z-index: 100; 
@@ -66,7 +66,7 @@
 
     .logo { 
       font-family: 'Cormorant Garamond', serif; 
-      font-size: 1.5rem; 
+      font-size: 1.4rem; 
       font-weight: 400; 
       letter-spacing: .05em; 
       text-align: center;
@@ -74,17 +74,16 @@
     .logo span { 
       color: var(--gold); 
       opacity: 0.9; 
-      font-size: 0.85rem; 
+      font-size: 0.8rem; 
       font-family: 'DM Sans', sans-serif;
       margin-left: 0.3rem;
       font-weight: 300;
     }
     
-    /* Grid layout para móviles: 2 columnas simétricas */
     .nav-container { 
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 0.5rem; 
+      gap: 0.4rem; 
       width: 100%; 
     }
 
@@ -92,36 +91,37 @@
       background: rgba(255, 255, 255, 0.05); 
       border: 1px solid rgba(255, 255, 255, 0.1); 
       color: #fff; 
-      padding: 0.75rem 1rem; 
-      border-radius: 12px; 
-      font-size: 0.85rem; 
+      padding: 0.65rem 0.5rem; 
+      border-radius: 10px; 
+      font-size: 0.8rem; 
       font-weight: 500;
       cursor: pointer; 
       display: flex; 
       align-items: center; 
-      justify-content: center; /* Centrado perfecto en móviles */
-      gap: 0.5rem; 
+      justify-content: center; 
+      gap: 0.4rem; 
       text-decoration: none; 
       transition: all 0.2s ease-in-out; 
-      -webkit-tap-highlight-color: transparent; /* Elimina flash azul feo en móviles */
+      -webkit-tap-highlight-color: transparent; 
     }
 
     .nav-link svg, #sync-btn svg {
       opacity: 0.85;
       flex-shrink: 0;
+      width: 14px;
+      height: 14px;
     }
 
-    /* Modificador para que el botón de actualización ocupe todo el ancho inferior en móvil */
     #sync-btn { 
       grid-column: span 2; 
       background: var(--gold); 
       color: #1e3a2f; 
       border: none;
       font-weight: 600;
-      margin-top: 0.2rem;
+      margin-top: 0.1rem;
+      padding: 0.75rem;
     }
 
-    /* Estados activos y hover (optimizados para desktop y toques móviles) */
     .nav-link:active, .nav-link:hover { 
       background: rgba(255, 255, 255, 0.15); 
       border-color: rgba(255, 255, 255, 0.25);
@@ -135,91 +135,129 @@
     /* ==========================================================================
        MAIN CONTENT & CALENDAR SYSTEM
        ========================================================================== */
-    main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
-    h1 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; margin-bottom: .2rem; text-align: center; }
-    .subtitle { color: var(--warm); font-size: .85rem; margin-bottom: 1.5rem; text-align: center; }
+    main { max-width: 1100px; margin: 0 auto; padding: 1rem 0.5rem 3rem; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; margin-bottom: .2rem; text-align: center; }
+    .subtitle { color: var(--warm); font-size: .8rem; margin-bottom: 1rem; text-align: center; }
 
-    .legend { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1.5rem; padding: 0.8rem; background: var(--sand); border-radius: 10px; border: 1px solid var(--border); justify-content: center; }
-    .legend-item { display: flex; align-items: center; gap: .4rem; font-size: .75rem; }
-    .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .legend { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1rem; padding: 0.6rem; background: var(--sand); border-radius: 10px; border: 1px solid var(--border); justify-content: center; }
+    .legend-item { display: flex; align-items: center; gap: .3rem; font-size: .7rem; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .dot-free{background:var(--green);} .dot-busy{background:var(--red);} .dot-partial{background:var(--amber);}
 
-    .year-nav { display: flex; gap: .4rem; overflow-x: auto; padding-bottom: 0.8rem; margin-bottom: 1.5rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    /* Contenedor del nav con desvanecimiento para indicar scroll horizontal en móviles */
+    .year-nav-container {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    .year-nav-container::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 20px;
+      background: linear-gradient(90deg, transparent, var(--cream));
+      pointer-events: none;
+    }
+
+    .year-nav { 
+      display: flex; 
+      gap: .4rem; 
+      overflow-x: auto; 
+      padding: 0.2rem 0.5rem 0.6rem; 
+      scrollbar-width: none; 
+      -webkit-overflow-scrolling: touch; 
+    }
     .year-nav::-webkit-scrollbar { display: none; }
-    .month-btn { flex-shrink: 0; background: none; border: 1.5px solid var(--border); padding: .4rem 0.9rem; border-radius: 20px; font-size: .75rem; cursor: pointer; color: var(--warm); }
+    .month-btn { flex-shrink: 0; background: #fff; border: 1px solid var(--border); padding: .5rem 1rem; border-radius: 20px; font-size: .75rem; cursor: pointer; color: var(--warm); box-shadow: 0 2px 4px rgba(0,0,0,0.02); -webkit-tap-highlight-color: transparent;}
     .month-btn.active { background: var(--charcoal); border-color: var(--charcoal); color: #fff; }
 
     #calendar-wrap { 
       background: #fff; 
-      border-radius: 14px; 
+      border-radius: 12px; 
       border: 1px solid var(--border); 
-      overflow-x: auto; 
-      box-shadow: 0 4px 24px rgba(0,0,0,.06); 
-      -webkit-overflow-scrolling: touch;
+      box-shadow: 0 4px 16px rgba(0,0,0,.04); 
+      overflow: hidden;
     }
 
-    .cal-header { background: var(--charcoal); color: #fff; padding: 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem; }
-    .cal-month-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; text-transform: capitalize; }
-    .cal-stats { display: flex; gap: 0.8rem; }
-    .stat { text-align: center; min-width: 55px; }
-    .stat-num { font-size: 1.1rem; font-weight: 500; }
-    .stat-lbl { font-size: .55rem; opacity: .8; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; }
+    .cal-header { background: var(--charcoal); color: #fff; padding: 0.8rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .cal-month-title { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; text-transform: capitalize; }
+    .cal-stats { display: flex; gap: 0.5rem; }
+    .stat { text-align: center; min-width: 48px; }
+    .stat-num { font-size: 1rem; font-weight: 500; }
+    .stat-lbl { font-size: .5rem; opacity: .8; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; }
     .stat-num.s-green{color:#7ed4a0;} .stat-num.s-red{color:#f08080;} .stat-num.s-amber{color:#f5c06a;}
 
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); min-width: 320px; }
-    .cal-day-name { background: var(--sand); padding: .5rem 0; text-align: center; font-size: .65rem; font-weight: 500; text-transform: uppercase; color: var(--warm); border-bottom: 1px solid var(--border); }
+    /* Sistema Grid Adaptable sin scroll horizontal innecesario */
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); width: 100%; }
+    .cal-day-name { background: var(--sand); padding: .4rem 0; text-align: center; font-size: .6rem; font-weight: 600; text-transform: uppercase; color: var(--warm); border-bottom: 1px solid var(--border); }
 
-    .cal-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-height: 80px; padding: .3rem; position: relative; }
+    .cal-cell { 
+      border-right: 1px solid var(--border); 
+      border-bottom: 1px solid var(--border); 
+      min-height: 65px; 
+      padding: .2rem; 
+      position: relative; 
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
     .cal-cell:nth-child(7n){border-right:none;}
-    .cal-cell.empty{background:var(--sand);opacity:.4;}
+    .cal-cell.empty{background:var(--sand);opacity:.3;}
     .cal-cell.free{background:var(--green-bg);}
     .cal-cell.busy{background:var(--red-bg);}
     .cal-cell.partial{background:var(--amber-bg);}
-    .cal-cell.today .day-num { background: var(--gold); color: #fff; border-radius: 50%; }
+    .cal-cell.today .day-num { background: var(--gold); color: #1e3a2f; border-radius: 50%; font-weight: 700; }
 
-    .day-num { font-size: .75rem; font-weight: 500; color: var(--charcoal); width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; margin-bottom: .2rem; }
+    .day-num { font-size: .75rem; font-weight: 500; color: var(--charcoal); width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: .1rem; z-index: 2; }
     .status-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
     .status-bar.free{background:var(--green);} .status-bar.busy{background:var(--red);} .status-bar.partial{background:var(--amber);}
 
-    .session-tags { display: flex; flex-direction: column; gap: 2px; }
+    .session-tags { display: flex; flex-direction: column; gap: 2px; width: 100%; margin-top: auto; }
     .session-tag { 
-      font-size: .55rem; 
-      padding: 1px 4px; 
-      border-radius: 4px; 
+      font-size: .5rem; 
+      padding: 1px 2px; 
+      border-radius: 3px; 
       font-weight: 500; 
       white-space: nowrap; 
       overflow: hidden; 
       text-overflow: ellipsis;
       max-width: 100%;
+      line-height: 1.1;
+      display: block;
+      text-align: center;
     }
-    .tag-busy { background: rgba(185, 64, 64, .1); color: var(--red); border: 1px solid rgba(185,64,64,0.1); }
-    .tag-free { background: rgba(58, 143, 94, .1); color: var(--green); border: 1px solid rgba(58,143,94,0.1); }
+    .tag-busy { background: rgba(185, 64, 64, .08); color: var(--red); border: 1px solid rgba(185,64,64,0.1); }
+    .tag-free { background: rgba(58, 143, 94, .08); color: var(--green); border: 1px solid rgba(58,143,94,0.1); }
 
-    footer { text-align: center; padding: 2rem; font-size: .75rem; color: var(--warm); border-top: 1px solid var(--border); }
+    footer { text-align: center; padding: 1.5rem; font-size: .7rem; color: var(--warm); border-top: 1px solid var(--border); margin-top: 2rem; }
 
     /* ==========================================================================
-       MEDIA QUERY: OPTIMIZACIÓN PARA ESCRITORIO (RESPONSIVE INVERSO)
+       MEDIA QUERY: OPTIMIZACIÓN PARA ESCRITORIO Y TABLETAS
        ========================================================================== */
-    @media(min-width: 850px) {
+    @media(min-width: 768px) {
       header { 
         flex-direction: row; 
         justify-content: space-between; 
-        height: 72px; 
-        padding: 0 3rem; 
+        padding: 0 2rem; 
+        height: 65px;
       }
-      /* Regresa a una sola fila horizontal fluida en pantallas grandes */
       .nav-container { 
         display: flex;
         width: auto; 
-        gap: 0.6rem; 
+        gap: 0.5rem; 
       }
       #sync-btn { 
         grid-column: auto; 
         margin-top: 0;
+        padding: 0.65rem 1rem;
       }
-      .logo { font-size: 1.8rem; }
+      .logo { font-size: 1.6rem; }
+      main { padding: 1.5rem 1rem 4rem; }
       h1 { font-size: 2.2rem; }
       .subtitle { font-size: .88rem; }
+      .cal-cell { min-height: 85px; padding: .4rem; }
+      .session-tag { font-size: .55rem; padding: 2px 4px; text-align: left;}
+      .year-nav-container::after { display: none; }
+      .year-nav { padding: 0.2rem 0 0.6rem; }
     }
   </style>
 </head>
@@ -229,23 +267,23 @@
   <div class="logo">Quinta Bugambilia <span>· Real del 14</span></div>
   <div class="nav-container">
     <a href="ventas.html" class="nav-link">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       <span>Ventas</span>
     </a>
     <a href="contrato_hospedaje.html" class="nav-link">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       <span>Contratos</span>
     </a>
     <a href="contrato_evento.html" class="nav-link">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
       <span>Evento</span>
     </a>
     <a href="rentas.html" class="nav-link">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
       <span>Rentas</span>
     </a>
     <button id="sync-btn" onclick="loadData()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10"/></svg>
       <span>Actualizar</span>
     </button>
   </div>
@@ -261,10 +299,12 @@
     <div class="legend-item"><div class="dot dot-busy"></div> No Disponible</div>
   </div>
 
-  <nav class="year-nav" id="month-nav"></nav>
+  <div class="year-nav-container">
+    <nav class="year-nav" id="month-nav"></nav>
+  </div>
 
   <div id="calendar-wrap">
-    <div style="text-align:center; padding:3rem; color:var(--warm);">Cargando disponibilidad...</div>
+    <div style="text-align:center; padding:3rem; color:var(--warm); font-size: 0.9rem;">Cargando disponibilidad...</div>
   </div>
 </main>
 
@@ -273,7 +313,8 @@
 <script>
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSo8m2mzpqf5Z_Znr_F6ZRDOqbZJ7zXuRzIkKkZHjU5A8ZvD3ejb7t6Pq_6YR28j12cAQCqQCqVFSve/pub?gid=0&single=true&output=csv';
 const MONTH_NAMES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-const DAY_NAMES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const DAY_NAMES = ['D','L','M','M','J','V','S']; // Letras cortas para ultra-móvil
+const DAY_NAMES_DESKTOP = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 let calendarData = {};
 let currentMonth = new Date().getMonth();
 const YEAR = 2026;
@@ -336,7 +377,7 @@ async function loadData() {
     renderNav();
     renderCalendar(currentMonth);
   } catch(e) {
-    document.getElementById('calendar-wrap').innerHTML = '<div style="padding:2rem;text-align:center;color:red;">Error al cargar datos.</div>';
+    document.getElementById('calendar-wrap').innerHTML = '<div style="padding:2rem;text-align:center;color:red;font-size:0.85rem;">Error al cargar datos.</div>';
   }
 }
 
@@ -350,6 +391,17 @@ function renderNav() {
     btn.onclick = () => { currentMonth = m; renderNav(); renderCalendar(m); };
     nav.appendChild(btn);
   });
+  
+  // Auto-scroll suave para centrar el mes activo en móviles
+  setTimeout(() => {
+    const activeBtn = nav.querySelector('.month-btn.active');
+    if (activeBtn) {
+      nav.scrollTo({
+        left: activeBtn.offsetLeft - (nav.offsetWidth / 2) + (activeBtn.offsetWidth / 2),
+        behavior: 'smooth'
+      });
+    }
+  }, 100);
 }
 
 function renderCalendar(month) {
@@ -367,9 +419,12 @@ function renderCalendar(month) {
     if (st === 'busy') busy++; else if (st === 'partial') partial++; else free++;
   }
 
-  let html = `<div class="cal-header"><div class="cal-month-title">${MONTH_NAMES[month]}</div><div class="cal-stats"><div class="stat"><div class="stat-num s-green">${free}</div><div class="stat-lbl">Disponible</div></div><div class="stat"><div class="stat-num s-amber">${partial}</div><div class="stat-lbl">Parcial</div></div><div class="stat"><div class="stat-num s-red">${busy}</div><div class="stat-lbl">No Disp.</div></div></div></div><div class="cal-grid">`;
+  let html = `<div class="cal-header"><div class="cal-month-title">${MONTH_NAMES[month]}</div><div class="cal-stats"><div class="stat"><div class="stat-num s-green">${free}</div><div class="stat-lbl">Libre</div></div><div class="stat"><div class="stat-num s-amber">${partial}</div><div class="stat-lbl">Parcial</div></div><div class="stat"><div class="stat-num s-red">${busy}</div><div class="stat-lbl">Ocup.</div></div></div></div><div class="cal-grid">`;
 
-  DAY_NAMES.forEach(d => html += `<div class="cal-day-name">${d}</div>`);
+  const isLargeScreen = window.innerWidth >= 768;
+  const labels = isLargeScreen ? DAY_NAMES_DESKTOP : DAY_NAMES;
+  
+  labels.forEach(d => html += `<div class="cal-day-name">${d}</div>`);
   for (let i = 0; i < firstWD; i++) html += `<div class="cal-cell empty"></div>`;
 
   for (let d = 1; d <= daysInMonth; d++) {
@@ -380,8 +435,15 @@ function renderCalendar(month) {
     
     let tags = '';
     if (data) {
-      if (data.manana) tags += `<span class="session-tag ${sessionClass(data.manana)}">☀️ ${data.manana}</span>`;
-      if (data.tarde) tags += `<span class="session-tag ${sessionClass(data.tarde)}">🌙 ${data.tarde}</span>`;
+      // Formato compacto para celulares (solo ícono si es pantalla chica, texto completo si es grande)
+      if (data.manana) {
+        const isOcupado = data.manana.toLowerCase().includes('ocup');
+        tags += `<span class="session-tag ${sessionClass(data.manana)}" title="Mañana: ${data.manana}">${isLargeScreen ? '☀️ ' + data.manana : (isOcupado ? '☀️ Ocup' : '☀️ Disp')}</span>`;
+      }
+      if (data.tarde) {
+        const isOcupado = data.tarde.toLowerCase().includes('ocup');
+        tags += `<span class="session-tag ${sessionClass(data.tarde)}" title="Tarde: ${data.tarde}">${isLargeScreen ? '🌙 ' + data.tarde : (isOcupado ? '🌙 Ocup' : '🌙 Disp')}</span>`;
+      }
     }
 
     html += `<div class="cal-cell ${status}${isToday ? ' today' : ''}">
@@ -392,6 +454,9 @@ function renderCalendar(month) {
   }
   wrap.innerHTML = html + '</div>';
 }
+
+// Re-renderizar si cambia el tamaño de pantalla (rotación del celular)
+window.addEventListener('resize', () => renderCalendar(currentMonth));
 
 loadData();
 </script>
