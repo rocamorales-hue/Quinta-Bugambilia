@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     /* ==========================================================================
-       RESET & VARIABLES GLOBALES (Alineado con Index, Rentas y Ventas)
+       RESET & VARIABLES GLOBALES (Alineado con tu ecosistema unificado)
        ========================================================================== */
     *, *::before, *::after { 
       box-sizing: border-box; 
@@ -39,7 +39,7 @@
     }
 
     /* ==========================================================================
-       HEADER & NAVIGATION (Misma línea visual)
+       HEADER & NAVIGATION (Solo Inicio y Nuevo, optimizado para móvil)
        ========================================================================== */
     header { 
       background: rgba(30, 58, 47, 0.95); 
@@ -119,9 +119,8 @@
       border-color: rgba(255, 255, 255, 0.25);
     }
 
-    .action-btn.primary:active, .action-btn.primary:hover { 
-      background: #4ca667; 
-      box-shadow: 0 4px 12px rgba(93, 184, 122, 0.2);
+    .action-btn:active, .action-btn:hover { 
+      background: rgba(255, 255, 255, 0.15);
     }
 
     /* ==========================================================================
@@ -157,7 +156,7 @@
       width: 100%; 
       padding: 0.65rem 0.8rem; 
       font-family: 'DM Sans', sans-serif; 
-      font-size: 0.9rem; /* Evita zoom automático en iOS */
+      font-size: 0.9rem; 
       color: var(--charcoal); 
       background: var(--cream); 
       border: 1px solid var(--border); 
@@ -189,7 +188,7 @@
     .submit-btn:active { background: #2c5444; }
 
     /* ==========================================================================
-       CONTRATO VISTA PREVIA (Estilo Sofisticado Documental)
+       CONTRATO VISTA PREVIA (Estilo Documental Elegante)
        ========================================================================== */
     .contrato-box { 
       display: none; 
@@ -202,6 +201,7 @@
       font-size: 0.85rem;
       text-align: justify;
       animation: fadeUp 0.4s ease-out;
+      color: #000;
     }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
@@ -209,22 +209,22 @@
     .contrato-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; text-transform: uppercase; color: var(--charcoal); }
     
     .contrato-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; margin: 1.2rem 0 0.4rem; text-transform: uppercase; color: var(--charcoal); border-bottom: 1px dashed var(--border); padding-bottom: 2px; }
-    .contrato-box p { margin-bottom: 0.8rem; color: #2c3e35; }
+    .contrato-box p { margin-bottom: 0.8rem; color: #111; }
     
-    .highlight { font-weight: 600; color: #000; border-bottom: 1px solid #ddd; padding: 0 2px; }
+    .highlight { font-weight: 600; color: #000; border-bottom: 1px solid #aaa; padding: 0 2px; }
     
-    /* Firmas */
+    /* Bloque de Firmas */
     .firmas-container { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 3rem; text-align: center; }
     .firma-block { margin-top: 1.5rem; }
     .linea-firma { width: 70%; height: 1px; background: #000; margin: 0 auto 0.4rem; }
     .firma-lbl { font-size: 0.75rem; font-weight: 500; text-transform: uppercase; color: var(--charcoal); }
 
     .print-actions { display: flex; justify-content: center; margin-top: 1.5rem; }
-    .print-btn { background: var(--green); color: #fff; border: none; padding: 0.7rem 1.5rem; font-size: 0.85rem; font-weight: 500; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+    .print-btn { background: var(--green); color: #fff; border: none; padding: 0.7rem 1.5rem; font-size: 0.85rem; font-weight: 500; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: background 0.2s; }
     .print-btn:active { background: #2e6f49; }
 
     /* ==========================================================================
-       MEDIA QUERIES & PRINT OPTIMIZATION
+       MEDIA QUERIES & OPTIMIZACIÓN DE IMPRESIÓN
        ========================================================================== */
     @media(min-width: 768px) {
       header { flex-direction: row; justify-content: space-between; padding: 0 2rem; height: 65px; }
@@ -312,7 +312,7 @@
     </div>
 
     <button class="submit-btn" onclick="generarContrato()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       Redactar y Previsualizar Contrato
     </button>
   </div>
@@ -380,16 +380,16 @@ function formatTime(timeStr) {
 }
 
 function generarContrato() {
-  const nombre = document.getElementById('nombreInput').value.trim();
-  if(!nombre) {
+  const n = document.getElementById('nombreInput').value.trim();
+  if(!n) {
     alert("Por favor, ingresa el nombre del Arrendatario.");
     document.getElementById('nombreInput').focus();
     return;
   }
 
-  // Mapear valores al documento del contrato
-  document.getElementById('out-nombre').innerText = nombre;
-  document.getElementById('out-nombre2').innerText = nombre;
+  // Rellenar datos
+  document.getElementById('out-nombre').innerText = n;
+  document.getElementById('out-nombre2').innerText = n;
   
   document.getElementById('out-entrada').innerText = formatDate(document.getElementById('fechaEntrada').value);
   document.getElementById('out-hora-e').innerText = formatTime(document.getElementById('horaEntrada').value);
@@ -400,17 +400,17 @@ function generarContrato() {
   document.getElementById('out-precio').innerText = document.getElementById('precioInput').value || "$0.00";
   document.getElementById('out-anticipo').innerText = document.getElementById('anticipoInput').value || "$0.00";
 
-  // Manejo de Notas Adicionales
-  const notas = document.getElementById('notasInput').value.trim();
+  // Notas Adicionales
+  const notas = document.getElementById('notasInput').value;
   const seccionNotas = document.getElementById('notas-seccion-contrato');
-  if(notas !== "") {
-    document.getElementById('out-notas').innerText = notas;
-    seccionNotas.style.display = "block";
+  if(notas.trim() !== "") {
+      document.getElementById('out-notas').innerText = notas;
+      seccionNotas.style.display = "block";
   } else {
-    seccionNotas.style.display = "none";
+      seccionNotas.style.display = "none";
   }
 
-  // Revelar panel de contrato y desplazar pantalla suavemente
+  // Mostrar contrato
   const box = document.getElementById('contrato-final');
   box.style.display = 'block';
   setTimeout(() => {
