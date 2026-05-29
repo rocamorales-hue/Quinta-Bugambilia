@@ -1,275 +1,654 @@
-<script>
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSo8m2mzpqf5Z_Znr_F6ZRDOqbZJ7zXuRzIkKkZHjU5A8ZvD3ejb7t6Pq_6YR28j12cAQCqQCqVFSve/pub?gid=652812646&single=true&output=csv';
-const COL_START = 3; // Mantiene el salto de las primeras columnas si son de control interno
-const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-const MESES_LOW = MESES.map(m => m.toLowerCase());
-
-let allRows = [];       
-let headers = [];       
-let activeMonth = 'all';
-let currentView = 'cards';
-
-function parseCSVLine(line) {
-  const cols=[]; let cur='',inQ=false;
-  for(let i=0;i<line.length;i++){
-    const ch=line[i];
-    if(ch==='"'){inQ=!inQ;}
-    else if(ch===','&&!inQ){cols.push(cur.trim());cur='';}
-    else{cur+=ch;}
-  }
-  cols.push(cur.trim());
-  return cols;
-}
-
-function parseMoney(str) {
-  if (!str) return 0;
-  let s = str.replace(/\$/g,'').replace(/\s/g,'').trim();
-  if (!s) return 0;
-  const hasComma = s.includes(','), hasDot = s.includes('.');
-  if (hasComma && hasDot) {
-    if (s.lastIndexOf('.') > s.lastIndexOf(',')) s = s.replace(/,/g,'');
-    else s = s.replace(/\./g,'').replace(',','.');
-  } else if (hasComma) {
-    const parts = s.split(',');
-    s = (parts.length===2 && parts[1].length<=2) ? s.replace(',','.') : s.replace(/,/g,'');
-  }
-  return parseFloat(s) || 0;
-}
-
-function isMoney(str) {
-  return str && (str.trim().startsWith('$') || /^\$?[\d,\.]+$/.test(str.trim()));
-}
-
-function formatMXN(val) {
-  return '$' + val.toLocaleString('es-MX', {minimumFractionDigits:0, maximumFractionDigits:0});
-}
-
-function detectMonth(row) {
-  for (const cell of row) {
-    const c = (cell||'').trim().toLowerCase().replace(/^\d+\.\s*/,'');
-    const hit = MESES_LOW.find(m => c === m || c.startsWith(m + ' ') || c.startsWith(m + ','));
-    if (hit) return MESES[MESES_LOW.indexOf(hit)];
-    const dm = cell.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-    if (dm) return MESES[parseInt(dm[2]) - 1];
-    const ym = cell.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if (ym) return MESES[parseInt(ym[2]) - 1];
-  }
-  return null;
-}
-
-function parseData(text) {
-  const lines = text.split('\n').filter(l => l.trim());
-  if (!lines.length) return;
-
-  // 1. Identificar la fila de encabezado óptima
-  let headerRowIdx = 0;
-  let bestScore = -1;
-  for (let i = 0; i < Math.min(10, lines.length); i++) {
-    const row = parseCSVLine(lines[i]);
-    let score = 0;
-    for (let ci = COL_START; ci < row.length; ci++) {
-      const v = (row[ci]||'').trim();
-      if (v && !isMoney(v) && isNaN(parseFloat(v))) score++;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Quinta Bugambilia – Rentas 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    /* ==========================================================================
+       RESET & VARIABLES GLOBALES (Alineado con Ventas)
+       ========================================================================== */
+    *, *::before, *::after { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
     }
-    if (score > bestScore) { bestScore = score; headerRowIdx = i; }
-  }
 
-  const headerRow = parseCSVLine(lines[headerRowIdx]);
-  
-  // 2. Limitar dinámicamente hasta donde terminen las columnas con título real
-  // Esto evita leer celdas vacías infinitas a la derecha de Google Sheets
-  let dynamicEnd = headerRow.length - 1;
-  while (dynamicEnd >= COL_START && !(headerRow[dynamicEnd]||'').trim()) {
-    dynamicEnd--;
-  }
+    :root {
+      --sand: #ddeef7; 
+      --cream: #f2f9f4; 
+      --charcoal: #1e3a2f; 
+      --warm: #4a7fa5;
+      --gold: #5db87a; 
+      --green: #3a8f5e; 
+      --red: #b94040; 
+      --amber: #4a7fa5;
+      --green-bg: #e8f5ee; 
+      --red-bg: #faeaea; 
+      --amber-bg: #ddeef7; 
+      --border: #b8d9c8;
+    }
 
-  // 3. Guardar los encabezados válidos encontrados
-  headers = [];
-  for (let ci = COL_START; ci <= dynamicEnd; ci++) {
-    headers.push((headerRow[ci]||'').trim() || `Col ${ci+1}`);
-  }
+    body { 
+      font-family: 'DM Sans', sans-serif; 
+      background: var(--cream); 
+      color: var(--charcoal); 
+      min-height: 100vh; 
+      overflow-x: hidden; 
+    }
 
-  allRows = [];
-  let currentMonth = null;
+    /* ==========================================================================
+       HEADER & NAVIGATION (Estilo Blur Premium Movil/Desktop)
+       ========================================================================== */
+    header { 
+      background: rgba(30, 58, 47, 0.95); 
+      backdrop-filter: blur(12px); 
+      -webkit-backdrop-filter: blur(12px);
+      color: #fff; 
+      padding: 1rem; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 0.8rem;
+      position: sticky; 
+      top: 0; 
+      z-index: 100; 
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
 
-  // 4. Procesar las filas de datos basados en el nuevo límite dinámico
-  for (let i = headerRowIdx + 1; i < lines.length; i++) {
-    const row = parseCSVLine(lines[i]);
-    const rowMonth = detectMonth(row);
-    if (rowMonth) currentMonth = rowMonth;
-
-    const fields = [];
-    let hasData = false;
+    .logo { 
+      font-family: 'Cormorant Garamond', serif; 
+      font-size: 1.4rem; 
+      font-weight: 400; 
+      letter-spacing: .05em; 
+      text-align: center;
+    }
+    .logo span { 
+      color: var(--gold); 
+      opacity: 0.9; 
+      font-size: 0.8rem; 
+      font-family: 'DM Sans', sans-serif;
+      margin-left: 0.3rem;
+      font-weight: 300;
+    }
     
-    for (let ci = COL_START; ci <= dynamicEnd; ci++) {
-      let v = (row[ci]||'').trim();
-      
-      // Filtro anti-basura de comentarios o notas del sistema
-      if (v.toLowerCase().includes('cite') || v.includes('://')) {
-        v = ''; 
-      }
-
-      fields.push(v);
-      if (v) hasData = true;
+    .nav-container { 
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.4rem; 
+      width: 100%; 
     }
-    if (!hasData) continue;
 
-    const allNumeric = fields.every(f => !f || isMoney(f) || !isNaN(parseFloat(f)));
-    if (allNumeric && fields.filter(Boolean).length <= 2) continue;
+    .nav-link, .btn-sync { 
+      background: rgba(255, 255, 255, 0.05); 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
+      color: #fff; 
+      padding: 0.65rem 0.5rem; 
+      border-radius: 10px; 
+      font-size: 0.8rem; 
+      font-weight: 500;
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 0.4rem; 
+      text-decoration: none; 
+      transition: all 0.2s ease-in-out; 
+      -webkit-tap-highlight-color: transparent; 
+    }
 
-    allRows.push({ fields, month: currentMonth, raw: row });
-  }
-}
+    .nav-link svg, .btn-sync svg {
+      opacity: 0.85;
+      flex-shrink: 0;
+      width: 14px;
+      height: 14px;
+    }
 
-function renderFilters() {
-  const months = [...new Set(allRows.map(r => r.month).filter(Boolean))];
-  const container = document.getElementById('month-filters');
-  container.innerHTML = '';
+    .btn-sync { 
+      background: var(--gold); 
+      color: #1e3a2f; 
+      border: none;
+      font-weight: 600;
+    }
 
-  const allBtn = document.createElement('button');
-  allBtn.className = 'filter-btn' + (activeMonth==='all'?' active':'');
-  allBtn.textContent = 'Todos';
-  allBtn.onclick = () => { activeMonth='all'; applyFilters(); };
-  container.appendChild(allBtn);
+    .nav-link:active, .nav-link:hover { 
+      background: rgba(255, 255, 255, 0.15); 
+      border-color: rgba(255, 255, 255, 0.25);
+    }
 
-  months.forEach(m => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn' + (activeMonth===m?' active':'');
-    btn.textContent = m;
-    btn.onclick = () => { activeMonth=m; applyFilters(); };
-    container.appendChild(btn);
-  });
-}
+    .btn-sync:active, .btn-sync:hover { 
+      background: #4ca667; 
+      box-shadow: 0 4px 12px rgba(93, 184, 122, 0.2);
+    }
 
-function applyFilters() {
-  document.querySelectorAll('.filter-btn').forEach(b => {
-    b.classList.toggle('active', b.textContent === (activeMonth==='all'?'Todos':activeMonth));
-  });
+    .btn-sync.loading svg { animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-  const q = (document.getElementById('search').value||'').toLowerCase();
-  const filtered = allRows.filter(r => {
-    if (activeMonth !== 'all' && r.month !== activeMonth) return false;
-    if (q && !r.fields.some(f => f.toLowerCase().includes(q))) return false;
-    return true;
-  });
+    /* ==========================================================================
+       MAIN CONTENT
+       ========================================================================== */
+    main { max-width: 1100px; margin: 0 auto; padding: 1rem 0.5rem 3rem; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; margin-bottom: .2rem; text-align: center; }
+    .subtitle { color: var(--warm); font-size: .8rem; margin-bottom: 1.5rem; text-align: center; }
 
-  renderSummary(filtered);
-  renderCards(filtered);
-  renderTable(filtered);
-}
+    #error-box {
+      display: none;
+      background: var(--red-bg);
+      border: 1px solid rgba(185, 64, 64, 0.2);
+      border-radius: 10px;
+      padding: 1rem;
+      color: var(--red);
+      font-size: .8rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
 
-function renderSummary(rows) {
-  const total = rows.length;
-  let totalMoney = 0;
-  
-  // Detectar inteligentemente montos grandes (totales) para la barra de resumen
-  rows.forEach(r => {
-    r.fields.forEach(f => {
-      const v = parseMoney(f);
-      if (v > 1000 && isMoney(f)) totalMoney += v; 
-    });
-  });
+    /* ── FILTERS BAR ── */
+    .filters-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(0,0,0,.03);
+    }
+    
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
 
-  const months = new Set(rows.map(r=>r.month).filter(Boolean));
-  let html = `<div class="sum-chip"><strong>${total}</strong> Eventos</div>`;
-  if (months.size > 0) html += `<div class="sum-chip"><strong>${months.size}</strong> ${months.size===1?'Mes':'Meses'}</div>`;
-  if (totalMoney > 0) html += `<div class="sum-chip">Total acumulado: <strong>${formatMXN(totalMoney)}</strong></div>`;
-  document.getElementById('summary-bar').innerHTML = html;
-}
+    .filter-label {
+      font-size: .65rem;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--warm);
+    }
 
-function renderCards(rows) {
-  const grid = document.getElementById('cards-grid');
-  if (!rows.length) {
-    grid.innerHTML = `<div class="empty-state"><p>No se encontraron reservaciones.</p></div>`;
-    return;
-  }
+    #month-filters {
+      display: flex;
+      gap: .4rem;
+      flex-wrap: wrap;
+      flex: 1;
+    }
 
-  grid.innerHTML = rows.map((r, idx) => {
-    const nameIdx = r.fields.findIndex(f => f && !isMoney(f) && isNaN(parseFloat(f)));
-    const name = nameIdx >= 0 ? r.fields[nameIdx] : (r.fields[0] || `Renta ${idx+1}`);
-    const badgeHtml = r.month ? `<span class="card-badge badge-green">${r.month}</span>` : '';
+    .filter-btn {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      padding: .4rem .8rem;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .75rem;
+      cursor: pointer;
+      color: var(--charcoal);
+      transition: all 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    const fieldRows = headers.map((h, i) => {
-      const val = r.fields[i] || '';
-      if (i === nameIdx) return ''; 
-      if (!val) return `<div class="field-row"><span class="field-key">${h}</span><span class="field-val empty">—</span></div>`;
+    .filter-btn:hover { border-color: var(--gold); color: var(--green); }
+    .filter-btn.active { background: var(--green); border-color: var(--green); color: #fff; font-weight: 500; }
+    
+    .search-input {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .55rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .8rem;
+      color: var(--charcoal);
+      outline: none;
+      transition: border-color .2s;
+      background: var(--cream);
+    }
+    .search-input:focus { border-color: var(--green); background: #fff; }
+
+    /* ── SUMMARY BAR ── */
+    .summary-bar {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .sum-chip {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .8rem;
+      font-size: .75rem;
+      color: var(--warm);
+      display: flex;
+      flex-direction: column;
+      gap: .2rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,.02);
+    }
+    .sum-chip strong {
+      color: var(--charcoal);
+      font-size: 1.3rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+    }
+
+    /* ── CARDS GRID ── */
+    .cards-grid { display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
+    .cards-grid.hidden { display: none; }
+
+    .renta-card {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(0,0,0,.03);
+      overflow: hidden;
+      position: relative;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .renta-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--gold));
+    }
+
+    .card-head { padding: 1rem 1.1rem .6rem; display: flex; justify-content: space-between; align-items: flex-start; gap: .5rem; }
+    .card-name { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; color: var(--charcoal); line-height: 1.2; }
+    .card-index { font-size: .65rem; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--warm); opacity: .7; margin-top: .15rem; }
+
+    .card-badge { flex-shrink: 0; font-size: .6rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; padding: .25rem .6rem; border-radius: 8px; white-space: nowrap; }
+    .badge-green { background: var(--green-bg); color: var(--green); }
+    .badge-blue { background: var(--amber-bg); color: var(--warm); }
+    .badge-gray { background: var(--sand); color: #6b8fa3; }
+
+    .card-divider { height: 1px; background: var(--cream); margin: 0 1.1rem; }
+
+    .card-fields { padding: .7rem 1.1rem 1rem; display: flex; flex-direction: column; gap: .45rem; }
+    .field-row { display: flex; align-items: baseline; gap: .5rem; }
+    .field-key { font-size: .65rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--warm); opacity: .8; min-width: 95px; flex-shrink: 0; }
+    .field-val { font-size: .8rem; color: var(--charcoal); }
+    .field-val.money { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--green); font-weight: 600; }
+    .field-val.empty { color: var(--border); font-style: italic; font-size: .75rem; }
+
+    /* ── VIEW TOGGLE ── */
+    .view-toggle { display: flex; gap: .3rem; margin-left: auto; }
+    .view-btn { background: var(--cream); border: 1px solid var(--border); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+    .view-btn.active { background: var(--green); border-color: var(--green); }
+    .view-btn svg { width: 14px; height: 14px; stroke: var(--warm); }
+    .view-btn.active svg { stroke: #fff; }
+
+    /* ── TABLE VIEW ── */
+    .table-wrap { display: none; background: #fff; border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; box-shadow: 0 4px 16px rgba(0,0,0,.03); }
+    .table-wrap.visible { display: block; }
+
+    table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    thead th { background: var(--charcoal); color: #fff; padding: .6rem .8rem; text-align: left; font-size: .65rem; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
+    tbody tr { border-bottom: 1px solid var(--cream); transition: background .12s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--sand); }
+    td { padding: .6rem .8rem; color: var(--charcoal); white-space: nowrap; }
+    td.money-cell { font-family: 'Cormorant Garamond', serif; font-size: .95rem; color: var(--green); font-weight: 600; }
+    td.empty-cell { color: var(--border); font-style: italic; font-size: .75rem; }
+
+    /* ── LOADER & EMPTY STATES ── */
+    #loading { text-align: center; padding: 3rem; color: var(--warm); font-size: 0.9rem; }
+    .spinner { width: 28px; height: 28px; border: 2.5px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 0.8rem; }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--warm); font-size: .85rem; }
+    .empty-state svg { width: 40px; height: 40px; opacity: .3; margin-bottom: .8rem; }
+
+    footer { text-align: center; padding: 1.5rem; font-size: .7rem; color: var(--warm); border-top: 1px solid var(--border); margin-top: 2rem; }
+
+    /* ==========================================================================
+       MEDIA QUERY: DESKTOP & TABLETS
+       ========================================================================== */
+    @media(min-width: 768px) {
+      header { flex-direction: row; justify-content: space-between; padding: 0 2rem; height: 65px; }
+      .nav-container { display: flex; width: auto; gap: 0.5rem; }
+      .logo { font-size: 1.6rem; text-align: left; }
+      .logo span { font-size: 0.9rem; }
       
-      const moneyVal = parseMoney(val);
-      const valClass = (moneyVal > 0 && isMoney(val)) ? 'money' : '';
-      const display = (moneyVal > 0 && isMoney(val)) ? formatMXN(moneyVal) : val;
-      return `<div class="field-row"><span class="field-key">${h}</span><span class="field-val ${valClass}">${display}</span></div>`;
-    }).join('');
+      main { padding: 1.5rem 1rem 4rem; }
+      h1 { font-size: 2.2rem; }
+      .subtitle { font-size: .88rem; }
 
-    return `<div class="renta-card">
-      <div class="card-head">
-        <div>
-          <div class="card-name">${name}</div>
-          <div class="card-index">ID #2026-${idx+1}</div>
-        </div>
-        ${badgeHtml}
+      .filters-bar { flex-direction: row; align-items: center; padding: 1rem 1.2rem; gap: 1rem; }
+      .search-input { width: 220px; margin-left: auto; }
+      .summary-bar { grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+      .cards-grid { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.2rem; }
+      
+      thead th { padding: .7rem 1rem; }
+      td { padding: .7rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Quinta Bugambilia <span>· Real del 14</span></div>
+  <div class="nav-container">
+    <a href="index.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Calendario</span>
+    </a>
+    <a href="ventas.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span>Ventas</span>
+    </a>
+    <button class="btn-sync" id="sync-btn" onclick="loadData()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10"/></svg>
+      <span>Actualizar</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <h1>Rentas 2026</h1>
+  <p class="subtitle">Detalle de reservaciones sincronizado en tiempo real</p>
+
+  <div id="error-box"></div>
+
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>Cargando datos desde la nube...</p>
+  </div>
+
+  <div id="ui" style="display:none">
+    <div class="filters-bar">
+      <div class="filter-group">
+        <span class="filter-label">Mes:</span>
+        <div id="month-filters"></div>
       </div>
-      <div class="card-divider"></div>
-      <div class="card-fields">${fieldRows}</div>
-    </div>`;
-  }).join('');
-}
+      
+      <input type="text" id="search-input" class="search-input" placeholder="Buscar por cliente o evento..." oninput="applyFilters()"/>
+      
+      <div class="view-toggle">
+        <button class="view-btn active" id="btn-cards" onclick="setView('cards')" title="Vista Tarjetas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </button>
+        <button class="view-btn" id="btn-table" onclick="setView('table')" title="Vista Tabla">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
 
-function renderTable(rows) {
-  const thead = document.getElementById('table-head');
-  const tbody = document.getElementById('table-body');
+    <div class="summary-bar">
+      <div class="sum-chip">Total Eventos<strong id="sum-count">0</strong></div>
+      <div class="sum-chip">Total Rentas<strong id="sum-total">$0.00</strong></div>
+      <div class="sum-chip">Total Anticipos<strong id="sum-deposits">$0.00</strong></div>
+      <div class="sum-chip">Por Liquidar<strong id="sum-pending">$0.00</strong></div>
+    </div>
 
-  thead.innerHTML = `<tr><th>#</th><th>Mes</th>${headers.map(h=>`<th>${h}</th>`).join('')}</tr>`;
+    <div id="cards-container" class="cards-grid"></div>
 
-  if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="${headers.length+2}" style="text-align:center;padding:2rem;color:var(--warm)">Sin resultados</td></tr>`;
-    return;
+    <div id="table-container" class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Evento</th>
+            <th>Total Renta</th>
+            <th>Anticipo</th>
+            <th>Restante</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+    
+    <div id="empty-state" class="empty-state" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      <p>No se encontraron reservaciones con los filtros seleccionados.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2026 Quinta Bugambilia. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+  // URL de publicación CSV de la pestaña "Rentas"
+  const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS1G_Z3w0G7vXnI6ZpSg66R9C_0B3O68lF_gB-z7U702Xyv_Bkgw6W_vHn7U-z46jNUXZ9G9z0p9B2x/pub?gid=1859591465&output=csv';
+
+  let allRows = [];
+  let currentMonth = 'TODOS';
+  let currentView = 'cards';
+
+  function formatMXN(amount) {
+    return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(amount || 0);
   }
 
-  tbody.innerHTML = rows.map((r, idx) => {
-    const cells = r.fields.map((f,i) => {
-      if (!f) return `<td class="empty-cell">—</td>`;
-      const moneyVal = parseMoney(f);
-      if (moneyVal > 0 && isMoney(f)) return `<td class="money-cell">${formatMXN(moneyVal)}</td>`;
-      return `<td>${f}</td>`;
-    }).join('');
-    return `<tr><td style="color:var(--warm);font-size:.7rem">${idx+1}</td><td>${r.month||'—'}</td>${cells}</tr>`;
-  }).join('');
-}
-
-function setView(view) {
-  currentView = view;
-  document.getElementById('cards-grid').classList.toggle('hidden', view==='table');
-  document.getElementById('table-wrap').classList.toggle('visible', view==='table');
-  document.getElementById('btn-cards').classList.toggle('active', view==='cards');
-  document.getElementById('btn-table').classList.toggle('active', view==='table');
-}
-
-async function loadData() {
-  const btn = document.getElementById('sync-btn');
-  btn.classList.add('loading');
-  document.getElementById('error-box').style.display='none';
-  document.getElementById('loading').style.display='block';
-  document.getElementById('ui').style.display='none';
-
-  try {
-    const res = await fetch(CSV_URL + '&t=' + Date.now());
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
-    parseData(text);
-
-    if (!allRows.length) throw new Error('No se encontraron datos válidos.');
-
-    renderFilters();
-    applyFilters();
-    document.getElementById('ui').style.display='block';
-    document.getElementById('loading').style.display='none';
-  } catch(e) {
-    document.getElementById('error-box').style.display='block';
-    document.getElementById('error-box').textContent='⚠️ Error al sincronizar: ' + e.message;
-    document.getElementById('loading').style.display='none';
+  function formatFecha(txt) {
+    if(!txt) return '';
+    const parts = txt.split('-');
+    if(parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts Partials?.[0] || parts[0]}`; 
+    }
+    return txt;
   }
-  btn.classList.remove('loading');
-}
 
-loadData();
+  function setView(view) {
+    currentView = view;
+    document.getElementById('cards-container').classList.toggle('hidden', view !== 'cards');
+    document.getElementById('table-container').classList.toggle('visible', view === 'table');
+    document.getElementById('btn-cards').classList.toggle('active', view === 'cards');
+    document.getElementById('btn-table').classList.toggle('active', view === 'table');
+  }
+
+  async function loadData() {
+    const btn = document.getElementById('sync-btn');
+    btn.classList.add('loading');
+    document.getElementById('error-box').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('ui').style.display = 'none';
+
+    try {
+      const res = await fetch(CSV_URL + '&t=' + Date.now());
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const text = await res.text();
+      parseData(text);
+
+      if (!allRows.length) throw new Error('No se encontraron datos en la pestaña publicada.');
+
+      renderFilters();
+      applyFilters();
+      document.getElementById('ui').style.display = 'block';
+      document.getElementById('loading').style.display = 'none';
+    } catch(e) {
+      document.getElementById('error-box').style.display = 'block';
+      document.getElementById('error-box').textContent = '⚠️ Error al cargar: ' + e.message;
+      document.getElementById('loading').style.display = 'none';
+    }
+    btn.classList.remove('loading');
+  }
+
+  function parseData(text) {
+    allRows = [];
+    const lines = text.split(/\r?\n/);
+    if(lines.length < 2) return;
+
+    // Detectar encabezados básicos
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+
+    for(let i = 1; i < lines.length; i++) {
+      if(!lines[i].trim()) continue;
+      
+      // Parseador simple de CSV respetando comillas
+      let cells = [];
+      let insideQuote = false;
+      let currentCell = '';
+      
+      for (let char of lines[i]) {
+        if (char === '"') {
+          insideQuote = !insideQuote;
+        } else if (char === ',' && !insideQuote) {
+          cells.push(currentCell.trim());
+          currentCell = '';
+        } else {
+          currentCell += char;
+        }
+      }
+      cells.push(currentCell.trim());
+
+      if(cells.length < 3 || !cells[0]) continue;
+
+      // Mapear columnas dinámicamente según orden esperado
+      const rowObj = {
+        id: cells[0],
+        cliente: cells[1] || 'Sin Nombre',
+        fecha: cells[2] || '',
+        mes: cells[3] || 'OTROS',
+        evento: cells[4] || '',
+        total: parseFloat(cells[5]?.replace(/[^0-9.-]/g, '')) || 0,
+        anticipo: parseFloat(cells[6]?.replace(/[^0-9.-]/g, '')) || 0,
+        restante: parseFloat(cells[7]?.replace(/[^0-9.-]/g, '')) || 0,
+        estado: cells[8] || 'Pendiente'
+      };
+      allRows.push(rowObj);
+    }
+  }
+
+  function renderFilters() {
+    const container = document.getElementById('month-filters');
+    const meses = ['TODOS', ...new Set(allRows.map(r => r.mes).filter(Boolean))];
+    
+    container.innerHTML = '';
+    meses.forEach(m => {
+      const btn = document.createElement('button');
+      btn.className = `filter-btn ${m === currentMonth ? 'active' : ''}`;
+      btn.textContent = m;
+      btn.onclick = () => {
+        currentMonth = m;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilters();
+      };
+      container.appendChild(btn);
+    });
+  }
+
+  function applyFilters() {
+    const searchTxt = document.getElementById('search-input').value.toLowerCase().trim();
+    
+    const filtered = allRows.filter(r => {
+      const matchesMonth = (currentMonth === 'TODOS' || r.mes === currentMonth);
+      const matchesSearch = (!searchTxt || 
+                             r.cliente.toLowerCase().includes(searchTxt) || 
+                             r.evento.toLowerCase().includes(searchTxt) ||
+                             r.id.toLowerCase().includes(searchTxt));
+      return matchesMonth && matchesSearch;
+    });
+
+    renderMetrics(filtered);
+    
+    if(filtered.length === 0) {
+      document.getElementById('cards-container').innerHTML = '';
+      document.getElementById('table-body').innerHTML = '';
+      document.getElementById('empty-state').style.display = 'block';
+      return;
+    }
+    document.getElementById('empty-state').style.display = 'none';
+
+    renderCards(filtered);
+    renderTable(filtered);
+  }
+
+  function renderMetrics(data) {
+    let total = 0, deposits = 0, pending = 0;
+    data.forEach(r => {
+      total += r.total;
+      deposits += r.anticipo;
+      pending += r.restante;
+    });
+
+    document.getElementById('sum-count').textContent = data.length;
+    document.getElementById('sum-total').textContent = formatMXN(total);
+    document.getElementById('sum-deposits').textContent = formatMXN(deposits);
+    document.getElementById('sum-pending').textContent = formatMXN(pending);
+  }
+
+  function getBadgeClass(estado) {
+    const est = estado.toLowerCase();
+    if(est.includes('liq') || est.includes('pag')) return 'badge-green';
+    if(est.includes('ant') || est.includes('parc')) return 'badge-blue';
+    return 'badge-gray';
+  }
+
+  function renderCards(data) {
+    const container = document.getElementById('cards-container');
+    container.innerHTML = '';
+
+    data.forEach(r => {
+      const card = document.createElement('div');
+      card.className = 'renta-card';
+      card.innerHTML = `
+        <div class="card-head">
+          <div>
+            <div class="card-name">${r.cliente}</div>
+            <div class="card-index">ID: ${r.id} · ${r.mes}</div>
+          </div>
+          <span class="card-badge ${getBadgeClass(r.estado)}">${r.estado}</span>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-fields">
+          <div class="field-row">
+            <span class="field-key">Fecha:</span>
+            <span class="field-val">${formatFecha(r.fecha) || '<span class="empty">No asignada</span>'}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-key">Tipo Evento:</span>
+            <span class="field-val">${r.evento || '<span class="empty">No especificado</span>'}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-key">Total Renta:</span>
+            <span class="field-val money">${formatMXN(r.total)}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-key">Anticipo:</span>
+            <span class="field-val money" style="color:var(--warm)">${formatMXN(r.anticipo)}</span>
+          </div>
+          <div class="field-row">
+            <span class="field-key">Restante:</span>
+            <span class="field-val money" style="color:${r.restante > 0 ? 'var(--red)' : 'var(--green)'}">${formatMXN(r.restante)}</span>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function renderTable(data) {
+    const tbody = document.getElementById('table-body');
+    tbody.innerHTML = '';
+
+    data.forEach(r => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${r.id}</strong></td>
+        <td>${r.cliente}</td>
+        <td>${formatFecha(r.fecha)}</td>
+        <td>${r.evento || '—'}</td>
+        <td class="money-cell">${formatMXN(r.total)}</td>
+        <td class="money-cell" style="color:var(--warm)">${formatMXN(r.anticipo)}</td>
+        <td class="money-cell" style="color:${r.restante > 0 ? 'var(--red)' : 'var(--green)'}">${formatMXN(r.restante)}</td>
+        <td><span class="card-badge ${getBadgeClass(r.estado)}">${r.estado}</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Carga inicial al abrir la página
+  window.addEventListener('DOMContentLoaded', loadData);
 </script>
+</body>
+</html>
