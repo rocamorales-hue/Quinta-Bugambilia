@@ -39,7 +39,7 @@
     }
 
     /* ==========================================================================
-       HEADER & NAVIGATION (Estilo Blur Premium Movil/Desktop)
+       HEADER & NAVIGATION (Estilo Blur Premium - Idéntico a Ventas)
        ========================================================================== */
     header { 
       background: rgba(30, 58, 47, 0.95); 
@@ -127,7 +127,7 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ==========================================================================
-       MAIN CONTENT
+       MAIN CONTENT & RESPONSIVE LAYOUT
        ========================================================================== */
     main { max-width: 1100px; margin: 0 auto; padding: 1rem 0.5rem 3rem; }
     h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; margin-bottom: .2rem; text-align: center; }
@@ -145,7 +145,7 @@
       text-align: center;
     }
 
-    /* ── FILTERS BAR ── */
+    /* ── FILTERS BAR (Mobile-First Layout) ── */
     .filters-bar {
       display: flex;
       flex-direction: column;
@@ -210,7 +210,7 @@
     }
     .search-input:focus { border-color: var(--green); background: #fff; }
 
-    /* ── SUMMARY BAR ── */
+    /* ── SUMMARY CARDS (2 en móvil, 4 en Escritorio) ── */
     .summary-bar {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -297,7 +297,7 @@
     td.money-cell { font-family: 'Cormorant Garamond', serif; font-size: .95rem; color: var(--green); font-weight: 600; }
     td.empty-cell { color: var(--border); font-style: italic; font-size: .75rem; }
 
-    /* ── LOADER & EMPTY STATES ── */
+    /* ── LOADER & STATES ── */
     #loading { text-align: center; padding: 3rem; color: var(--warm); font-size: 0.9rem; }
     .spinner { width: 28px; height: 28px; border: 2.5px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 0.8rem; }
     .empty-state { text-align: center; padding: 3rem 1rem; color: var(--warm); font-size: .85rem; }
@@ -306,7 +306,7 @@
     footer { text-align: center; padding: 1.5rem; font-size: .7rem; color: var(--warm); border-top: 1px solid var(--border); margin-top: 2rem; }
 
     /* ==========================================================================
-       MEDIA QUERY: DESKTOP & TABLETS
+       MEDIA QUERY: ADAPTACIÓN PANTALLAS GRANDES (Tablet & Desktop)
        ========================================================================== */
     @media(min-width: 768px) {
       header { flex-direction: row; justify-content: space-between; padding: 0 2rem; height: 65px; }
@@ -417,7 +417,7 @@
 </footer>
 
 <script>
-  // URL de publicación CSV de la pestaña "Rentas"
+  // URL de origen del Google Sheet publicado en formato CSV
   const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS1G_Z3w0G7vXnI6ZpSg66R9C_0B3O68lF_gB-z7U702Xyv_Bkgw6W_vHn7U-z46jNUXZ9G9z0p9B2x/pub?gid=1859591465&output=csv';
 
   let allRows = [];
@@ -432,7 +432,7 @@
     if(!txt) return '';
     const parts = txt.split('-');
     if(parts.length === 3) {
-      return `${parts[2]}/${parts[1]}/${parts Partials?.[0] || parts[0]}`; 
+      return `${parts[2]}/${parts[1]}/${parts[0]}`; 
     }
     return txt;
   }
@@ -477,13 +477,9 @@
     const lines = text.split(/\r?\n/);
     if(lines.length < 2) return;
 
-    // Detectar encabezados básicos
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-
     for(let i = 1; i < lines.length; i++) {
       if(!lines[i].trim()) continue;
       
-      // Parseador simple de CSV respetando comillas
       let cells = [];
       let insideQuote = false;
       let currentCell = '';
@@ -502,7 +498,6 @@
 
       if(cells.length < 3 || !cells[0]) continue;
 
-      // Mapear columnas dinámicamente según orden esperado
       const rowObj = {
         id: cells[0],
         cliente: cells[1] || 'Sin Nombre',
@@ -647,7 +642,6 @@
     });
   }
 
-  // Carga inicial al abrir la página
   window.addEventListener('DOMContentLoaded', loadData);
 </script>
 </body>
