@@ -39,7 +39,7 @@
     }
 
     /* ==========================================================================
-       HEADER & NAVIGATION (Solo Home y Actualizar)
+       HEADER & NAVIGATION (Estilo Blur Premium Movil/Desktop)
        ========================================================================== */
     header { 
       background: rgba(30, 58, 47, 0.95); 
@@ -76,7 +76,7 @@
     
     .nav-container { 
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 0.4rem; 
       width: 100%; 
     }
@@ -122,11 +122,11 @@
       background: #4ca667; 
       box-shadow: 0 4px 12px rgba(93, 184, 122, 0.2);
     }
-    .btn-outline.loading svg { animation: spin .8s linear infinite; }
+    #sync-btn.loading svg { animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ==========================================================================
-       MAIN CONTENT & FINANCES SYSTEM (Responsivo Móvil)
+       MAIN CONTENT & FINANCES SYSTEM
        ========================================================================== */
     main { max-width: 1100px; margin: 0 auto; padding: 1rem 0.5rem 3rem; }
     h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; margin-bottom: .2rem; text-align: center; }
@@ -144,21 +144,26 @@
       text-align: center;
     }
 
-    /* ── KPI GRIDS (Mobile First) ── */
-    .kpi-grid, .kpi-grid-2 { 
+    /* ── KPI GRIDS (2 columnas estables en celular para evitar scroll eterno) ── */
+    .kpi-grid { 
       display: grid; 
       grid-template-columns: 1fr; 
-      gap: 0.8rem; 
-      margin-bottom: 0.8rem; 
+      gap: 0.6rem; 
+      margin-bottom: 0.6rem; 
     }
-    .kpi-grid-2 { margin-bottom: 1.5rem; }
+    .kpi-grid-2 { 
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
 
     .kpi-card {
       background: #fff;
       border-radius: 12px;
       border: 1px solid var(--border);
-      padding: 1.2rem;
-      box-shadow: 0 4px 16px rgba(0,0,0,.03);
+      padding: 1rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,.02);
       position: relative;
       overflow: hidden;
     }
@@ -169,12 +174,12 @@
     .kpi-card.secondary::before { background: var(--warm); }
 
     .kpi-label { font-size: .65rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--warm); margin-bottom: .3rem; }
-    .kpi-value { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 600; color: var(--charcoal); line-height: 1.1; }
+    .kpi-value { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; color: var(--charcoal); line-height: 1.1; }
     .kpi-value.gold { color: var(--green); }
     .kpi-value.green { color: var(--green); }
     .kpi-value.amber { color: var(--charcoal); }
-    .kpi-value.warm { color: var(--warm); font-size: 1.5rem; }
-    .kpi-sub { font-size: .7rem; color: var(--warm); margin-top: .2rem; opacity: .8; }
+    .kpi-value.warm { color: var(--warm); font-size: 1.35rem; }
+    .kpi-sub { font-size: .65rem; color: var(--warm); margin-top: .15rem; opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* ── PROGRESS BAR ── */
     .progress-card {
@@ -182,7 +187,7 @@
       border-radius: 12px;
       border: 1px solid var(--border);
       padding: 1rem;
-      box-shadow: 0 4px 16px rgba(0,0,0,.04);
+      box-shadow: 0 4px 16px rgba(0,0,0,.03);
       margin-bottom: 1.5rem;
     }
     .progress-label { display: flex; justify-content: space-between; font-size: .75rem; color: var(--warm); margin-bottom: .4rem; font-weight: 500; }
@@ -193,7 +198,7 @@
     .content-row { display: grid; grid-template-columns: 1fr; gap: 1rem; }
 
     /* ── BAR CHART ── */
-    .chart-card, .table-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 1rem; box-shadow: 0 4px 16px rgba(0,0,0,.04); }
+    .chart-card, .table-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 1rem; box-shadow: 0 4px 16px rgba(0,0,0,.03); }
     .card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: var(--charcoal); border-bottom: 1px solid var(--cream); padding-bottom: 0.4rem; }
     
     .bar-chart { display: flex; flex-direction: column; gap: .6rem; }
@@ -224,7 +229,7 @@
     footer { text-align: center; padding: 1.5rem; font-size: .7rem; color: var(--warm); border-top: 1px solid var(--border); margin-top: 2rem; }
 
     /* ==========================================================================
-       MEDIA QUERY: OPTIMIZACIÓN DESKTOP & TABLETS
+       MEDIA QUERY: DESKTOP & TABLETS
        ========================================================================== */
     @media(min-width: 768px) {
       header { flex-direction: row; justify-content: space-between; padding: 0 2rem; height: 65px; }
@@ -258,6 +263,10 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span>Inicio</span>
     </a>
+    <a href="rentas.html" class="nav-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Rentas</span>
+    </a>
     <button id="sync-btn" onclick="loadData()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10"/></svg>
       <span>Actualizar</span>
@@ -267,77 +276,73 @@
 
 <main>
   <h1>Ventas 2026</h1>
-  <p class="subtitle">Resumen financiero actualizado en tiempo real[cite: 3]</p>
+  <p class="subtitle">Resumen financiero de comercialización</p>
 
   <div id="error-box"></div>
   <div id="content" style="display:none">
 
-    <!-- KPI Cards Principales -->
     <div class="kpi-grid">
       <div class="kpi-card total">
-        <div class="kpi-label">Total Ventas Reservadas[cite: 3]</div>
-        <div class="kpi-value gold" id="kpi-total">—[cite: 3]</div>
-        <div class="kpi-sub" id="kpi-meses">— meses registrados[cite: 3]</div>
+        <div class="kpi-label">Total Ventas Reservadas</div>
+        <div class="kpi-value gold" id="kpi-total">—</div>
+        <div class="kpi-sub" id="kpi-meses">— meses registrados</div>
       </div>
       <div class="kpi-card anticipo">
-        <div class="kpi-label">Anticipos Recibidos[cite: 3]</div>
-        <div class="kpi-value green" id="kpi-anticipo">—[cite: 3]</div>
-        <div class="kpi-sub" id="kpi-anticipo-pct">— del total[cite: 3]</div>
+        <div class="kpi-label">Anticipos Recibidos</div>
+        <div class="kpi-value green" id="kpi-anticipo">—</div>
+        <div class="kpi-sub" id="kpi-anticipo-pct">— del total</div>
       </div>
       <div class="kpi-card liquidar">
-        <div class="kpi-label">Por Liquidar[cite: 3]</div>
-        <div class="kpi-value amber" id="kpi-liquidar">—[cite: 3]</div>
-        <div class="kpi-sub" id="kpi-liquidar-pct">— del total[cite: 3]</div>
+        <div class="kpi-label">Por Liquidar</div>
+        <div class="kpi-value amber" id="kpi-liquidar">—</div>
+        <div class="kpi-sub" id="kpi-liquidar-pct">— del total</div>
       </div>
     </div>
 
-    <!-- KPI Cards Secundarios -->
     <div class="kpi-grid-2">
       <div class="kpi-card secondary">
-        <div class="kpi-label">Promedio Mensual[cite: 3]</div>
-        <div class="kpi-value warm" id="kpi-promedio">—[cite: 3]</div>
-        <div class="kpi-sub">por mes activo[cite: 3]</div>
+        <div class="kpi-label">Promedio Mensual</div>
+        <div class="kpi-value warm" id="kpi-promedio">—</div>
+        <div class="kpi-sub">por mes activo</div>
       </div>
       <div class="kpi-card secondary">
-        <div class="kpi-label">Mes Top[cite: 3]</div>
-        <div class="kpi-value warm" id="kpi-top-mes">—[cite: 3]</div>
-        <div class="kpi-sub" id="kpi-top-val">—[cite: 3]</div>
+        <div class="kpi-label">Mes Top</div>
+        <div class="kpi-value warm" id="kpi-top-mes">—</div>
+        <div class="kpi-sub" id="kpi-top-val">—</div>
       </div>
       <div class="kpi-card secondary">
-        <div class="kpi-label">Mes Menor[cite: 3]</div>
-        <div class="kpi-value warm" id="kpi-min-mes">—[cite: 3]</div>
-        <div class="kpi-sub" id="kpi-min-val">—[cite: 3]</div>
+        <div class="kpi-label">Mes Menor</div>
+        <div class="kpi-value warm" id="kpi-min-mes">—</div>
+        <div class="kpi-sub" id="kpi-min-val">—</div>
       </div>
       <div class="kpi-card secondary">
-        <div class="kpi-label">Avance del Año[cite: 3]</div>
-        <div class="kpi-value warm" id="kpi-avance">—[cite: 3]</div>
-        <div class="kpi-sub" id="kpi-avance-sub">meses con venta / 12[cite: 3]</div>
+        <div class="kpi-label">Avance del Año</div>
+        <div class="kpi-value warm" id="kpi-avance">—</div>
+        <div class="kpi-sub" id="kpi-avance-sub">meses con venta / 12</div>
       </div>
     </div>
 
-    <!-- Barra de Progreso Cobros -->
     <div class="progress-card">
       <div class="progress-label">
-        <span>Anticipos cobrados[cite: 3]</span>
-        <span id="progress-pct">0%[cite: 3]</span>
+        <span>Anticipos cobrados</span>
+        <span id="progress-pct">0%</span>
       </div>
       <div class="progress-track">
         <div class="progress-fill" id="progress-fill" style="width:0%"></div>
       </div>
     </div>
 
-    <!-- Fila Partida: Gráfica y Tabla -->
     <div class="content-row">
       <div class="chart-card">
-        <div class="card-title">Ventas por mes[cite: 3]</div>
+        <div class="card-title">Ventas por mes</div>
         <div class="bar-chart" id="bar-chart"></div>
       </div>
       
       <div class="table-card">
-        <div class="card-title">Detalle mensual[cite: 3]</div>
+        <div class="card-title">Detalle mensual</div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Mes[cite: 3]</th><th>Venta Total[cite: 3]</th></tr></thead>
+            <thead><tr><th>Mes</th><th>Venta Total</th></tr></thead>
             <tbody id="table-body"></tbody>
           </table>
         </div>
@@ -352,7 +357,7 @@
   </div>
 </main>
 
-<footer> Rentas Quinta Bugambilia 2026 · Sincronizado con Google Sheets </footer>
+<footer>Quinta Bugambilia 2026 · Sincronizado con Google Sheets</footer>
 
 <script>
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSo8m2mzpqf5Z_Znr_F6ZRDOqbZJ7zXuRzIkKkZHjU5A8ZvD3ejb7t6Pq_6YR28j12cAQCqQCqVFSve/pub?gid=1163742139&single=true&output=csv';
@@ -553,7 +558,7 @@ function render(data) {
       if(isLargeScreen) {
         setTimeout(() => fill.classList.add('loaded'), 600);
       } else {
-        fill.classList.add('loaded'); // Sin delay en móvil para mejor respuesta táctil
+        fill.classList.add('loaded');
       }
     }, 50 + idx * 40);
   });
@@ -575,7 +580,7 @@ function render(data) {
   tbody.appendChild(totalTr);
 }
 
-window.addEventListener('resize', () => loadData());
+// Carga inicial estable de datos
 loadData();
 </script>
 </body>
