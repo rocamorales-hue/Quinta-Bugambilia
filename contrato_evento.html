@@ -414,7 +414,7 @@
 
     <p><span class="clausula-title">PRIMERA. OBJETO Y UBICACIÓN:</span> El Arrendador otorga el uso temporal del inmueble ubicado en el Fraccionamiento Real del Catorce, Hermosillo, Sonora. El uso bajo esta modalidad está destinado exclusivamente para áreas exteriores, salvo adicionales especificados en este contrato.</p>
 
-    <p><span class="clausula-title">SEGUNDA. VIGENCIA Y HORARIOS:</span> El presente contrato ampara la estancia y el uso de las instalaciones exclusivamente desde el día <strong><span id="out-entrada"></span></strong> a las <strong><span id="out-hora-e"></span></strong> hasta el día <strong><span id="out-salida"></span></strong> a las <strong><span id="out-hora-s"></span></strong>. En cumplimiento estricto con el reglamento interno del Fraccionamiento Real del Catorce, se estipula que las <strong>01:00 AM</strong> es la hora límite absoluta e improrrogable para el apagado total de sistemas de sonido y el desalojo completo de invitados y proveedores. Todo retraso o exceso en el tiempo de desalojo general de la propiedad posterior al horario de salida pactado generará un cobro penalizado automático de <strong>$1,000.00 MXN por cada hora o fracción adicional</strong>, deducible del depósito de garantía.</p>
+    <p><span class="clausula-title">SEGUNDA. VIGENCIA Y HORARIOS:</span> El presente contrato ampara el uso de las instalaciones por un período base de 7 horas, con entrada a las <strong><span id="out-hora-e"></span></strong> y salida a las <strong><span id="out-hora-s"></span></strong> del día <strong><span id="out-entrada"></span></strong>. En caso de que el Arrendatario desee extender el evento más allá de las <strong><span id="out-hora-s2"></span></strong>, podrá hacerlo bajo las siguientes condiciones: la extensión deberá solicitarse y pagarse previamente, tiene un costo de $500.00 MXN por hora adicional, y en ningún caso podrá rebasar las 01:00 AM, hora límite absoluta e improrrogable conforme al reglamento del Fraccionamiento Real del Catorce. A dicha hora, sin excepción, deberá haberse apagado todo sistema de sonido y desalojado la totalidad de invitados y proveedores. Todo retraso posterior a la hora de salida pactada generará un cargo automático de $1,000.00 MXN por cada hora o fracción, deducible del depósito de garantía.</p>
 
     <p><span class="clausula-title">TERCERA. COSTO Y PAQUETE:</span> El costo total acordado es de <strong id="out-precio"></strong> MXN. El Arrendatario contrata formalmente el paquete con capacidad para un máximo estricto de <strong id="out-personas"></strong> personas. El Arrendatario se compromete formalmente a respetar dicho límite; por cada persona excedente que ingrese a las instalaciones durante el desarrollo del evento, se aplicará un cobro obligatorio y punitivo de <strong>$250.00 MXN</strong>, deducible directamente del depósito en garantía o cobrado en el acto.</p>
 
@@ -422,7 +422,7 @@
 
     <p><span class="clausula-title">QUINTA. FORMA DE PAGO:</span> Se requiere un anticipo de <strong id="out-anticipo"></strong> (30%) para asegurar la fecha. El saldo restante deberá liquidarse en su totalidad antes de ingresar al inmueble.</p>
 
-    <p><span class="clausula-title">SEXTA. DEPÓSITO DE GARANTÍA:</span> El Arrendatario leaves <strong id="out-deposito"></strong> MXN como garantía. Se devolverá en un plazo máximo de 24 horas tras verificar que no existan daños. <strong>Importante:</strong> El uso de confeti, polvos de colores o vidrio en la alberca causará la pérdida total del depósito.</p>
+    <p><span class="clausula-title">SEXTA. DEPÓSITO DE GARANTÍA:</span> El Arrendatario deja <strong id="out-deposito"></strong> MXN como garantía. Se devolverá en un plazo máximo de 24 horas tras verificar que no existan daños. <strong>Importante:</strong> El uso de confeti, polvos de colores o vidrio en la alberca causará la pérdida total del depósito.</p>
 
     <p><span class="clausula-title">SÉPTIMA. REGLAMENTO DE ALBERCA Y DESLINDE DE RESPONSABILIDAD:</span> Queda prohibido introducir comida, envases de vidrio, mascotas o cualquier sustancia contaminante al agua de la alberca. El Arrendatario declara expresamente conocer y aceptar los riesgos inherentes al uso de alberca y áreas acuáticas, asumiendo plena responsabilidad por cualquier accidente, lesión o incidente que pudiera ocurrir dentro de la propiedad durante el desarrollo del evento. El Arrendador queda liberado de toda responsabilidad civil, penal o de cualquier otra índole derivada del uso de las instalaciones, incluyendo el área de alberca. El Arrendatario se compromete expresamente a no emprender acción legal alguna en contra del Arrendador por dichos conceptos.</p>
 
@@ -544,9 +544,9 @@
     
     document.getElementById('out-fecha-contrato').innerText = formatDate(document.getElementById('fechaContrato').value);
     document.getElementById('out-entrada').innerText = formatDate(document.getElementById('fechaEntrada').value);
-    document.getElementById('out-salida').innerText = formatDate(document.getElementById('fechaSalida').value);
     document.getElementById('out-hora-e').innerText = formatTime(document.getElementById('horaEntrada').value);
     document.getElementById('out-hora-s').innerText = formatTime(document.getElementById('horaSalida').value);
+    document.getElementById('out-hora-s2').innerText = formatTime(document.getElementById('horaSalida').value);
     document.getElementById('out-precio').innerText = document.getElementById('precioInput').value;
     document.getElementById('out-anticipo').innerText = document.getElementById('anticipoInput').value;
     document.getElementById('out-deposito').innerText = document.getElementById('depositoInput').value;
