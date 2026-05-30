@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     /* ==========================================================================
-       RESET & VARIABLES GLOBALES (Alineado con Index, Rentas y Ventas)
+       RESET & VARIABLES GLOBALES
        ========================================================================== */
     *, *::before, *::after { 
       box-sizing: border-box; 
@@ -39,7 +39,7 @@
     }
 
     /* ==========================================================================
-       HEADER & NAVIGATION (Estilo unificado para smartphones)
+       HEADER & NAVIGATION
        ========================================================================== */
     header { 
       background: rgba(30, 58, 47, 0.95); 
@@ -274,9 +274,15 @@
   <p class="subtitle">Panel de cotización y redacción para contratos de eventos</p>
 
   <div class="form-container">
-    <div class="field">
-      <label>Nombre del Arrendatario</label>
-      <input type="text" id="nombreInput" placeholder="Ej. Roberto Morales">
+    <div class="row">
+      <div class="field">
+        <label>Nombre del Arrendatario</label>
+        <input type="text" id="nombreInput" placeholder="Ej. Roberto Morales">
+      </div>
+      <div class="field">
+        <label>Identificación Oficial (INE / Pasaporte)</label>
+        <input type="text" id="ineInput" placeholder="Clave de Elector o No. de Documento">
+      </div>
     </div>
 
     <div class="row">
@@ -301,20 +307,26 @@
       </div>
     </div>
 
-    <div class="field">
-      <label>Paquete Contratado</label>
-      <select id="paqueteSelect" onchange="calcularTotal()">
-        <option value="0" data-price="0">Seleccionar Paquete</option>
-        <option value="20" data-price="4600">20 pers — $4,600</option>
-        <option value="30" data-price="6540">30 pers — $6,540</option>
-        <option value="40" data-price="8240">40 pers — $8,240</option>
-        <option value="50" data-price="9700">50 pers — $9,700</option>
-        <option value="60" data-price="10420">60 pers — $10,420</option>
-        <option value="70" data-price="11140">70 pers — $11,140</option>
-        <option value="80" data-price="11860">80 pers — $11,860</option>
-        <option value="90" data-price="12580">90 pers — $12,580</option>
-        <option value="100" data-price="13900">100 pers — $13,900</option>
-      </select>
+    <div class="row">
+      <div class="field">
+        <label>Paquete Contratado</label>
+        <select id="paqueteSelect" onchange="calcularTotal()">
+          <option value="0" data-price="0">Seleccionar Paquete</option>
+          <option value="20" data-price="4600">20 pers — $4,600</option>
+          <option value="30" data-price="6540">30 pers — $6,540</option>
+          <option value="40" data-price="8240">40 pers — $8,240</option>
+          <option value="50" data-price="9700">50 pers — $9,700</option>
+          <option value="60" data-price="10420">60 pers — $10,420</option>
+          <option value="70" data-price="11140">70 pers — $11,140</option>
+          <option value="80" data-price="11860">80 pers — $11,860</option>
+          <option value="90" data-price="12580">90 pers — $12,580</option>
+          <option value="100" data-price="13900">100 pers — $13,900</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Fecha del Día (Firma del Contrato)</label>
+        <input type="date" id="fechaContrato">
+      </div>
     </div>
 
     <label>🌟 Contrataciones Adicionales</label>
@@ -343,6 +355,16 @@
           <input type="checkbox" class="extra-cb" data-name="Casa Principal (acceso completo)" value="1500" onchange="calcularTotal()">
           <span class="extra-label">Casa Principal (Acceso completo)</span>
           <span class="extra-price">$1,500</span>
+      </label>
+      <label class="extra-item">
+          <input type="checkbox" class="extra-cb" data-name="Casa Principal (si acceso a cuartos)" value="1000" onchange="calcularTotal()">
+          <span class="extra-label">Casa Principal (Si acceso a cuartos)</span>
+          <span class="extra-price">$1,000</span>
+      </label>
+      <label class="extra-item">
+          <input type="checkbox" class="extra-cb" data-name="Salón de Entretenimiento" value="1200" onchange="calcularTotal()">
+          <span class="extra-label">Salón de Entretenimiento</span>
+          <span class="extra-price">$1,200</span>
       </label>
       <label class="extra-item">
           <input type="checkbox" class="extra-cb" data-name="Depto. Independiente" value="1000" onchange="calcularTotal()">
@@ -388,29 +410,29 @@
       <h2>CONTRATO DE ARRENDAMIENTO TEMPORAL: QUINTA BUGAMBILIA</h2>
     </div>
 
-    <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que celebran, por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> en representación de <strong>QUINTA BUGAMBILIA</strong> (en adelante "El Arrendador") y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong> (en adelante "El Arrendatario"), bajo las siguientes cláusulas:</p>
+    <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que se celebra el día <strong><span id="out-fecha-contrato"></span></strong>, entre los suscritos: por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> en representación de <strong>QUINTA BUGAMBILIA</strong> (en adelante "El Arrendador") y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong> identificado con documento/INE número <strong><span id="out-ine"></span></strong> (en adelante "El Arrendatario"), bajo las siguientes cláusulas:</p>
 
-    <p><span class="clausula-title">PRIMERA. OBJETO Y UBICACIÓN:</span> El Arrendador otorga el uso temporal del inmueble ubicado en el Fraccionamiento Real del Catorce, Hermosillo, Sonora. El uso bajo esta modalidad está destinado exclusivamente para áreas exteriores, salvo adicionales especificados en este contrato.</p>
+    <p><span class="clausula-title">PRIMERA. OBJETO Y UBICACIÓN:</span> El Arrendador otorga el uso temporal del inmueble ubicado en el Fraccionamiento Real del Catorce, Hermosillo, Sonora. El uso bajo esta modalidada está destinado exclusivamente para áreas exteriores, salvo adicionales especificados en este contrato.</p>
 
-    <p><span class="clausula-title">SEGUNDA. VIGENCIA Y HORARIOS:</span> Ampara la estancia desde el día <strong><span id="out-entrada"></span></strong> a las <strong><span id="out-hora-e"></span></strong> hasta el día <strong><span id="out-salida"></span></strong> a las <strong><span id="out-hora-s"></span></strong>. Cualquier exceso en el tiempo de salida generará un cargo de $300.00 MXN por cada hora adicional.</p>
+    <p><span class="clausula-title">SEGUNDA. VIGENCIA Y HORARIOS:</span> Ampara la estancia desde el día <strong><span id="out-entrada"></span></strong> a las <strong><span id="out-hora-e"></span></strong> hasta el día <strong><span id="out-salida"></span></strong> a las <strong><span id="out-hora-s"></span></strong>. Se establece rígidamente que la hora máxima de salida de los invitados de la propiedad será a las <strong>01:00 AM</strong>. Cualquier exceso en el tiempo de desalojo general de las instalaciones generará un cargo automático de $300.00 MXN por cada hora adicional.</p>
 
-    <p><span class="clausula-title">TERCERA. COSTO Y PAQUETE:</span> El costo total es de <strong id="out-precio"></strong> MXN. El Arrendatario contrata el paquete para un máximo de <strong id="out-personas"></strong> personas. El exceso de ocupación sin previo aviso será motivo de cargos extra.</p>
+    <p><span class="clausula-title">TERCERA. COSTO Y PAQUETE:</span> El costo total acordado es de <strong id="out-precio"></strong> MXN. El Arrendatario contrata formalmente el paquete con capacidad para un máximo estricto de <strong id="out-personas"></strong> personas. El Arrendatario se compromete formalmente a respetar dicho límite; por cada persona excedente que ingrese a las instalaciones durante el desarrollo del evento, se aplicará un cobro obligatorio y punitivo de <strong>$250.00 MXN</strong>, deducible directamente del depósito en garantía o cobrado en el acto.</p>
 
     <p><span class="clausula-title">CUARTA. INCLUSIONES:</span> El paquete incluye uso de alberca, palapa, áreas exteriores, así como mesas y manteles blancos para el número de invitados contratados y una hielera grande.</p>
 
     <p><span class="clausula-title">QUINTA. FORMA DE PAGO:</span> Se requiere un anticipo de <strong id="out-anticipo"></strong> (30%) para asegurar la fecha. El saldo restante deberá liquidarse en su totalidad antes de ingresar al inmueble.</p>
 
-    <p><span class="clausula-title">SEXTA. DEPÓSITO DE GARANTÍA:</span> El Arrendatario deja <strong id="out-deposito"></strong> MXN como garantía. Se devolverá en 24 horas tras verificar que no existan daños. <strong>Importante:</strong> El uso de confeti, polvos de colores o vidrio en la alberca causará la pérdida total del depósito.</p>
+    <p><span class="clausula-title">SEXTA. DEPÓSITO DE GARANTÍA:</span> El Arrendatario deja <strong id="out-deposito"></strong> MXN como garantía. Se devolverá en un plazo máximo de 24 horas tras verificar que no existan daños. <strong>Importante:</strong> El uso de confeti, polvos de colores o vidrio en la alberca causará la pérdida total del depósito.</p>
 
     <p><span class="clausula-title">SÉPTIMA. REGLAMENTO DE ALBERCA:</span> Queda prohibido introducir comida, envases de vidrio o mascotas al agua. El uso de la alberca es bajo riesgo del Arrendatario. El Arrendador no se hace responsable por accidentes, lesiones o pérdidas dentro de la propiedad.</p>
 
-    <p><span class="clausula-title">OCTAVA. CUIDADO DE INSTALACIONES AND HUMO:</span> Queda <strong>estrictamente prohibido fumar</strong> en el interior de la casa principal, departamento, salón de juegos y área de palapa. Asimismo, se prohíbe tirar colillas de cigarro en el pasto sintético o áreas verdes. Cualquier quemadura en el pasto o mobiliario será penalizada con el cobro total de la reparación o reposición.</p>
+    <p><span class="clausula-title">OCTAVA. PROHIBICIÓN DE FUMAR E INSTALACIONES:</span> Queda <strong>estrictamente prohibido fumar</strong> en el interior de la casa principal, departamento, salón de juegos y área de palapa. Asimismo, se prohíbe tirar colillas de cigarro en el pasto sintético o áreas verdes. Cualquier quemadura en el pasto o mobiliario será penalizada con el cobro total de la reparación o reposición. <em>De igual manera, el Arrendador se deslinda de toda responsabilidad legal o financiera por objetos, dinero, joyas o valores olvidados por el Arrendatario o sus invitados dentro de cualquier área de la propiedad.</em></p>
 
     <p><span class="clausula-title">NOVENA. RESPONSABILIDAD DE MOBILIARIO:</span> El Arrendatario se compromete a cuidar el equipo y mobiliario (incluyendo piezas de madera fina). Cualquier daño será descontado del depósito o cobrado por separado si el monto excede la garantía.</p>
 
-    <p><span class="clausula-title">DÉCIMA. SERVICIOS EXTERNOS Y SONIDO:</span> Se permite música y catering externos. El Arrendatario es responsable de mantener un volumen moderado y de retirar cualquier equipo externo al finalizar el evento.</p>
+    <p><span class="clausula-title">DÉCIMA. SERVICIOS EXTERNOS, PROVEEDORES Y SONIDO:</span> Se permite música y catering externos. Sin embargo, para cumplir con el reglamento interno del Fraccionamiento Real del Catorce, se estipula como <strong>hora límite improrrogable para la música las 01:00 AM</strong>. Asimismo, el Arrendatario asume plena responsabilidad solidaria y legal por el comportamiento, daños, suciedad o retrasos ocasionados por sus proveedores externos (músicos, djs, banquetes, decoradores), respondiendo económicamente por cualquier desperfecto que estos causen en la propiedad.</p>
 
-    <p><span class="clausula-title">DÉCIMA PRIMERA. CANCELACIONES:</span> +20 días de antelación se reembolsa el 80%; entre 11 y 19 días el 50%; con 10 días o menos no habrá reembolso del anticipo.</p>
+    <p><span class="clausula-title">DÉCIMA PRIMERA. CANCELACIONES Y ACTIVIDADES PROHIBIDAS:</span> Con 21 días o más de antelación al evento se reembolsará el 80% del anticipo; en cancelaciones efectuadas entre 11 y 20 días previos se devolverá únicamente el 50%; con 10 días o menos de anticipación no habrá reembolso alguno bajo ninguna circunstancia. <strong>Queda estrictamente prohibido el consumo, venta o distribución de sustancias ilícitas o drogas, así como cualquier actividad ilegal dentro del inmueble; la violación de esta norma resultará en el desalojo inmediato de los asistentes y la cancelación del evento sin derecho a reembolso ni devolución del depósito.</strong></p>
 
     <div id="seccion-adicionales" class="seccion-detalles" style="display:none;">
       <p><strong>SERVICIOS ADICIONALES CONTRATADOS:</strong></p>
@@ -425,10 +447,12 @@
     <div class="reglas-oro">
       <p style="text-align: center; margin-top: 0; font-weight: bold;">⚠️ REGLAMENTOS CLAVE</p>
       <ul style="font-size: 0.85rem; padding-left: 20px;">
+          <li><strong>HORA LÍMITE GENERAL:</strong> Fin de la música y salida obligatoria de invitados a la 1:00 AM.</li>
+          <li><strong>CONTROL DE INVITADOS:</strong> Límite estricto según paquete. Persona extra genera cobro de $250.00 MXN.</li>
+          <li><strong>SUSTANCIAS ILÍCITAS:</strong> Tolerancia cero. Su uso implica desalojo inmediato sin reembolso.</li>
           <li><strong>ESPACIO LIBRE DE HUMO:</strong> Prohibido fumar en interiores, palapa y salón de juegos.</li>
           <li><strong>CUIDADO DEL PASTO:</strong> Prohibido tirar colillas al pasto sintético (Riesgo de quemadura irreversible).</li>
           <li><strong>PROHIBIDO VIDRIO:</strong> Nada de botellas o vasos de vidrio cerca de la alberca.</li>
-          <li><strong>SIN CONTAMINANTES:</strong> Prohibido arrojar confeti, diamantina o comida al agua.</li>
       </ul>
     </div>
 
@@ -439,7 +463,7 @@
       </div>
       <div class="firmas-box">
         <div class="linea-firma"></div>
-        <strong>EL ARRENDATARIO</strong><br><span id="out-nombre2"></span>
+        <strong>EL ARRENDATARIO</strong><br><span id="out-nombre2"></span><br><span id="out-ine2" style="font-size:0.75rem; color:#555;"></span>
       </div>
     </div>
     
@@ -455,6 +479,12 @@
 <footer> Rentas Quinta Bugambilia 2026 </footer>
 
 <script>
+  // Cargar fecha actual por defecto en el campo de fecha de contrato
+  window.addEventListener('DOMContentLoaded', () => {
+    const hoy = new Date().toISOString().split('T')[0];
+    document.getElementById('fechaContrato').value = hoy;
+  });
+
   function formatCurrency(input) {
     let value = input.value.replace(/\D/g, "");
     if (value === "") { input.value = ""; return; }
@@ -491,10 +521,16 @@
   function generarContrato() {
     const n = document.getElementById('nombreInput').value;
     const pkg = document.getElementById('paqueteSelect').value;
+    const ine = document.getElementById('ineInput').value;
+    
     if(!n || pkg == "0") return alert("Por favor llena el nombre y selecciona un paquete.");
     
     document.getElementById('out-nombre').innerText = n;
     document.getElementById('out-nombre2').innerText = n;
+    document.getElementById('out-ine').innerText = ine || "____________________";
+    document.getElementById('out-ine2').innerText = ine ? `INE: ${ine}` : "";
+    
+    document.getElementById('out-fecha-contrato').innerText = formatDate(document.getElementById('fechaContrato').value);
     document.getElementById('out-entrada').innerText = formatDate(document.getElementById('fechaEntrada').value);
     document.getElementById('out-salida').innerText = formatDate(document.getElementById('fechaSalida').value);
     document.getElementById('out-hora-e').innerText = formatTime(document.getElementById('horaEntrada').value);
@@ -532,9 +568,12 @@
 
   function clearForm() {
     document.getElementById('nombreInput').value = "";
+    document.getElementById('ineInput').value = "";
     document.getElementById('fechaEntrada').value = "";
     document.getElementById('fechaSalida').value = "";
     document.getElementById('paqueteSelect').value = "0";
+    const hoy = new Date().toISOString().split('T')[0];
+    document.getElementById('fechaContrato').value = hoy;
     document.querySelectorAll('.extra-cb').forEach(cb => cb.checked = false);
     document.getElementById('manualNombre1').value = "";
     document.getElementById('manualMonto1').value = "";
