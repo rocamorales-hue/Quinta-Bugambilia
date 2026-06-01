@@ -244,13 +244,42 @@
     }
 
     @media print {
-      body, main { background: #fff; padding: 0; margin: 0; color: #000; }
-      /* AQUÍ ESTÁ LA CORRECCIÓN: Se ocultan los elementos informativos del main */
-      header, .form-container, h1, .subtitle, .no-print-area, footer { display: none !important; }
-      #contrato-final { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100%; }
-      .firmas-print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 50px; }
-      .firmas-box { margin-bottom: 0; }
-      @page { margin: 1.2cm; }
+      /* Ocultar absolutamente todo por defecto dentro del body y main */
+      body *, main *, header, footer, .form-container, h1, .subtitle, .no-print-area { 
+        display: none !important; 
+      }
+      
+      /* Forzar a mostrar únicamente la sección del contrato y sus descendientes */
+      body, main, #contrato-final, #contrato-final * { 
+        display: block !important; 
+      }
+
+      /* Ajustes de limpieza para la hoja impresa */
+      body, main { 
+        background: #fff; 
+        padding: 0; 
+        margin: 0; 
+        color: #000; 
+      }
+      #contrato-final { 
+        border: none !important; 
+        box-shadow: none !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+        width: 100%; 
+      }
+      .firmas-print-grid { 
+        display: grid !important; 
+        grid-template-columns: 1fr 1fr; 
+        gap: 20px; 
+        margin-top: 50px; 
+      }
+      .firmas-box { 
+        margin-bottom: 0; 
+      }
+      @page { 
+        margin: 1.2cm; 
+      }
     }
   </style>
 </head>
@@ -425,7 +454,7 @@
 
     <p><span class="clausula-title">SEXTA. DEPÓSITO DE GARANTÍA:</span> El Arrendatario deja <strong id="out-deposito"></strong> MXN como garantía. Se devolverá en un plazo máximo de 24 horas tras verificar que no existan daños. <strong>Importante:</strong> El uso de confeti, polvos de colores o vidrio en la alberca causará la pérdida total del depósito.</p>
 
-    <p><span class="clausula-title">SÉPTIMA. REGLAMENTO DE ALBERCA Y DESLINDE DE RESPONSABILIDAD:</span> Queda prohibido introducir comida, envases de vidrio, mascotas o cualquier sustancia contaminante al agua de la alberca. El Arrendatario declara expresamente conocer y aceptar los riesgos inherentes al uso de alberca y áreas acuáticas, asumiendo plena responsabilidad por cualquier accidente, lesión o incidente que pudiera ocurrir dentro de la propiedad durante el desarrollo del evento. El Arrendador queda liberado de toda responsabilidad civil, penal o de cualquier otra índole derivada del uso de las instalaciones, incluyendo el área de alberca. El Arrendatario se compromete expresamente a no emprender acción legal alguna en contra del Arrendador por dichos conceptos.</p>
+    <p><span class="clausula-title">SÉPTIMA. REGLAMENTO DE ALBERCA Y DESLINDE DE RESPONSABILIDAD:</span> Queda prohibido introducir comida, envases de vidrio, mascotas o cualquier sustancia contaminante al agua de la alberca. El Arrendatario declara expresamente conocer y aceptar los riesgos inherentes al uso de alberca y áreas acuáticas, asumiendo plena responsabilidad por cualquier accidentee, lesión o incidente que pudiera ocurrir dentro de la propiedad durante el desarrollo del evento. El Arrendador queda liberado de toda responsabilidad civil, penal o de cualquier otra índole derivada del uso de las instalaciones, incluyendo el área de alberca. El Arrendatario se compromete expresamente a no emprender acción legal alguna en contra del Arrendador por dichos conceptos.</p>
 
     <p><span class="clausula-title">OCTAVA. PROHIBICIÓN DE FUMAR E INSTALACIONES:</span> Queda <strong>estrictamente prohibido fumar</strong> en el interior de la casa principal, departamento, salón de juegos y área de palapa. Asimismo, se prohíbe tirar colillas de cigarro en el pasto sintético o áreas verdes. Cualquier quemadura en el pasto o mobiliario será penalizada con el cobro total de la reparación o reposición. <em>De igual manera, el Arrendador se deslinda de toda responsabilidad legal o financiera por objetos, dinero, joyas o valores olvidados por el Arrendatario o sus invitados dentro de cualquier área de la propiedad.</em></p>
 
@@ -498,6 +527,7 @@
     document.getElementById('fechaContrato').value = hoy;
   });
 
+  // Las funciones restantes de JavaScript (formatCurrency, calcularTotal, generarContrato, etc.) se mantienen exactamente iguales.
   function formatCurrency(input) {
     let value = input.value.replace(/\D/g, "");
     if (value === "") { input.value = ""; return; }
