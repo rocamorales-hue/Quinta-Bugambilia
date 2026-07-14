@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Quinta Bugambilia – Gestión Integral 2026</title>
+  <title>Quinta Bugambilia – Disponibilidad 2026</title>
   <link rel="manifest" href="manifest.json">
   <script>
     if ('serviceWorker' in navigator) {
@@ -45,7 +45,7 @@
     }
 
     /* ==========================================================================
-       HEADER & NAVIGATION (MOBILE-FIRST OPTIMIZED)
+       HEADER & NAVIGATION
        ========================================================================== */
     header { 
       background: rgba(30, 58, 47, 0.95); 
@@ -188,29 +188,18 @@
     .tag-free { background: rgba(58, 143, 94, .08); color: var(--green); border: 1px solid rgba(58,143,94,0.1); }
 
     /* ==========================================================================
-       CONTRATOS STYLE PANEL
+       CONTRATOS PANEL STYLE
        ========================================================================== */
     .form-container { background: #fff; padding: 1.2rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,.04); margin-bottom: 1.5rem; max-width: 800px; margin-left: auto; margin-right: auto; }
     .field { display: flex; flex-direction: column; margin-bottom: 1rem; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0; }
     .form-container label { display: block; font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--warm); margin-bottom: 0.3rem; }
     
-    input[type="text"], input[type="number"], input[type="date"], input[type="time"], textarea, select {
+    .form-container input[type="text"], .form-container input[type="number"], .form-container input[type="date"], .form-container input[type="time"], .form-container textarea, .form-container select {
       width: 100%; padding: 0.65rem 0.8rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--charcoal); background: var(--cream); border: 1px solid var(--border); border-radius: 8px; outline: none; transition: all 0.2s; box-sizing: border-box;
     }
-    input:focus, textarea:focus, select:focus { border-color: var(--warm); background: #fff; box-shadow: 0 0 0 3px rgba(74,127,165,0.1); }
-    textarea { resize: vertical; min-height: 70px; }
-
-    .extras-container { background: #f9fdfb; padding: 0.3rem; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 1rem; }
-    .extra-item { display: flex; align-items: center; padding: 0.75rem; border-bottom: 1px solid #eee; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-    .extra-item:last-child { border-bottom: none; }
-    .extra-item input[type="checkbox"] { width: 22px; height: 22px; margin-right: 12px; flex-shrink: 0; accent-color: var(--green); cursor: pointer; }
-    .extra-label { flex-grow: 1; font-size: 0.85rem; }
-    .extra-price { font-weight: 600; color: var(--green); font-size: 0.85rem; }
-    .manual-extra { display: grid; grid-template-columns: 1fr 100px; gap: 0.5rem; padding: 0.6rem; background: #fff; border-top: 1px solid #eee; }
-
-    .btn-generar { width: 100%; padding: 0.8rem; background: var(--charcoal); color: white; border: none; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9rem; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: background 0.2s; -webkit-tap-highlight-color: transparent; }
-    .btn-generar:active { background: #2c5444; }
+    .form-container input:focus, .form-container textarea:focus, .form-container select:focus { border-color: var(--warm); background: #fff; box-shadow: 0 0 0 3px rgba(74,127,165,0.1); }
+    .form-container textarea { resize: vertical; min-height: 70px; }
 
     #contrato-final { display: none; background: #fff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,.06); line-height: 1.6; font-size: 0.85rem; text-align: justify; color: #000; animation: fadeUp 0.4s ease-out; max-width: 800px; margin: 2rem auto 0; }
     .header-contrato { text-align: center; margin-bottom: 1.5rem; border-bottom: 2px solid var(--charcoal); padding-bottom: 0.8rem; }
@@ -229,7 +218,7 @@
     footer { text-align: center; padding: 1.5rem; font-size: .7rem; color: var(--warm); border-top: 1px solid var(--border); margin-top: 2rem; }
 
     /* ==========================================================================
-       MEDIA QUERY: DESKTOP & PRINT OPTIMIZATION
+       MEDIA QUERY
        ========================================================================== */
     @media(min-width: 768px) {
       header { flex-direction: row; justify-content: space-between; padding: 0 2rem; height: 65px; }
@@ -508,7 +497,7 @@ let calendarData = {};
 let currentMonth = new Date().getMonth();
 const YEAR = 2026;
 
-// CONTROL DE CAMBIO DE SECCIÓN NATIVA EN INDEX
+// ================= NAVEGACIÓN ENTRE SECCIONES DEL INDEX =================
 function switchSection(sectionId) {
   document.querySelectorAll('.app-section').forEach(section => {
     section.classList.remove('active-section');
@@ -526,6 +515,7 @@ function switchSection(sectionId) {
   }
 }
 
+// ================= LÓGICA DEL CALENDARIO ORIGINAL (RECUPERADA) =================
 function parseCSVLine(line) {
   const cols = []; let cur = '', inQ = false;
   for (let i = 0; i < line.length; i++) {
@@ -662,7 +652,7 @@ function renderCalendar(month) {
   wrap.innerHTML = html + '</div>';
 }
 
-// ================= LOGICA LÓGICA DE CONTRATOS =================
+// ================= LÓGICA DE CONTRATOS INTEGRADA CORRECATMENTE =================
 function toggleCheckbox(e, id) {
   const cb = document.getElementById(id);
   if (e.target.tagName !== 'INPUT') {
@@ -794,30 +784,6 @@ function generarContrato() {
 function numeroALetras(num) {
   let entero = Math.floor(num);
   return entero.toLocaleString('es-MX') + " pesos 00/100 M.N.";
-}
-
-function clearForm() {
-  document.getElementById('nombreInput').value = "";
-  document.getElementById('ineInput').value = "";
-  document.getElementById('fechaEntrada').value = "";
-  document.getElementById('fechaSalida').value = "";
-  document.getElementById('horaEntrada').value = "15:00";
-  document.getElementById('horaSalida').value = "12:00";
-  document.getElementById('eventoInicioInput').value = "16:00";
-  document.getElementById('eventoFinInput').value = "23:00";
-  document.getElementById('nochesInput').value = "1";
-  document.getElementById('costoNocheInput').value = "0";
-  document.getElementById('paqueteSelect').value = "0";
-  document.getElementById('precioInput').value = "";
-  document.getElementById('manualNombre1').value = "";
-  document.getElementById('manualMonto1').value = "";
-  document.getElementById('anotacionesInput').value = "";
-  document.getElementById('depositoInput').value = "$1,000.00";
-  
-  const checkboxes = document.querySelectorAll('.extra-item input[type="checkbox"]');
-  checkboxes.forEach(cb => cb.checked = false);
-
-  document.getElementById('contrato-final').style.display = 'none';
 }
 
 window.addEventListener('resize', () => renderCalendar(currentMonth));
