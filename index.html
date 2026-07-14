@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Quinta Bugambilia – Disponibilidad 2026</title>
+  <title>Quinta Bugambilia – Gestión Integral 2026</title>
   <link rel="manifest" href="manifest.json">
   <script>
     if ('serviceWorker' in navigator) {
@@ -82,7 +82,7 @@
     
     .nav-container { 
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 0.4rem; 
       width: 100%; 
     }
@@ -113,16 +113,13 @@
     }
 
     #sync-btn { 
-      grid-column: span 2; 
       background: var(--gold); 
       color: #1e3a2f; 
       border: none;
       font-weight: 600;
-      margin-top: 0.1rem;
-      padding: 0.75rem;
     }
 
-    .nav-link:active, .nav-link:hover { 
+    .nav-link:active, .nav-link:hover, .nav-link.active { 
       background: rgba(255, 255, 255, 0.15); 
       border-color: rgba(255, 255, 255, 0.25);
     }
@@ -131,6 +128,10 @@
       background: #4ca667; 
       box-shadow: 0 4px 12px rgba(93, 184, 122, 0.2);
     }
+
+    /* Modificadores de secciones activas */
+    .app-section { display: none; }
+    .app-section.active-section { display: block; }
 
     /* ==========================================================================
        MAIN CONTENT & CALENDAR SYSTEM
@@ -144,40 +145,20 @@
     .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .dot-free{background:var(--green);} .dot-busy{background:var(--red);} .dot-partial{background:var(--amber);}
 
-    /* Contenedor del nav con desvanecimiento para indicar scroll horizontal en móviles */
-    .year-nav-container {
-      position: relative;
-      margin-bottom: 1rem;
-    }
+    .year-nav-container { position: relative; margin-bottom: 1rem; }
     .year-nav-container::after {
-      content: '';
-      position: absolute;
-      top: 0; right: 0; bottom: 0;
-      width: 20px;
-      background: linear-gradient(90deg, transparent, var(--cream));
-      pointer-events: none;
+      content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 20px;
+      background: linear-gradient(90deg, transparent, var(--cream)); pointer-events: none;
     }
 
     .year-nav { 
-      display: flex; 
-      gap: .4rem; 
-      overflow-x: auto; 
-      padding: 0.2rem 0.5rem 0.6rem; 
-      scrollbar-width: none; 
-      -webkit-overflow-scrolling: touch; 
+      display: flex; gap: .4rem; overflow-x: auto; padding: 0.2rem 0.5rem 0.6rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; 
     }
     .year-nav::-webkit-scrollbar { display: none; }
     .month-btn { flex-shrink: 0; background: #fff; border: 1px solid var(--border); padding: .5rem 1rem; border-radius: 20px; font-size: .75rem; cursor: pointer; color: var(--warm); box-shadow: 0 2px 4px rgba(0,0,0,0.02); -webkit-tap-highlight-color: transparent;}
     .month-btn.active { background: var(--charcoal); border-color: var(--charcoal); color: #fff; }
 
-    #calendar-wrap { 
-      background: #fff; 
-      border-radius: 12px; 
-      border: 1px solid var(--border); 
-      box-shadow: 0 4px 16px rgba(0,0,0,.04); 
-      overflow: hidden;
-    }
-
+    #calendar-wrap { background: #fff; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,.04); overflow: hidden; }
     .cal-header { background: var(--charcoal); color: #fff; padding: 0.8rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
     .cal-month-title { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; text-transform: capitalize; }
     .cal-stats { display: flex; gap: 0.5rem; }
@@ -186,20 +167,10 @@
     .stat-lbl { font-size: .5rem; opacity: .8; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; }
     .stat-num.s-green{color:#7ed4a0;} .stat-num.s-red{color:#f08080;} .stat-num.s-amber{color:#f5c06a;}
 
-    /* Sistema Grid Adaptable sin scroll horizontal innecesario */
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); width: 100%; }
     .cal-day-name { background: var(--sand); padding: .4rem 0; text-align: center; font-size: .6rem; font-weight: 600; text-transform: uppercase; color: var(--warm); border-bottom: 1px solid var(--border); }
 
-    .cal-cell { 
-      border-right: 1px solid var(--border); 
-      border-bottom: 1px solid var(--border); 
-      min-height: 65px; 
-      padding: .2rem; 
-      position: relative; 
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+    .cal-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-height: 65px; padding: .2rem; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
     .cal-cell:nth-child(7n){border-right:none;}
     .cal-cell.empty{background:var(--sand);opacity:.3;}
     .cal-cell.free{background:var(--green-bg);}
@@ -212,44 +183,57 @@
     .status-bar.free{background:var(--green);} .status-bar.busy{background:var(--red);} .status-bar.partial{background:var(--amber);}
 
     .session-tags { display: flex; flex-direction: column; gap: 2px; width: 100%; margin-top: auto; }
-    .session-tag { 
-      font-size: .5rem; 
-      padding: 1px 2px; 
-      border-radius: 3px; 
-      font-weight: 500; 
-      white-space: nowrap; 
-      overflow: hidden; 
-      text-overflow: ellipsis;
-      max-width: 100%;
-      line-height: 1.1;
-      display: block;
-      text-align: center;
-    }
+    .session-tag { font-size: .5rem; padding: 1px 2px; border-radius: 3px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; line-height: 1.1; display: block; text-align: center; }
     .tag-busy { background: rgba(185, 64, 64, .08); color: var(--red); border: 1px solid rgba(185,64,64,0.1); }
     .tag-free { background: rgba(58, 143, 94, .08); color: var(--green); border: 1px solid rgba(58,143,94,0.1); }
+
+    /* ==========================================================================
+       CONTRATOS STYLE PANEL
+       ========================================================================== */
+    .form-container { background: #fff; padding: 1.2rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,.04); margin-bottom: 1.5rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+    .field { display: flex; flex-direction: column; margin-bottom: 1rem; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0; }
+    .form-container label { display: block; font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--warm); margin-bottom: 0.3rem; }
+    
+    input[type="text"], input[type="number"], input[type="date"], input[type="time"], textarea, select {
+      width: 100%; padding: 0.65rem 0.8rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--charcoal); background: var(--cream); border: 1px solid var(--border); border-radius: 8px; outline: none; transition: all 0.2s; box-sizing: border-box;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--warm); background: #fff; box-shadow: 0 0 0 3px rgba(74,127,165,0.1); }
+    textarea { resize: vertical; min-height: 70px; }
+
+    .extras-container { background: #f9fdfb; padding: 0.3rem; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 1rem; }
+    .extra-item { display: flex; align-items: center; padding: 0.75rem; border-bottom: 1px solid #eee; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .extra-item:last-child { border-bottom: none; }
+    .extra-item input[type="checkbox"] { width: 22px; height: 22px; margin-right: 12px; flex-shrink: 0; accent-color: var(--green); cursor: pointer; }
+    .extra-label { flex-grow: 1; font-size: 0.85rem; }
+    .extra-price { font-weight: 600; color: var(--green); font-size: 0.85rem; }
+    .manual-extra { display: grid; grid-template-columns: 1fr 100px; gap: 0.5rem; padding: 0.6rem; background: #fff; border-top: 1px solid #eee; }
+
+    .btn-generar { width: 100%; padding: 0.8rem; background: var(--charcoal); color: white; border: none; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9rem; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: background 0.2s; -webkit-tap-highlight-color: transparent; }
+    .btn-generar:active { background: #2c5444; }
+
+    #contrato-final { display: none; background: #fff; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,.06); line-height: 1.6; font-size: 0.85rem; text-align: justify; color: #000; animation: fadeUp 0.4s ease-out; max-width: 800px; margin: 2rem auto 0; }
+    .header-contrato { text-align: center; margin-bottom: 1.5rem; border-bottom: 2px solid var(--charcoal); padding-bottom: 0.8rem; }
+    .header-contrato h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; text-transform: uppercase; color: var(--charcoal); margin: 0; }
+    .clausula-title { font-weight: bold; display: inline; color: #000; }
+    #contrato-final p { margin-bottom: 0.8rem; color: #111; }
+    .seccion-detalles { margin-top: 1rem; padding: 1rem; border: 1px dashed var(--border); background: var(--cream); border-radius: 8px; }
+    .tabla-banco { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.8rem; }
+    .tabla-banco td { padding: 0.4rem 0.6rem; border: 1px solid #ccc; }
+    .tabla-banco td:first-child { font-weight: bold; background-color: #f5f5f5; width: 35%; }
+    .firmas-container { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 2.5rem; text-align: center; }
+    .linea-firma { width: 70%; height: 1px; background: #000; margin: 0 auto 0.4rem; padding-top: 5px; border-top: 1px solid #000; }
+    .no-print-area { display: flex; justify-content: center; margin-top: 1.5rem; }
+    .btn-print { background: var(--green); color: #fff; border: none; padding: 0.7rem 1.5rem; font-size: 0.85rem; font-weight: 500; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: background 0.2s; }
 
     footer { text-align: center; padding: 1.5rem; font-size: .7rem; color: var(--warm); border-top: 1px solid var(--border); margin-top: 2rem; }
 
     /* ==========================================================================
-       MEDIA QUERY: OPTIMIZACIÓN PARA ESCRITORIO Y TABLETAS
+       MEDIA QUERY: DESKTOP & PRINT OPTIMIZATION
        ========================================================================== */
     @media(min-width: 768px) {
-      header { 
-        flex-direction: row; 
-        justify-content: space-between; 
-        padding: 0 2rem; 
-        height: 65px;
-      }
-      .nav-container { 
-        display: flex;
-        width: auto; 
-        gap: 0.5rem; 
-      }
-      #sync-btn { 
-        grid-column: auto; 
-        margin-top: 0;
-        padding: 0.65rem 1rem;
-      }
+      header { flex-direction: row; justify-content: space-between; padding: 0 2rem; height: 65px; }
+      .nav-container { display: flex; width: auto; gap: 0.5rem; }
       .logo { font-size: 1.6rem; }
       main { padding: 1.5rem 1rem 4rem; }
       h1 { font-size: 2.2rem; }
@@ -258,6 +242,16 @@
       .session-tag { font-size: .55rem; padding: 2px 4px; text-align: left;}
       .year-nav-container::after { display: none; }
       .year-nav { padding: 0.2rem 0 0.6rem; }
+      .form-container, #contrato-final { padding: 2rem; }
+      .firmas-container { grid-template-columns: 1fr 1fr; gap: 3rem; }
+    }
+
+    @media print {
+      body, main { background: #fff; padding: 0; margin: 0; color: #000; }
+      header, .form-container, h1, .subtitle, .no-print-area, .legend, .year-nav-container, #calendar-wrap, footer { display: none !important; }
+      #contrato-final { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100%; }
+      .firmas-print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 50px; }
+      @page { margin: 1.5cm; }
     }
   </style>
 </head>
@@ -266,45 +260,240 @@
 <header>
   <div class="logo">Quinta Bugambilia <span>· Real del 14</span></div>
   <div class="nav-container">
-    <a href="ventas.html" class="nav-link">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      <span>Ventas</span>
-    </a>
-    <a href="contrato_hospedaje.html" class="nav-link">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    <button class="nav-link active" id="btn-sec-cal" onclick="switchSection('calendario')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+      <span>Calendario</span>
+    </button>
+    <button class="nav-link" id="btn-sec-con" onclick="switchSection('contratos')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       <span>Contratos</span>
-    </a>
-    <a href="contrato_evento.html" class="nav-link">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
-      <span>Evento</span>
-    </a>
-    <a href="rentas.html" class="nav-link">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-      <span>Rentas</span>
-    </a>
+    </button>
     <button id="sync-btn" onclick="loadData()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10"/></svg>
       <span>Actualizar</span>
     </button>
   </div>
 </header>
 
 <main>
-  <h1>Disponibilidad 2026</h1>
-  <p class="subtitle">Calendario en tiempo real</p>
+  <div id="section-calendario" class="app-section active-section">
+    <h1>Disponibilidad 2026</h1>
+    <p class="subtitle">Calendario en tiempo real</p>
 
-  <div class="legend">
-    <div class="legend-item"><div class="dot dot-free"></div> Libre</div>
-    <div class="legend-item"><div class="dot dot-partial"></div> Parcial</div>
-    <div class="legend-item"><div class="dot dot-busy"></div> No Disponible</div>
+    <div class="legend">
+      <div class="legend-item"><div class="dot dot-free"></div> Libre</div>
+      <div class="legend-item"><div class="dot dot-partial"></div> Parcial</div>
+      <div class="legend-item"><div class="dot dot-busy"></div> No Disponible</div>
+    </div>
+
+    <div class="year-nav-container">
+      <nav class="year-nav" id="month-nav"></nav>
+    </div>
+
+    <div id="calendar-wrap">
+      <div style="text-align:center; padding:3rem; color:var(--warm); font-size: 0.9rem;">Cargando disponibilidad...</div>
+    </div>
   </div>
 
-  <div class="year-nav-container">
-    <nav class="year-nav" id="month-nav"></nav>
-  </div>
+  <div id="section-contratos" class="app-section">
+    <h1>Generador de Contrato</h1>
+    <p class="subtitle">Panel integral de reservas y cálculo de arrendamiento + hospedaje</p>
 
-  <div id="calendar-wrap">
-    <div style="text-align:center; padding:3rem; color:var(--warm); font-size: 0.9rem;">Cargando disponibilidad...</div>
+    <div class="form-container">
+      <div class="row">
+        <div class="field">
+          <label>Nombre del Cliente Arrendatario</label>
+          <input type="text" id="nombreInput" placeholder="Ej. Juan Pérez">
+        </div>
+        <div class="field">
+          <label>Identificación Oficial (INE / Pasaporte)</label>
+          <input type="text" id="ineInput" placeholder="Clave de Elector o No. de Documento">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Fecha de Entrada (Check-In)</label>
+          <input type="date" id="fechaEntrada" onchange="calcularTotal()">
+        </div>
+        <div class="field">
+          <label>Hora de Entrada</label>
+          <input type="time" id="horaEntrada" value="15:00">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Fecha de Salida (Check-Out)</label>
+          <input type="date" id="fechaSalida" onchange="calcularTotal()">
+        </div>
+        <div class="field">
+          <label>Hora de Salida</label>
+          <input type="time" id="horaSalida" value="12:00">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Hora Inicio del Evento</label>
+          <input type="time" id="eventoInicioInput" value="16:00">
+        </div>
+        <div class="field">
+          <label>Hora Fin del Evento</label>
+          <input type="time" id="eventoFinInput" value="23:00">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Número de Noches</label>
+          <input type="number" id="nochesInput" min="0" value="1" oninput="calcularTotal()">
+        </div>
+        <div class="field">
+          <label>Costo por Noche de Hospedaje ($)</label>
+          <input type="number" id="costoNocheInput" min="0" value="0" oninput="calcularTotal()">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Paquete de Evento (Base de Personas / Aforo)</label>
+        <select id="paqueteSelect" onchange="calcularTotal()">
+          <option value="0" data-price="0" data-aforo="0">Sin Paquete de Evento (Solo Hospedaje)</option>
+          <option value="20" data-price="4600" data-aforo="20">20 personas — $4,600</option>
+          <option value="30" data-price="6540" data-aforo="30">30 personas — $6,540</option>
+          <option value="40" data-price="8240" data-aforo="40">40 personas — $8,240</option>
+          <option value="50" data-price="9700" data-aforo="50">50 personas — $9,700</option>
+          <option value="60" data-price="10420" data-aforo="60">60 personas — $10,420</option>
+          <option value="70" data-price="11140" data-aforo="70">70 personas — $11,140</option>
+          <option value="80" data-price="11860" data-aforo="80">80 personas — $11,860</option>
+        </select>
+      </div>
+
+      <label>Servicios Extra / Adicionales</label>
+      <div class="extras-container">
+        <div class="extra-item" onclick="toggleCheckbox(event, 'extraBrincolin')">
+          <input type="checkbox" id="extraBrincolin" value="500" onchange="calcularTotal()">
+          <span class="extra-label">Brincolin Estándar</span>
+          <span class="extra-price">+$500</span>
+        </div>
+        <div class="extra-item" onclick="toggleCheckbox(event, 'extraBrincolinAcuatico')">
+          <input type="checkbox" id="extraBrincolinAcuatico" value="1200" onchange="calcularTotal()">
+          <span class="extra-label">Brincolin Acuático Grande</span>
+          <span class="extra-price">+$1,200</span>
+        </div>
+        <div class="extra-item" onclick="toggleCheckbox(event, 'extraFutbolito')">
+          <input type="checkbox" id="extraFutbolito" value="400" onchange="calcularTotal()">
+          <span class="extra-label">Mesa de Futbolito</span>
+          <span class="extra-price">+$400</span>
+        </div>
+        <div class="extra-item" onclick="toggleCheckbox(event, 'extraBocina')">
+          <input type="checkbox" id="extraBocina" value="400" onchange="calcularTotal()">
+          <span class="extra-label">Bocina de Alta Potencia</span>
+          <span class="extra-price">+$400</span>
+        </div>
+        <div class="extra-item" onclick="toggleCheckbox(event, 'extraCalentador')">
+          <input type="checkbox" id="extraCalentador" value="600" onchange="calcularTotal()">
+          <span class="extra-label">Calentador Ambiental de Gas</span>
+          <span class="extra-price">+$600</span>
+        </div>
+
+        <div class="manual-extra">
+          <input type="text" id="manualNombre1" placeholder="Concepto Extra Manual (Ej. Sillas Extra)">
+          <input type="text" id="manualMonto1" placeholder="$0.00" oninput="calcularTotal()">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Precio Total Calculado ($)</label>
+          <input type="text" id="precioInput" placeholder="Calculado automáticamente">
+        </div>
+        <div class="field">
+          <label>Depósito en Garantía (Reembolsable)</label>
+          <input type="text" id="depositoInput" value="$1,000.00">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Anotaciones Especiales</label>
+        <textarea id="anotacionesInput" placeholder="Ej. Se autoriza la entrada de proveedores externos..."></textarea>
+      </div>
+
+      <button class="btn-generar" onclick="generarContrato()">
+        <svg style="width:18px;height:18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Generar e Integrar Contrato Final
+      </button>
+    </div>
+
+    <div id="contrato-final">
+      <div class="header-contrato">
+        <h2>CONTRATO DE ARRENDAMIENTO TEMPORAL Y HOSPEDAJE DE "QUINTA BUGAMBILIA"</h2>
+      </div>
+
+      <p><span class="clausula-title">PRIMERA. OBJETO DEL CONTRATO.</span> EL ARRENDADOR otorga en arrendamiento temporal y servicio de hospedaje el inmueble denominado "Quinta Bugambilia", ubicado en el Fraccionamiento Real del Catorce, en la ciudad de Hermosillo, Sonora. El inmueble se destina exclusivamente a fines recreativos, de esparcimiento de carácter familiar y pernocta.</p>
+
+      <p><span class="clausula-title">SEGUNDA. FECHA, HORARIO Y COSTO DEL ARRENDAMIENTO.</span> EL ARRENDATARIO, C. <span id="out-nombre" style="font-weight:bold; text-decoration:underline;"></span>, identificado con documento oficial No. <span id="out-ine" style="font-weight:bold;"></span>, hace uso del inmueble bajo las siguientes condiciones:</p>
+      
+      <ul style="margin-left:2rem; margin-bottom:0.8rem; font-size:0.9rem;">
+        <li><strong>Fecha de hospedaje:</strong> Del <span id="out-fecha-entrada" style="font-weight:bold;"></span> (Check-In a las <span id="out-hora-entrada" style="font-weight:bold;"></span> hrs) al <span id="out-fecha-salida" style="font-weight:bold;"></span> (Check-Out a las <span id="out-hora-salida" style="font-weight:bold;"></span> hrs), amparando un total de <span id="out-noches-cant" style="font-weight:bold;"></span> noche(s) de hospedaje.</li>
+        <li><strong>Evento:</strong> Se autoriza la realización de un evento el día <span id="out-fecha-evento" style="font-weight:bold;"></span> en el horario de <span id="out-hora-evento-inicio" style="font-weight:bold;"></span> hrs a <span id="out-hora-evento-fin" style="font-weight:bold;"></span> hrs.</li>
+        <li><strong>Ocupación y aforo máximo permitido:</strong> Máximo de <span id="out-aforo-evento" style="font-weight:bold;"></span> personas para el evento y capacidad de hospedaje para hasta 12 personas en dormitorios.</li>
+        <li><strong>Costo total del arrendamiento y hospedaje:</strong> <span id="out-precio" style="font-weight:bold; color:var(--green);"></span>.</li>
+        <li><strong>El arrendamiento incluye de forma base:</strong> Mesas con mantel, Sillas correspondientes al paquete, 1 hielera grande y acceso a las instalaciones de hospedaje para la(s) noche(s) contratada(s).</li>
+      </ul>
+
+      <p><span class="clausula-title">TERCERA. ANTICIPO Y PAGO DEL SALDO.</span> Para reservar la fecha, EL ARRENDATARIO deberá realizar un anticipo equivalente al 30% del monto total (<span id="out-anticipo" style="font-weight:bold;"></span>). El monto restante (<span id="out-saldo" style="font-weight:bold;"></span>) deberá liquidarse en su totalidad antes del ingreso al inmueble el día del inicio del servicio.</p>
+
+      <p><span class="clausula-title">CUARTA. DATOS PARA DEPÓSITO O TRANSFERENCIA.</span> Los pagos correspondientes deberán realizarse a la siguiente cuenta bancaria propiedad del ARRENDADOR:</p>
+      <table class="tabla-banco">
+        <tr><td>Banco:</td><td>Santander</td></tr>
+        <tr><td>Titular:</td><td>Javier Antonio Morales Mizquez</td></tr>
+        <tr><td>Número de Tarjeta:</td><td>5579 0890 0728 7264</td></tr>
+        <tr><td>CLABE:</td><td>014760655114097664</td></tr>
+        <tr><td>Número de Cuenta:</td><td>65511409766</td></tr>
+      </table>
+
+      <p><span class="clausula-title">QUINTA. DEPÓSITO DE GARANTÍA.</span> EL ARRENDATARIO entregará un depósito de garantía por la cantidad de <span id="out-deposito" style="font-weight:bold;"></span>, el cual será reembolsado al finalizar el periodo de hospedaje, siempre y cuando no se hayan ocasionado daños al inmueble, habitaciones, mobiliario o equipo, y se entregue en condiciones razonables de limpieza.</p>
+
+      <p><span class="clausula-title">SEXTA. OCUPACIÓN Y USO DE INSTALACIONES.</span> La ocupación máxima permitida para el evento es de <span id="out-aforo-evento2" style="font-weight:bold;"></span> personas y de 12 personas para el hospedaje nocturno. Se permite el uso de las áreas externas del inmueble y las habitaciones destinadas al hospedaje. Cualquier exceso de ocupación no autorizado en el evento o en el hospedaje dará lugar a la rescisión inmediata del contrato sin derecho a reembolso.</p>
+
+      <p><span class="clausula-title">SÉPTIMA. ACCESO AL SALÓN DE JUEGOS.</span> Se otorga acceso al salón de juegos. Queda expresamente estipulado que cualquier daño o desperfecto a cualquier equipo o mobiliario correrá por cargo del ARRENDATARIO. Se recomienda limitar el acceso a niños y controlar estrictamente el aforo en esta área para evitar incidentes.</p>
+
+      <p><span class="clausula-title">OCTAVA. CONDICIONES DE USO Y RESPONSABILIDADES.</span> El inmueble deberá usarse exclusivamente para los fines establecidos. EL ARRENDATARIO se compromete a firmar el reglamento de uso y hospedaje antes de ingresar. EL ARRENDADOR no se hace responsable por accidentes, lesiones, enfermedades o pérdidas de objetos personales durante el uso y estancia en el inmueble.</p>
+
+      <p><span class="clausula-title">NOVENA. CANCELACIONES.</span> En caso de cancelación por parte del ARRENDATARIO: más de 20 días de anticipación (reembolso del 80% del anticipo), entre 4 y 19 días (reembolso del 50% del anticipo), menos de 3 días (no habrá reembolso).</p>
+
+      <p><span class="clausula-title">DÉCIMA. PROHIBICIONES Y REGLAS DE CONVIVENCIA.</span> Queda estrictamente prohibido el uso de sustancias ilegales, la introducción de mascotas (salvo acuerdo previo por escrito) y generar ruido excesivo fuera de los horarios permitidos por la localidad. El incumplimiento dará lugar a la terminación inmediata del contrato y desalojo sin derecho a reembolso.</p>
+
+      <p><span class="clausula-title">DÉCIMA PRIMERA. LIMPIEZA Y DAÑOS.</span> EL ARRENDATARIO es responsable de entregar el inmueble en condiciones de orden y limpieza aceptables. Si los daños ocasionados a la propiedad, mobiliario o blancos exceden el monto del depósito de garantía, EL ARRENDATARIO se compromete formalmente a cubrir la diferencia de inmediato.</p>
+
+      <p><span class="clausula-title">DÉCIMA SEGUNDA. ACEPTACIÓN DEL CONTRATO.</span> Ambas partes declaran haber leído y comprendido el contenido del presente contrato, manifestando su conformidad y obligándose a su estricto cumplimiento.</p>
+
+      <div class="seccion-detalles">
+        <strong>SERVICIOS ADICIONALES Y ANOTACIONES INCLUIDAS:</strong>
+        <p id="out-detalles-extras" style="margin-top: 5px; font-style: italic; white-space: pre-line;"></p>
+      </div>
+
+      <div class="firmas-container firmas-print-grid">
+        <div class="firmas-box">
+          <div class="linea-firma"></div>
+          <p style="font-size:0.75rem; font-weight:bold;">EL ARRENDATARIO (CLIENTE)</p>
+          <p style="font-size:0.7rem; color:#444;" id="out-firma-nombre"></p>
+        </div>
+        <div class="firmas-box">
+          <div class="linea-firma"></div>
+          <p style="font-size:0.75rem; font-weight:bold;">EL ARRENDADOR</p>
+          <p style="font-size:0.7rem; color:#444;">Administración Quinta Bugambilia</p>
+        </div>
+      </div>
+
+      <div class="no-print-area">
+        <button class="btn-print" onclick="window.print()">
+          <svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Imprimir Contrato Oficial
+        </button>
+      </div>
+    </div>
   </div>
 </main>
 
@@ -313,11 +502,29 @@
 <script>
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSo8m2mzpqf5Z_Znr_F6ZRDOqbZJ7zXuRzIkKkZHjU5A8ZvD3ejb7t6Pq_6YR28j12cAQCqQCqVFSve/pub?gid=0&single=true&output=csv';
 const MONTH_NAMES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-const DAY_NAMES = ['D','L','M','M','J','V','S']; // Letras cortas para ultra-móvil
+const DAY_NAMES = ['D','L','M','M','J','V','S']; 
 const DAY_NAMES_DESKTOP = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 let calendarData = {};
 let currentMonth = new Date().getMonth();
 const YEAR = 2026;
+
+// CONTROL DE CAMBIO DE SECCIÓN NATIVA EN INDEX
+function switchSection(sectionId) {
+  document.querySelectorAll('.app-section').forEach(section => {
+    section.classList.remove('active-section');
+  });
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.remove('active');
+  });
+  
+  if (sectionId === 'calendario') {
+    document.getElementById('section-calendario').classList.add('active-section');
+    document.getElementById('btn-sec-cal').classList.add('active');
+  } else if (sectionId === 'contratos') {
+    document.getElementById('section-contratos').classList.add('active-section');
+    document.getElementById('btn-sec-con').classList.add('active');
+  }
+}
 
 function parseCSVLine(line) {
   const cols = []; let cur = '', inQ = false;
@@ -383,6 +590,7 @@ async function loadData() {
 
 function renderNav() {
   const nav = document.getElementById('month-nav');
+  if (!nav) return;
   nav.innerHTML = '';
   MONTH_NAMES.forEach((name, m) => {
     const btn = document.createElement('button');
@@ -392,7 +600,6 @@ function renderNav() {
     nav.appendChild(btn);
   });
   
-  // Auto-scroll suave para centrar el mes activo en móviles
   setTimeout(() => {
     const activeBtn = nav.querySelector('.month-btn.active');
     if (activeBtn) {
@@ -406,6 +613,7 @@ function renderNav() {
 
 function renderCalendar(month) {
   const wrap = document.getElementById('calendar-wrap');
+  if (!wrap) return;
   const monthKey = `${YEAR}-${String(month + 1).padStart(2, '0')}`;
   const monthData = calendarData[monthKey] || {};
   const daysInMonth = new Date(YEAR, month + 1, 0).getDate();
@@ -435,7 +643,6 @@ function renderCalendar(month) {
     
     let tags = '';
     if (data) {
-      // Formato compacto para celulares (solo ícono si es pantalla chica, texto completo si es grande)
       if (data.manana) {
         const isOcupado = data.manana.toLowerCase().includes('ocup');
         tags += `<span class="session-tag ${sessionClass(data.manana)}" title="Mañana: ${data.manana}">${isLargeScreen ? '☀️ ' + data.manana : (isOcupado ? '☀️ Ocup' : '☀️ Disp')}</span>`;
@@ -455,9 +662,165 @@ function renderCalendar(month) {
   wrap.innerHTML = html + '</div>';
 }
 
-// Re-renderizar si cambia el tamaño de pantalla (rotación del celular)
-window.addEventListener('resize', () => renderCalendar(currentMonth));
+// ================= LOGICA LÓGICA DE CONTRATOS =================
+function toggleCheckbox(e, id) {
+  const cb = document.getElementById(id);
+  if (e.target.tagName !== 'INPUT') {
+    cb.checked = !cb.checked;
+  }
+  calcularTotal();
+}
 
+function calcularTotal() {
+  const selectPaquete = document.getElementById('paqueteSelect');
+  const optionSeleccionada = selectPaquete.options[selectPaquete.selectedIndex];
+  let costoPaquete = parseFloat(optionSeleccionada.getAttribute('data-price')) || 0;
+
+  const noches = parseInt(document.getElementById('nochesInput').value) || 0;
+  const costoNoche = parseFloat(document.getElementById('costoNocheInput').value) || 0;
+  let costoHospedaje = noches * costoNoche;
+
+  let costoExtras = 0;
+  const extrasIds = ['extraBrincolin', 'extraBrincolinAcuatico', 'extraFutbolito', 'extraBocina', 'extraCalentador'];
+  extrasIds.forEach(id => {
+    const item = document.getElementById(id);
+    if (item && item.checked) {
+      costoExtras += parseFloat(item.value);
+    }
+  });
+
+  const manualMonto = document.getElementById('manualMonto1').value.replace(/[^0-9.]/g, '');
+  if (manualMonto !== "" && !isNaN(manualMonto)) {
+    costoExtras += parseFloat(manualMonto);
+  }
+
+  let total = costoPaquete + costoHospedaje + costoExtras;
+  document.getElementById('precioInput').value = formatCurrency(total);
+}
+
+function formatCurrency(val) {
+  return '$' + val.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+}
+
+function stringToFullDate(dateString) {
+  if(!dateString) return "___________";
+  const parts = dateString.split('-');
+  const date = new Date(parts[0], parts[1] - 1, parts[2]);
+  const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+  return date.toLocaleDateString("es-MX", opciones);
+}
+
+function generarContrato() {
+  const nombre = document.getElementById('nombreInput').value.trim();
+  if(nombre === "") {
+    alert("Por favor ingrese el Nombre del Cliente.");
+    return;
+  }
+
+  document.getElementById('out-nombre').innerText = nombre;
+  document.getElementById('out-firma-nombre').innerText = nombre;
+  document.getElementById('out-ine').innerText = document.getElementById('ineInput').value || "_________________";
+  
+  const entradaStr = document.getElementById('fechaEntrada').value;
+  const salidaStr = document.getElementById('fechaSalida').value;
+  document.getElementById('out-fecha-entrada').innerText = stringToFullDate(entradaStr);
+  document.getElementById('out-fecha-salida').innerText = stringToFullDate(salidaStr);
+  document.getElementById('out-fecha-evento').innerText = stringToFullDate(entradaStr); 
+
+  document.getElementById('out-hora-entrada').innerText = document.getElementById('horaEntrada').value || "--:--";
+  document.getElementById('out-hora-salida').innerText = document.getElementById('horaSalida').value || "--:--";
+  
+  document.getElementById('out-hora-evento-inicio').innerText = document.getElementById('eventoInicioInput').value || "--:--";
+  document.getElementById('out-hora-evento-fin').innerText = document.getElementById('eventoFinInput').value || "--:--";
+
+  const nochesCant = document.getElementById('nochesInput').value || "0";
+  document.getElementById('out-noches-cant').innerText = nochesCant;
+
+  const selectP = document.getElementById('paqueteSelect');
+  const optionP = selectP.options[selectP.selectedIndex];
+  const aforo = optionP.getAttribute('data-aforo') || "0";
+  document.getElementById('out-aforo-evento').innerText = aforo;
+  document.getElementById('out-aforo-evento2').innerText = aforo;
+
+  let totalRaw = document.getElementById('precioInput').value.replace(/[^0-9.]/g, '');
+  let totalVal = parseFloat(totalRaw) || 0;
+  
+  let anticipoVal = totalVal * 0.30;
+  let saldoVal = totalVal - anticipoVal;
+
+  document.getElementById('out-precio').innerText = formatCurrency(totalVal) + ` (${numeroALetras(totalVal)})`;
+  document.getElementById('out-anticipo').innerText = formatCurrency(anticipoVal);
+  document.getElementById('out-saldo').innerText = formatCurrency(saldoVal);
+  document.getElementById('out-deposito').innerText = document.getElementById('depositoInput').value || "$1,000.00";
+
+  let stringExtras = "";
+  const extrasList = [
+    {id: 'extraBrincolin', nombre: 'Brincolin Estándar'},
+    {id: 'extraBrincolinAcuatico', nombre: 'Brincolin Acuático Grande'},
+    {id: 'extraFutbolito', nombre: 'Mesa de Futbolito'},
+    {id: 'extraBocina', nombre: 'Bocina de Alta Potencia'},
+    {id: 'extraCalentador', nombre: 'Calentador Ambiental de Gas'}
+  ];
+
+  extrasList.forEach(item => {
+    if(document.getElementById(item.id).checked) {
+      stringExtras += `• Incluye servicio de: ${item.nombre}.\n`;
+    }
+  });
+
+  const manualNombre = document.getElementById('manualNombre1').value.trim();
+  const manualPrecio = document.getElementById('manualMonto1').value.trim();
+  if(manualNombre !== "") {
+    stringExtras += `• Extra Personalizado: ${manualNombre} (${manualPrecio}).\n`;
+  }
+
+  const anotaciones = document.getElementById('anotacionesInput').value.trim();
+  if(anotaciones !== "") {
+    stringExtras += `\nNotas de la Administración: ${anotaciones}`;
+  }
+
+  if(stringExtras === "") {
+    stringExtras = "Ninguno. Solo se compromete el paquete base configurado.";
+  }
+  document.getElementById('out-detalles-extras').innerText = stringExtras;
+
+  const boxContrato = document.getElementById('contrato-final');
+  boxContrato.style.display = 'block';
+  setTimeout(() => {
+    boxContrato.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 150);
+}
+
+function numeroALetras(num) {
+  let entero = Math.floor(num);
+  return entero.toLocaleString('es-MX') + " pesos 00/100 M.N.";
+}
+
+function clearForm() {
+  document.getElementById('nombreInput').value = "";
+  document.getElementById('ineInput').value = "";
+  document.getElementById('fechaEntrada').value = "";
+  document.getElementById('fechaSalida').value = "";
+  document.getElementById('horaEntrada').value = "15:00";
+  document.getElementById('horaSalida').value = "12:00";
+  document.getElementById('eventoInicioInput').value = "16:00";
+  document.getElementById('eventoFinInput').value = "23:00";
+  document.getElementById('nochesInput').value = "1";
+  document.getElementById('costoNocheInput').value = "0";
+  document.getElementById('paqueteSelect').value = "0";
+  document.getElementById('precioInput').value = "";
+  document.getElementById('manualNombre1').value = "";
+  document.getElementById('manualMonto1').value = "";
+  document.getElementById('anotacionesInput').value = "";
+  document.getElementById('depositoInput').value = "$1,000.00";
+  
+  const checkboxes = document.querySelectorAll('.extra-item input[type="checkbox"]');
+  checkboxes.forEach(cb => cb.checked = false);
+
+  document.getElementById('contrato-final').style.display = 'none';
+}
+
+window.addEventListener('resize', () => renderCalendar(currentMonth));
 loadData();
 </script>
 </body>
