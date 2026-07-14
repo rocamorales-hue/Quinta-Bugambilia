@@ -125,7 +125,7 @@
       margin-bottom: 0.3rem; 
     }
 
-    input[type="text"], input[type="number"], input[type="date"], textarea, select {
+    input[type="text"], input[type="number"], input[type="date"], input[type="time"], textarea, select {
       width: 100%; 
       padding: 0.65rem 0.8rem; 
       font-family: 'DM Sans', sans-serif; 
@@ -265,12 +265,34 @@
           <input type="date" id="fechaEntrada" onchange="calcularTotal()">
         </div>
         <div class="field">
-          <label>Fecha de Salida (Check-Out)</label>
-          <input type="date" id="fechaSalida" onchange="calcularTotal()">
+          <label>Hora de Entrada</label>
+          <input type="time" id="horaEntrada" value="15:00">
         </div>
       </div>
 
-      <!-- NUEVA SECCIÓN DE NOCHES -->
+      <div class="row">
+        <div class="field">
+          <label>Fecha de Salida (Check-Out)</label>
+          <input type="date" id="fechaSalida" onchange="calcularTotal()">
+        </div>
+        <div class="field">
+          <label>Hora de Salida</label>
+          <input type="time" id="horaSalida" value="12:00">
+        </div>
+      </div>
+
+      <!-- NUEVOS CAMPOS DE HORARIO DE EVENTO -->
+      <div class="row">
+        <div class="field">
+          <label>Hora Inicio del Evento</label>
+          <input type="time" id="eventoInicioInput" value="16:00">
+        </div>
+        <div class="field">
+          <label>Hora Fin del Evento</label>
+          <input type="time" id="eventoFinInput" value="23:00">
+        </div>
+      </div>
+
       <div class="row">
         <div class="field">
           <label>Número de Noches</label>
@@ -353,8 +375,8 @@
     </div>
 
     <!-- ==========================================================================
-         VISTA IMPRIMIBLE DEL CONTRATO (CONTRATO BASE ACTUALIZADO)
-         ========================================================================== */ -->
+         VISTA IMPRIMIBLE DEL CONTRATO
+         ========================================================================== -->
     <div id="contrato-final">
       <div class="header-contrato">
         <h2>CONTRATO DE ARRENDAMIENTO TEMPORAL Y HOSPEDAJE DE "QUINTA BUGAMBILIA"</h2>
@@ -365,8 +387,8 @@
       <p><span class="clausula-title">SEGUNDA. FECHA, HORARIO Y COSTO DEL ARRENDAMIENTO.</span> EL ARRENDATARIO, C. <span id="out-nombre" style="font-weight:bold; text-decoration:underline;"></span>, identificado con documento oficial No. <span id="out-ine" style="font-weight:bold;"></span>, hace uso del inmueble bajo las siguientes condiciones:</p>
       
       <ul style="margin-left:2rem; margin-bottom:0.8rem; font-size:0.9rem;">
-        <li><strong>Fecha de hospedaje:</strong> Del <span id="out-fecha-entrada" style="font-weight:bold;"></span> al <span id="out-fecha-salida" style="font-weight:bold;"></span> (<span id="out-noches-cant" style="font-weight:bold;"></span> noche(s) de hospedaje).</li>
-        <li><strong>Evento:</strong> Se autoriza la realización de un evento el día <span id="out-fecha-evento" style="font-weight:bold;"></span>.</li>
+        <li><strong>Fecha de hospedaje:</strong> Del <span id="out-fecha-entrada" style="font-weight:bold;"></span> (Check-In a las <span id="out-hora-entrada" style="font-weight:bold;"></span> hrs) al <span id="out-fecha-salida" style="font-weight:bold;"></span> (Check-Out a las <span id="out-hora-salida" style="font-weight:bold;"></span> hrs), amparando un total de <span id="out-noches-cant" style="font-weight:bold;"></span> noche(s) de hospedaje.</li>
+        <li><strong>Evento:</strong> Se autoriza la realización de un evento el día <span id="out-fecha-evento" style="font-weight:bold;"></span> en el horario de <span id="out-hora-evento-inicio" style="font-weight:bold;"></span> hrs a <span id="out-hora-evento-fin" style="font-weight:bold;"></span> hrs.</li>
         <li><strong>Ocupación y aforo máximo permitido:</strong> Máximo de <span id="out-aforo-evento" style="font-weight:bold;"></span> personas para el evento y capacidad de hospedaje para hasta 12 personas en dormitorios.</li>
         <li><strong>Costo total del arrendamiento y hospedaje:</strong> <span id="out-precio" style="font-weight:bold; color:var(--green);"></span>.</li>
         <li><strong>El arrendamiento incluye de forma base:</strong> Mesas con mantel, Sillas correspondientes al paquete, 1 hielera grande y acceso a las instalaciones de hospedaje para la(s) noche(s) contratada(s).</li>
@@ -436,17 +458,14 @@
     }
 
     function calcularTotal() {
-      // 1. Obtener precio del paquete de personas
       const selectPaquete = document.getElementById('paqueteSelect');
       const optionSeleccionada = selectPaquete.options[selectPaquete.selectedIndex];
       let costoPaquete = parseFloat(optionSeleccionada.getAttribute('data-price')) || 0;
 
-      // 2. Calcular hospedaje (Noches x Costo por noche)
       const noches = parseInt(document.getElementById('nochesInput').value) || 0;
       const costoNoche = parseFloat(document.getElementById('costoNocheInput').value) || 0;
       let costoHospedaje = noches * costoNoche;
 
-      // 3. Sumar Checkboxes de Extras
       let costoExtras = 0;
       const extrasIds = ['extraBrincolin', 'extraBrincolinAcuatico', 'extraFutbolito', 'extraBocina', 'extraCalentador'];
       extrasIds.forEach(id => {
@@ -456,13 +475,11 @@
         }
       });
 
-      // 4. Sumar Extra Manual
       const manualMonto = document.getElementById('manualMonto1').value.replace(/[^0-9.]/g, '');
       if (manualMonto !== "" && !isNaN(manualMonto)) {
         costoExtras += parseFloat(manualMonto);
       }
 
-      // Suma Final Completa
       let total = costoPaquete + costoHospedaje + costoExtras;
       document.getElementById('precioInput').value = formatCurrency(total);
     }
@@ -486,29 +503,34 @@
         return;
       }
 
-      // Inyecciones básicas
       document.getElementById('out-nombre').innerText = nombre;
       document.getElementById('out-firma-nombre').innerText = nombre;
       document.getElementById('out-ine').innerText = document.getElementById('ineInput').value || "_________________";
       
-      // Fechas e información del hospedaje
+      // Pasar Fechas y Horas del DOM al Contrato
       const entradaStr = document.getElementById('fechaEntrada').value;
       const salidaStr = document.getElementById('fechaSalida').value;
       document.getElementById('out-fecha-entrada').innerText = stringToFullDate(entradaStr);
       document.getElementById('out-fecha-salida').innerText = stringToFullDate(salidaStr);
-      document.getElementById('out-fecha-evento').innerText = stringToFullDate(entradaStr); // Asumimos evento el día de ingreso
+      document.getElementById('out-fecha-evento').innerText = stringToFullDate(entradaStr); 
 
+      document.getElementById('out-hora-entrada').innerText = document.getElementById('horaEntrada').value || "--:--";
+      document.getElementById('out-hora-salida').innerText = document.getElementById('horaSalida').value || "--:--";
+      
+      // Integrar Horarios del Evento
+      document.getElementById('out-hora-evento-inicio').innerText = document.getElementById('eventoInicioInput').value || "--:--";
+      document.getElementById('out-hora-evento-fin').innerText = document.getElementById('eventoFinInput').value || "--:--";
+
+      // Corregida variable que rompía el script
       const nochesCant = document.getElementById('nochesInput').value || "0";
-      document.getElementById('out-noches-cant').innerText = achesCant;
+      document.getElementById('out-noches-cant').innerText = nochesCant;
 
-      // Resolver Aforos basándonos en el paquete seleccionado
       const selectP = document.getElementById('paqueteSelect');
       const optionP = selectP.options[selectP.selectedIndex];
       const aforo = optionP.getAttribute('data-aforo') || "0";
       document.getElementById('out-aforo-evento').innerText = aforo;
       document.getElementById('out-aforo-evento2').innerText = aforo;
 
-      // Cálculos Financieros del Contrato
       let totalRaw = document.getElementById('precioInput').value.replace(/[^0-9.]/g, '');
       let totalVal = parseFloat(totalRaw) || 0;
       
@@ -520,7 +542,6 @@
       document.getElementById('out-saldo').innerText = formatCurrency(saldoVal);
       document.getElementById('out-deposito').innerText = document.getElementById('depositoInput').value || "$1,000.00";
 
-      // Compilación de los extras añadidos
       let stringExtras = "";
       const extrasList = [
         {id: 'extraBrincolin', nombre: 'Brincolin Estándar'},
@@ -552,7 +573,6 @@
       }
       document.getElementById('out-detalles-extras').innerText = stringExtras;
 
-      // Mostrar e ir a la vista previa
       const boxContrato = document.getElementById('contrato-final');
       boxContrato.style.display = 'block';
       setTimeout(() => {
@@ -560,7 +580,6 @@
       }, 150);
     }
 
-    // Helper básico de conversión a texto para el monto total
     function numeroALetras(num) {
       let entero = Math.floor(num);
       return entero.toLocaleString('es-MX') + " pesos 00/100 M.N.";
@@ -571,6 +590,10 @@
       document.getElementById('ineInput').value = "";
       document.getElementById('fechaEntrada').value = "";
       document.getElementById('fechaSalida').value = "";
+      document.getElementById('horaEntrada').value = "15:00";
+      document.getElementById('horaSalida').value = "12:00";
+      document.getElementById('eventoInicioInput').value = "16:00";
+      document.getElementById('eventoFinInput').value = "23:00";
       document.getElementById('nochesInput').value = "1";
       document.getElementById('costoNocheInput').value = "0";
       document.getElementById('paqueteSelect').value = "0";
