@@ -191,7 +191,7 @@
     .btn-generar:active { background: #2c5444; }
 
     /* ==========================================================================
-       CONTRATO VISTA PREVIA & ESTILO MODERNO
+       CONTRATO VISTA PREVIA
        ========================================================================== */
     #contrato-final { 
       display: none; 
@@ -203,9 +203,8 @@
       line-height: 1.6;
       font-size: 0.88rem;
       color: #1a1a1a;
-      animation: fadeUp 0.4s ease-out;
+      margin-top: 2rem;
     }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
     .brand-header-print {
       display: flex;
@@ -342,7 +341,7 @@
     .btn-print:hover { background: #235a3a; }
 
     /* ==========================================================================
-       MEDIA QUERIES & CONTROL DE IMPRESIÓN MODERNO
+       CONTROL DE IMPRESIÓN MODERNO
        ========================================================================== */
     @media(min-width: 768px) {
       header { flex-direction: row; justify-content: space-between; padding: 0 2rem; height: 65px; }
@@ -385,7 +384,7 @@
 <header>
   <div class="logo">Quinta Bugambilia <span>· Real del 14</span></div>
   <div class="nav-container">
-    <a href="index.html" class="nav-link">
+    <a href="#" class="nav-link">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span>Inicio</span>
     </a>
@@ -513,11 +512,11 @@
     <div class="row-3">
       <div class="field">
         <label>Precio Total (Auto)</label>
-        <input type="text" id="precioInput" readonly style="font-weight:bold;">
+        <input type="text" id="precioInput" readonly style="font-weight:bold;" value="$0.00">
       </div>
       <div class="field">
         <label>Anticipo (30%)</label>
-        <input type="text" id="anticipoInput" readonly>
+        <input type="text" id="anticipoInput" readonly value="$0.00">
       </div>
       <div class="field">
         <label>Depósito de Garantía</label>
@@ -525,7 +524,7 @@
       </div>
     </div>
 
-    <button class="btn-generar" onclick="generarContrato()">
+    <button class="btn-generar" type="button" onclick="generarContrato()">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       GENERAR VISTA PREVIA DEL CONTRATO
     </button>
@@ -650,7 +649,7 @@
     </div>
     
     <div class="no-print-area">
-        <button class="btn-print" onclick="window.print()">
+        <button class="btn-print" type="button" onclick="window.print()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
           GUARDAR COMO PDF / IMPRIMIR
         </button>
@@ -659,121 +658,160 @@
 </main>
 
 <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    const hoy = new Date().toISOString().split('T')[0];
-    document.getElementById('fechaContrato').value = hoy;
-  });
+  window.onload = function() {
+    var hoy = new Date();
+    var dd = String(hoy.getDate()).padStart(2, '0');
+    var mm = String(hoy.getMonth() + 1).padStart(2, '0');
+    var yyyy = hoy.getFullYear();
+    document.getElementById('fechaContrato').value = yyyy + '-' + mm + '-' + dd;
+  };
 
   function formatCurrency(input) {
-    let value = input.value.replace(/\D/g, "");
-    if (value === "") { input.value = ""; return; }
-    value = (parseFloat(value) / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    input.value = value;
+    var val = input.value.replace(/\D/g, "");
+    if (val === "") { input.value = ""; return; }
+    var num = (parseFloat(val) / 100).toFixed(2);
+    input.value = "$" + Number(num).toLocaleString('en-US', {minimumFractionDigits: 2});
   }
 
   function calcularTotal() {
-    const select = document.getElementById('paqueteSelect');
-    const basePrice = parseFloat(select.options[select.selectedIndex].getAttribute('data-price')) || 0;
-    let extrasTotal = 0;
+    var select = document.getElementById('paqueteSelect');
+    var selectedOption = select.options[select.selectedIndex];
+    var basePrice = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+    var extrasTotal = 0;
     
-    document.querySelectorAll('.extra-cb:checked').forEach(cb => extrasTotal += parseFloat(cb.value));
-    
-    const m1Input = document.getElementById('manualMonto1');
-    if (m1Input && m1Input.value) {
-      const m1 = m1Input.value.replace(/[$,]/g, "");
-      if (!isNaN(parseFloat(m1))) extrasTotal += parseFloat(m1);
+    var cbs = document.querySelectorAll('.extra-cb');
+    for(var i=0; i<cbs.length; i++) {
+      if(cbs[i].checked) {
+        extrasTotal += parseFloat(cbs[i].value) || 0;
+      }
     }
     
-    const total = basePrice + extrasTotal;
-    document.getElementById('precioInput').value = total.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    document.getElementById('anticipoInput').value = (total * 0.30).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    var m1Input = document.getElementById('manualMonto1');
+    if (m1Input && m1Input.value) {
+      var m1 = m1Input.value.replace(/[^0-9.]/g, "");
+      if (!isNaN(parseFloat(m1))) {
+        extrasTotal += parseFloat(m1);
+      }
+    }
+    
+    var total = basePrice + extrasTotal;
+    var anticipo = total * 0.30;
+    
+    document.getElementById('precioInput').value = "$" + total.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('anticipoInput').value = "$" + anticipo.toLocaleString('en-US', {minimumFractionDigits: 2});
   }
 
-  function formatDate(dateStr) {
+  function formatDateTexto(dateStr) {
     if(!dateStr) return "________________";
-    const parts = dateStr.split('-');
+    var parts = dateStr.split('-');
     if(parts.length !== 3) return "________________";
-    // Usar construcción local de la fecha para evitar desfases de zona horaria
-    const date = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+    
+    var meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+    var dia = parseInt(parts[2], 10);
+    var mes = meses[parseInt(parts[1], 10) - 1];
+    var anio = parts[0];
+    
+    return dia + " de " + mes + " de " + anio;
   }
 
-  function formatTime(timeStr) {
+  function formatTimeTexto(timeStr) {
     if(!timeStr) return "____";
-    let [hh, mm] = timeStr.split(':');
-    let ampm = hh >= 12 ? 'PM' : 'AM';
-    hh = hh % 12 || 12;
-    return `${hh}:${mm} ${ampm}`;
+    var parts = timeStr.split(':');
+    if(parts.length < 2) return "____";
+    var hh = parseInt(parts[0], 10);
+    var mm = parts[1];
+    var ampm = hh >= 12 ? 'PM' : 'AM';
+    hh = hh % 12;
+    hh = hh ? hh : 12;
+    return hh + ':' + mm + ' ' + ampm;
   }
 
   function generarContrato() {
-    const n = document.getElementById('nombreInput').value;
-    const pkg = document.getElementById('paqueteSelect').value;
-    const ine = document.getElementById('ineInput').value;
+    var nombre = document.getElementById('nombreInput').value.trim();
+    var paquete = document.getElementById('paqueteSelect').value;
     
-    if(!n || pkg === "0") {
-      return alert("Por favor ingresa el nombre del cliente y selecciona un paquete.");
+    if (nombre === "") {
+      alert("Por favor escribe el nombre del Arrendatario.");
+      return;
     }
-    
-    document.getElementById('out-nombre').innerText = n;
-    document.getElementById('out-nombre2').innerText = n;
-    document.getElementById('out-ine').innerText = ine || "________________";
-    document.getElementById('out-ine2').innerText = ine ? `INE/ID: ${ine}` : "";
-    
-    const fechaCont = formatDate(document.getElementById('fechaContrato').value);
-    const fechaE = formatDate(document.getElementById('fechaEntrada').value);
-    const horaE = formatTime(document.getElementById('horaEntrada').value);
-    const horaS = formatTime(document.getElementById('horaSalida').value);
+    if (paquete === "0") {
+      alert("Por favor selecciona un paquete.");
+      return;
+    }
 
-    document.getElementById('out-fecha-contrato').innerText = fechaCont;
-    document.getElementById('out-entrada').innerText = fechaE;
-    document.getElementById('out-hora-e').innerText = horaE;
-    document.getElementById('out-hora-s').innerText = horaS;
-    
-    const precio = document.getElementById('precioInput').value || "$0.00";
-    const anticipo = document.getElementById('anticipoInput').value || "$0.00";
-    const deposito = document.getElementById('depositoInput').value || "$1,500.00";
+    var ine = document.getElementById('ineInput').value.trim();
+    var fechaContratoVal = document.getElementById('fechaContrato').value;
+    var fechaEntradaVal = document.getElementById('fechaEntrada').value;
+    var horaEntradaVal = document.getElementById('horaEntrada').value;
+    var horaSalidaVal = document.getElementById('horaSalida').value;
+    var precioVal = document.getElementById('precioInput').value || "$0.00";
+    var anticipoVal = document.getElementById('anticipoInput').value || "$0.00";
+    var depositoVal = document.getElementById('depositoInput').value || "$1,500.00";
 
-    document.getElementById('out-precio').innerText = precio;
-    document.getElementById('out-anticipo').innerText = anticipo;
-    document.getElementById('out-deposito').innerText = deposito;
-    document.getElementById('out-personas').innerText = pkg;
+    var fechaContTexto = formatDateTexto(fechaContratoVal);
+    var fechaEntTexto = formatDateTexto(fechaEntradaVal);
+    var horaEntTexto = formatTimeTexto(horaEntradaVal);
+    var horaSalTexto = formatTimeTexto(horaSalidaVal);
 
-    // Llenar tarjetas visuales de resumen
-    document.getElementById('out-card-horario').innerText = `${fechaE} (${horaE} - ${horaS})`;
-    document.getElementById('out-card-paquete').innerText = `Paquete ${pkg} personas`;
-    document.getElementById('out-card-costo').innerText = `${precio} / Ant: ${anticipo}`;
+    // Inyectar datos en la vista previa
+    document.getElementById('out-nombre').innerText = nombre;
+    document.getElementById('out-nombre2').innerText = nombre;
+    document.getElementById('out-ine').innerText = ine !== "" ? ine : "________________";
+    document.getElementById('out-ine2').innerText = ine !== "" ? "INE/ID: " + ine : "";
 
-    document.getElementById('out-fecha-hoy').innerText = fechaCont;
+    document.getElementById('out-fecha-contrato').innerText = fechaContTexto;
+    document.getElementById('out-fecha-hoy').innerText = fechaContTexto;
+    document.getElementById('out-entrada').innerText = fechaEntTexto;
+    document.getElementById('out-hora-e').innerText = horaEntTexto;
+    document.getElementById('out-hora-s').innerText = horaSalTexto;
 
-    let extras = [];
-    document.querySelectorAll('.extra-cb:checked').forEach(cb => extras.push(`• ${cb.getAttribute('data-name')}`));
-    const nom1 = document.getElementById('manualNombre1').value;
-    if(nom1) extras.push(`• ${nom1}`);
-    
-    const seccionExtras = document.getElementById('seccion-adicionales');
+    document.getElementById('out-precio').innerText = precioVal;
+    document.getElementById('out-anticipo').innerText = anticipoVal;
+    document.getElementById('out-deposito').innerText = depositoVal;
+    document.getElementById('out-personas').innerText = paquete;
+
+    // Tarjetas visuales superiores
+    document.getElementById('out-card-horario').innerText = fechaEntTexto + " (" + horaEntTexto + " - " + horaSalTexto + ")";
+    document.getElementById('out-card-paquete').innerText = "Paquete " + paquete + " personas";
+    document.getElementById('out-card-costo').innerText = precioVal + " / Ant: " + anticipoVal;
+
+    // Servicios adicionales
+    var extras = [];
+    var cbs = document.querySelectorAll('.extra-cb');
+    for(var i=0; i<cbs.length; i++) {
+      if(cbs[i].checked) {
+        extras.push("• " + cbs[i].getAttribute('data-name'));
+      }
+    }
+    var manualNom = document.getElementById('manualNombre1').value.trim();
+    if(manualNom !== "") {
+      extras.push("• " + manualNom);
+    }
+
+    var seccionExtras = document.getElementById('seccion-adicionales');
     if(extras.length > 0) {
-        document.getElementById('out-notas').innerHTML = extras.join("<br>");
-        seccionExtras.style.display = "block";
+      document.getElementById('out-notas').innerHTML = extras.join("<br>");
+      seccionExtras.style.display = "block";
     } else {
-        seccionExtras.style.display = "none";
+      seccionExtras.style.display = "none";
     }
 
-    const anotaciones = document.getElementById('anotacionesInput').value;
-    const seccionAnots = document.getElementById('seccion-anotaciones');
-    if(anotaciones && anotaciones.trim() !== "") {
-        document.getElementById('out-anotaciones').innerText = anotaciones;
-        seccionAnots.style.display = "block";
+    // Anotaciones
+    var anotaciones = document.getElementById('anotacionesInput').value.trim();
+    var seccionAnots = document.getElementById('seccion-anotaciones');
+    if(anotaciones !== "") {
+      document.getElementById('out-anotaciones').innerText = anotaciones;
+      seccionAnots.style.display = "block";
     } else {
-        seccionAnots.style.display = "none";
+      seccionAnots.style.display = "none";
     }
 
-    const box = document.getElementById('contrato-final');
-    box.style.display = 'block';
-    
-    setTimeout(() => {
-      box.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+    // Mostrar elemento del contrato
+    var cajaContrato = document.getElementById('contrato-final');
+    cajaContrato.style.display = 'block';
+
+    // Desplazamiento suave hacia la vista previa
+    cajaContrato.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function clearForm() {
@@ -782,15 +820,25 @@
     document.getElementById('fechaEntrada').value = "";
     document.getElementById('fechaSalida').value = "";
     document.getElementById('paqueteSelect').value = "0";
-    const hoy = new Date().toISOString().split('T')[0];
-    document.getElementById('fechaContrato').value = hoy;
-    document.querySelectorAll('.extra-cb').forEach(cb => cb.checked = false);
+    
+    var hoy = new Date();
+    var dd = String(hoy.getDate()).padStart(2, '0');
+    var mm = String(hoy.getMonth() + 1).padStart(2, '0');
+    var yyyy = hoy.getFullYear();
+    document.getElementById('fechaContrato').value = yyyy + '-' + mm + '-' + dd;
+
+    var cbs = document.querySelectorAll('.extra-cb');
+    for(var i=0; i<cbs.length; i++) {
+      cbs[i].checked = false;
+    }
+    
     document.getElementById('manualNombre1').value = "";
     document.getElementById('manualMonto1').value = "";
     document.getElementById('anotacionesInput').value = "";
-    document.getElementById('precioInput').value = "";
-    document.getElementById('anticipoInput').value = "";
+    document.getElementById('precioInput').value = "$0.00";
+    document.getElementById('anticipoInput').value = "$0.00";
     document.getElementById('depositoInput').value = "$1,500.00";
+    
     document.getElementById('contrato-final').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
