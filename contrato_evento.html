@@ -677,7 +677,7 @@
     let extrasTotal = 0;
     document.querySelectorAll('.extra-cb:checked').forEach(cb => extrasTotal += parseFloat(cb.value));
     const m1 = document.getElementById('manualMonto1').value.replace(/[$,]/g, "");
-    if (!isNaN(parseFloat(m1))) extrasTotal += parseFloat(m1);
+    if (!isNaN(parseFloat(m1)) && m1 !== "") extrasTotal += parseFloat(m1);
     const total = basePrice + extrasTotal;
     document.getElementById('precioInput').value = total.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     document.getElementById('anticipoInput').value = (total * 0.30).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -685,8 +685,10 @@
 
   function formatDate(dateStr) {
     if(!dateStr) return "________________";
-    const [year, month, day] = dateStr.split('-');
-    return new Date(year, month - 1, day).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+    const parts = dateStr.split('-');
+    if(parts.length !== 3) return "________________";
+    const date = new Date(parts[0], parts[1] - 1, parts[2]);
+    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
   function formatTime(timeStr) {
@@ -702,7 +704,9 @@
     const pkg = document.getElementById('paqueteSelect').value;
     const ine = document.getElementById('ineInput').value;
     
-    if(!n || pkg == "0") return alert("Por favor ingresa el nombre del cliente y selecciona un paquete.");
+    if(!n || pkg === "0") {
+      return alert("Por favor ingresa el nombre del cliente y selecciona un paquete.");
+    }
     
     document.getElementById('out-nombre').innerText = n;
     document.getElementById('out-nombre2').innerText = n;
