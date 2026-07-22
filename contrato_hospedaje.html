@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Quinta Bugambilia – Contrato de Hospedaje</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     /* ==========================================================================
        RESET & VARIABLES GLOBALES
@@ -17,17 +17,14 @@
 
     :root {
       --sand: #ddeef7; 
-      --cream: #f2f9f4; 
-      --charcoal: #1e3a2f; 
-      --warm: #4a7fa5;
-      --gold: #5db87a; 
-      --green: #3a8f5e; 
-      --red: #b94040; 
-      --amber: #4a7fa5;
-      --green-bg: #e8f5ee; 
-      --red-bg: #faeaea; 
-      --amber-bg: #ddeef7; 
+      --cream: #f8faf9; 
+      --charcoal: #11221c; 
+      --warm: #3b6280;
+      --gold: #41965e; 
+      --green: #2d734a; 
+      --green-bg: #eaf5ef; 
       --border: #b8d9c8;
+      --accent-bg: #f0f7f3;
     }
 
     body { 
@@ -42,7 +39,7 @@
        HEADER & NAVIGATION
        ========================================================================== */
     header { 
-      background: rgba(30, 58, 47, 0.95); 
+      background: rgba(17, 34, 28, 0.96); 
       backdrop-filter: blur(12px); 
       -webkit-backdrop-filter: blur(12px);
       color: #fff; 
@@ -61,12 +58,12 @@
     .logo { 
       font-family: 'Cormorant Garamond', serif; 
       font-size: 1.4rem; 
-      font-weight: 400; 
+      font-weight: 600; 
       letter-spacing: .05em; 
       text-align: center;
     }
     .logo span { 
-      color: var(--gold); 
+      color: #5db87a; 
       opacity: 0.9; 
       font-size: 0.8rem; 
       font-family: 'DM Sans', sans-serif;
@@ -115,26 +112,27 @@
     /* ==========================================================================
        MAIN CONTENT & FORM LAYOUT
        ========================================================================== */
-    main { max-width: 800px; margin: 0 auto; padding: 1rem 0.5rem 3rem; }
-    h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; margin-bottom: .2rem; text-align: center; }
-    .subtitle { color: var(--warm); font-size: .8rem; margin-bottom: 1.5rem; text-align: center; }
+    main { max-width: 850px; margin: 0 auto; padding: 1rem 0.5rem 3rem; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; margin-bottom: .2rem; text-align: center; }
+    .subtitle { color: var(--warm); font-size: .85rem; margin-bottom: 1.5rem; text-align: center; }
 
     .form-container { 
       background: #fff; 
-      padding: 1.2rem; 
-      border-radius: 12px; 
+      padding: 1.5rem; 
+      border-radius: 14px; 
       border: 1px solid var(--border); 
       box-shadow: 0 4px 16px rgba(0,0,0,.04);
       margin-bottom: 1.5rem;
     }
 
     .field { display: flex; flex-direction: column; margin-bottom: 1rem; }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
     
     label { 
       display: block; 
       font-size: .7rem; 
-      font-weight: 600; 
+      font-weight: 700; 
       text-transform: uppercase; 
       letter-spacing: .05em; 
       color: var(--warm); 
@@ -154,109 +152,214 @@
       transition: all 0.2s;
       box-sizing: border-box;
     }
-    input:focus, textarea:focus { border-color: var(--warm); background: #fff; box-shadow: 0 0 0 3px rgba(74,127,165,0.1); }
+    input:focus, textarea:focus { border-color: var(--warm); background: #fff; box-shadow: 0 0 0 3px rgba(59, 98, 128, 0.12); }
     textarea { resize: vertical; min-height: 70px; }
 
     .btn-calc { 
-      width: 100%; background: var(--gold); color: #1e3a2f; border: none; border-radius: 8px; 
-      padding: 10px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: bold; margin-top: 6px;
-      transition: background 0.2s; -webkit-tap-highlight-color: transparent;
+      width: 100%; background: #e2f0e8; color: var(--green); border: 1px solid #b2dac2; border-radius: 8px; 
+      padding: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: bold; margin-top: 6px;
+      transition: all 0.2s; -webkit-tap-highlight-color: transparent;
     }
-    .btn-calc:active { background: #4ca667; }
+    .btn-calc:hover { background: #d0e8db; }
 
     .btn-generar { 
-      width: 100%; padding: 0.8rem; background: var(--charcoal); color: white; 
-      border: none; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9rem;
+      width: 100%; padding: 0.9rem; background: var(--charcoal); color: white; 
+      border: none; border-radius: 10px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.95rem;
       margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
       transition: background 0.2s; -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 4px 12px rgba(17, 34, 28, 0.15);
     }
     .btn-generar:active { background: #2c5444; }
 
-    /* Panel de Recomendaciones Internas */
     .alert-box {
-      background-color: #fff9e6;
-      border: 1px solid #ffe0b2;
-      border-radius: 8px;
+      background-color: #fcf8e3;
+      border: 1px solid #faebcc;
+      border-radius: 10px;
       padding: 1rem;
       margin-bottom: 1.5rem;
       font-size: 0.8rem;
-      color: #664d03;
+      color: #8a6d3b;
     }
     .alert-box ul { margin-left: 1.2rem; margin-top: 0.4rem; }
 
     /* ==========================================================================
-       CONTRATO VISTA PREVIA (Estilo Documental Oficial)
+       CONTRATO VISTA PREVIA & ESTILO MODERNO
        ========================================================================== */
     #contrato-final { 
       display: none; 
       background: #fff; 
-      padding: 1.5rem; 
-      border-radius: 12px; 
+      padding: 2rem; 
+      border-radius: 16px; 
       border: 1px solid var(--border); 
-      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+      box-shadow: 0 8px 30px rgba(0,0,0,.06);
       line-height: 1.6;
-      font-size: 0.85rem;
-      text-align: justify;
-      color: #000;
+      font-size: 0.88rem;
+      color: #1a1a1a;
       animation: fadeUp 0.4s ease-out;
     }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
-    .header-contrato { text-align: center; margin-bottom: 1.5rem; border-bottom: 2px solid var(--charcoal); padding-bottom: 0.8rem; }
-    .header-contrato h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; text-transform: uppercase; color: var(--charcoal); text-decoration: none; }
-    
-    .clausula-header { font-weight: bold; display: inline; text-decoration: underline; color: #000; }
-    #contrato-final p { margin-bottom: 0.8rem; color: #111; }
-    
-    #notas-seccion-contrato { margin-top: 1rem; padding: 1rem; border: 1px dashed var(--border); background: var(--cream); border-radius: 8px; }
+    .brand-header-print {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2px solid var(--charcoal);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .brand-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--charcoal);
+      line-height: 1;
+    }
+    .brand-sub {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--green);
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .doc-type {
+      text-align: right;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-    /* Tabla de Datos Bancarios */
+    .reunidos-box {
+      background: var(--accent-bg);
+      border-left: 4px solid var(--green);
+      padding: 1rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .grid-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.2rem 0;
+    }
+    .summary-card {
+      background: #fdfdfd;
+      border: 1px solid #e2e8e5;
+      padding: 0.8rem;
+      border-radius: 8px;
+    }
+    .summary-card .label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #666;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .summary-card .val {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--charcoal);
+    }
+
+    .clausula-item {
+      margin-bottom: 1.2rem;
+      text-align: justify;
+    }
+    .clausula-header { 
+      font-weight: 700; 
+      color: var(--charcoal); 
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
     .tabla-banco {
       width: 100%;
       border-collapse: collapse;
-      margin: 1rem 0;
-      font-size: 0.8rem;
+      margin: 0.8rem 0;
+      font-size: 0.82rem;
+      background: #fcfcfc;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #e0e0e0;
     }
     .tabla-banco td {
-      padding: 0.4rem 0.6rem;
-      border: 1px solid #ccc;
+      padding: 0.5rem 0.8rem;
+      border-bottom: 1px solid #eee;
     }
     .tabla-banco td:first-child {
       font-weight: bold;
-      background-color: #f5f5f5;
-      width: 30%;
+      background-color: #f4f6f5;
+      width: 25%;
+      color: #333;
     }
 
-    .firmas-container { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 2.5rem; text-align: center; }
-    .firmas-box { margin-top: 1rem; }
-    .linea-firma { width: 70%; height: 1px; background: #000; margin: 0 auto 0.4rem; padding-top: 0; }
+    #notas-seccion-contrato { 
+      margin-top: 1.2rem; 
+      padding: 1rem; 
+      border: 1px dashed var(--border); 
+      background: #fbfdfc; 
+      border-radius: 8px; 
+    }
 
-    .no-print-area { display: flex; justify-content: center; margin-top: 1.5rem; }
-    .btn-print { background: var(--green); color: #fff; border: none; padding: 0.7rem 1.5rem; font-size: 0.85rem; font-weight: 500; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: background 0.2s; width: auto; max-width: none; box-shadow: none; }
-    .btn-print:active { background: #2e6f49; }
+    .firmas-container { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 2rem; 
+      margin-top: 3rem; 
+      text-align: center; 
+    }
+    .firmas-box { margin-top: 1rem; }
+    .linea-firma { width: 80%; height: 1px; background: #000; margin: 0 auto 0.5rem; }
+
+    .no-print-area { display: flex; justify-content: center; margin-top: 2rem; }
+    .btn-print { 
+      background: var(--green); color: #fff; border: none; padding: 0.8rem 2rem; font-size: 0.9rem; font-weight: 600; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; transition: background 0.2s; box-shadow: 0 4px 12px rgba(45, 115, 74, 0.2); 
+    }
+    .btn-print:hover { background: #235a3a; }
 
     /* ==========================================================================
-       MEDIA QUERIES & CONTROL DE IMPRESIÓN
+       MEDIA QUERIES & CONTROL DE IMPRESIÓN MODERNO
        ========================================================================== */
     @media(min-width: 768px) {
       header { flex-direction: row; justify-content: space-between; padding: 0 2rem; height: 65px; }
       .nav-container { display: flex; width: auto; gap: 0.5rem; }
       .logo { font-size: 1.6rem; }
       main { padding: 1.5rem 1rem 4rem; }
-      h1 { font-size: 2.2rem; }
-      .subtitle { font-size: .88rem; }
       .form-container { padding: 2rem; }
-      #contrato-final { padding: 3rem; font-size: 0.95rem; }
-      .header-contrato h2 { font-size: 1.5rem; }
-      .firmas-container { grid-template-columns: 1fr 1fr; gap: 3rem; }
+      #contrato-final { padding: 3rem; }
     }
 
     @media print {
-      body, main { background: #fff; padding: 0; margin: 0; color: #000; }
-      header, .form-container, .no-print-area, .alert-box, footer { display: none !important; }
-      #contrato-final { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100%; }
-      .firmas-print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 50px; }
-      .firmas-box { margin-bottom: 0; }
+      body, main { background: #fff !important; padding: 0 !important; margin: 0 !important; color: #000 !important; }
+      header, .form-container, .no-print-area, .alert-box, footer, .subtitle, h1 { display: none !important; }
+      #contrato-final { 
+        display: block !important; 
+        border: none !important; 
+        box-shadow: none !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+        width: 100% !important; 
+        font-size: 9.5pt !important;
+        line-height: 1.45 !important;
+      }
+      .brand-header-print { margin-bottom: 1rem; padding-bottom: 0.5rem; }
+      .brand-title { font-size: 1.6rem; }
+      .reunidos-box { padding: 0.6rem; margin-bottom: 1rem; font-size: 9pt; }
+      .grid-summary { gap: 0.5rem; margin: 0.8rem 0; }
+      .summary-card { padding: 0.5rem; }
+      .summary-card .val { font-size: 0.9rem; }
+      .clausula-item { margin-bottom: 0.8rem; page-break-inside: avoid; }
+      .tabla-banco td { padding: 0.3rem 0.6rem; }
+      .firmas-container { margin-top: 2.5rem; page-break-inside: avoid; }
+      .linea-firma { width: 85%; }
     }
   </style>
 </head>
@@ -278,13 +381,13 @@
 
 <main>
   <h1>Generar Contrato</h1>
-  <p class="subtitle">Panel de redacción para contratos de hospedaje</p>
+  <p class="subtitle">Panel de redacción para contratos de hospedaje de Quinta Bugambilia</p>
 
   <div class="alert-box">
-    <strong>📋 Recordatorios de Gestión y Seguridad Legal:</strong>
+    <strong>📋 Gestión Legal y Operativa:</strong>
     <ul>
-      <li>La cláusula de exención de responsabilidad (Séptima) tiene limitaciones en México. Se recomienda validar con un abogado o mantener la declaración de conocimiento de riesgo del cliente que ya se integró.</li>
-      <li>Se han añadido restricciones explícitas sobre el consumo de alcohol responsable, control de daños por invitados (terceros) y logística estricta de proveedores externos.</li>
+      <li>Recuerda validar el recibo del anticipo mediante transferencia antes de confirmar de forma definitiva la fecha en agenda.</li>
+      <li>Verifica los datos de identificación oficial (INE/Pasaporte) al momento de autorizar el check-in.</li>
     </ul>
   </div>
 
@@ -321,103 +424,171 @@
       </div>
     </div>
 
-    <div class="field">
-      <label>Precio Total</label>
-      <input type="text" id="precioInput" placeholder="$0.00" onkeyup="formatCurrency(this)" inputmode="decimal">
+    <div class="row-3">
+      <div class="field">
+        <label>Precio Total</label>
+        <input type="text" id="precioInput" placeholder="$0.00" onkeyup="formatCurrency(this)" inputmode="decimal">
+      </div>
+
+      <div class="field">
+        <label>Anticipo (30%)</label>
+        <input type="text" id="anticipoInput" placeholder="$0.00" onkeyup="formatCurrency(this)" inputmode="decimal">
+        <button class="btn-calc" onclick="calcularAnticipo()">CALCULAR 30%</button>
+      </div>
+
+      <div class="field">
+        <label>Depósito en Garantía</label>
+        <input type="text" id="depositoInput" value="$1,000.00" onkeyup="formatCurrency(this)" inputmode="decimal">
+      </div>
     </div>
 
     <div class="field">
-      <label>Anticipo (30%)</label>
-      <input type="text" id="anticipoInput" placeholder="$0.00" onkeyup="formatCurrency(this)" inputmode="decimal">
-      <button class="btn-calc" onclick="calcularAnticipo()">CALCULAR 30% AUTOMÁTICAMENTE</button>
-    </div>
-
-    <div class="field">
-      <label>Notas Adicionales</label>
-      <textarea id="notasInput" placeholder="Ej. Pago de personas extra, extensión de horario, etc."></textarea>
+      <label>Notas Adicionales / Acuerdos Especiales</label>
+      <textarea id="notasInput" placeholder="Ej. Incluye 7 huéspedes extra por acuerdo previo, extensión de horario, etc."></textarea>
     </div>
 
     <button class="btn-generar" onclick="generarContrato()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      VER CONTRATO COMPLETO
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      GENERAR VISTA PREVIA DEL CONTRATO
     </button>
   </div>
 
+  <!-- VISTA PREVIA DEL CONTRATO -->
   <div id="contrato-final">
-    <div class="header-contrato">
-      <h2>CONTRATO DE ARRENDAMIENTO TEMPORAL: QUINTA BUGAMBILIA</h2>
-    </div>
-
-    <p>Conste por el presente documento el Contrato de Arrendamiento Temporal que celebran, por una parte, <strong>JAVIER ANTONIO MORALES MIZQUEZ</strong> en representación de <strong>QUINTA BUGAMBILIA</strong> (en adelante "El Arrendador") y, por la otra, el Sr./Sra. <strong id="out-nombre"></strong> e identificado con INE/Documento Oficial No. <strong id="out-ine"></strong> (en adelante "El Arrendatario"), de acuerdo con las siguientes:</p>
-
-    <p style="text-align: center; font-weight: bold; margin: 15px 0;">CLÁUSULAS</p>
     
-    <p><span class="clausula-header">PRIMERA. EL INMUEBLE</span> El Arrendador da en renta temporal la propiedad ubicada en el Fraccionamiento Real del Catorce, en Hermosillo, Sonora. Su uso es exclusivamente para descanso y convivencia familiar. El Arrendatario declara recibir el inmueble en buen estado y con las instalaciones (incluida la alberca) funcionando correctamente.</p>
-
-    <p><span class="clausula-header">SEGUNDA. FECHAS Y HORARIOS</span> El periodo de renta ampara la estancia bajo los siguientes horarios estrictos:<br><br>
-    <strong>Entrada (Check-in):</strong> <span id="out-entrada"></span> a las <span id="out-hora-e"></span>.<br>
-    <strong>Salida (Check-out):</strong> <span id="out-salida"></span> a las <span id="out-hora-s"></span>.<br><br>
-    <em>Nota: El incumplimiento en la hora de salida generará un cargo de $300.00 MXN por cada hora o fracción de retraso.</em></p>
-
-    <p><span class="clausula-header">TERCERA. PRECIO Y FORMA DE PAGO</span> El costo total por la estancia base es de <strong id="out-precio"></strong> MXN. El Arrendatario, para apartar la fecha, deberá dar un anticipo del 30% del total de la renta (<strong id="out-anticipo"></strong>). El saldo restante deberá liquidarse en su totalidad antes de ingresar a la propiedad.<br><br>
-    <strong>REGLA DE PAGO ESTRICTA:</strong> <ins>NO SE ACEPTA EFECTIVO BAJO NINGUNA CIRCUNSTANCIA</ins>. Todo pago deberá realizarse mediante transferencia electrónica o depósito bancario a la siguiente cuenta oficial:</p>
-
-    <table class="tabla-banco">
-      <tr><td>Banco:</td><td>Santander</td></tr>
-      <tr><td>Titular:</td><td>Javier Antonio Morales Mizquez</td></tr>
-      <tr><td>Número de Tarjeta:</td><td>5579 0890 0728 7264</td></tr>
-      <tr><td>CLABE:</td><td>014760655114097664</td></tr>
-      <tr><td>Número de Cuenta:</td><td>65511409766</td></tr>
-    </table>
-
-    <p><span class="clausula-header">CUARTA. DEPÓSITO EN GARANTÍA</span> Al momento del ingreso, El Arrendatario entregará la cantidad de $1,000.00 MXN en concepto de depósito de garantía. Dicho monto será devuelto en un plazo máximo de 24 horas posteriores a la salida, vía transferencia electrónica, tras una revisión exhaustiva del inmueble, mobiliario, equipo de alberca y cumplimiento de las reglas. El Arrendatario asume total responsabilidad económica por cualquier daño material causado tanto por su persona como por cualquiera de sus invitados o terceros que ingresen al lugar durante la vigencia de este contrato.</p>
-
-    <p><span class="clausula-header">QUINTA. CAPACIDAD Y PERSONAS EXTRA</span> La tarifa pactada cubre exclusivamente un <strong>máximo de 12 personas</strong> para hospedaje.<br><br>
-    • <strong>Visitas adicionales (solo día):</strong> $250.00 MXN por persona (MÁXIMO 7 adicionales).<br>
-    • <strong>Huéspedes adicionales (pernoctan):</strong> $550.00 MXN por persona (MÁXIMO 5 adicionales).<br><br>
-    Cualquier persona extra debe ser autorizada previamente. El ingreso de personas no registradas o exceder los topes máximos establecidos será motivo de descuento automático del depósito o rescisión inmediata del contrato.</p>
-
-    <p><span class="clausula-header">SEXTA. CUIDADO DE LAS INSTALACIONES Y ALBERCA</span> El Arrendatario se compromete a entregar el inmueble en las mismas condiciones recibidas. <br><br>
-    <strong>Alberca:</strong> Si la alberca se ensucia por uso negligente (introducir alimentos, envases, aceites corporales en exceso o desechos), se aplicará un cargo extra de recuperación de agua y filtrado profundo que se descontará del depósito.</p>
-
-    <p><span class="clausula-header">SÉPTIMA. EXENCIÓN DE RESPONSABILIDAD Y ACEPTACIÓN DE RIESGOS</span> El Arrendador no se hace responsable por accidentes, lesiones, afectaciones de salud o fallecimientos que ocurran dentro de la propiedad, especialmente en el área de alberca y áreas recreativas. El Arrendatario declara expresamente conocer y aceptar de forma voluntaria los riesgos inherentes al uso de la alberca y las instalaciones. Es responsabilidad exclusiva del Arrendatario la supervisión constante de menores de edad y el uso moderado e idóneo de los espacios, liberando enteramente de toda responsabilidad civil o penal al Arrendador.</p>
-
-    <p><span class="clausula-header">OCTAVA. OBJETOS OLVIDADOS</span> El Arrendador no se hace responsable por la pérdida, robo u olvido de objetos de valor, dinero o joyas dejados en la propiedad por el Arrendatario o sus invitados.</p>
-
-    <p><span class="clausula-header">NOVENA. POLÍTICA DE CANCELACIÓN</span> En caso de cancelación por parte de El Arrendatario, se aplicarán las siguientes retenciones sobre el anticipo:<br><br>
-    • Más de 30 días de anticipación: Se reembolsa el 80%.<br>
-    • Entre 11 y 30 días de anticipación: Se reembolsa el 50%.<br>
-    • 10 días o menos de anticipación: No habrá reembolso.</p>
-
-    <p><span class="clausula-header">DÉCIMA. REGLAS, LOGÍSTICA Y RESTRICCIONES DE EVENTOS</span> Se debe respetar estrictamente el reglamento del fraccionamiento (volumen de música moderado). No se permiten mascotas. Asimismo, se establecen las siguientes limitantes especiales:<br><br>
-    • <strong>Música y Sonido:</strong> Bajo esta modalidad <ins>NO está permitida</ins> la contratación de música en vivo que requiera escenario, ni la instalación de equipos grandes de sonido o iluminación profesional.<br>
-    • <strong>Proveedores de Comida / Banquetes externos:</strong> En caso de contratar catering o preparación de alimentos externos, el proveedor tiene la obligación estricta de recoger y retirarse con toda la basura generada por su servicio.<br>
-    • <strong>Decoraciones:</strong> Cualquier arreglo, inflable o decoración añadida tendrá que ser retirada en su totalidad <strong>antes de terminar su estancia</strong>.<br>
-    • <strong>Responsabilidad Logística:</strong> Todo lo relacionado con la coordinación, montaje, supervisión y desmontaje de servicios externos va por cuenta y riesgo exclusivo de quien renta (El Arrendatario). La propiedad debe entregarse en condiciones aceptables; la suciedad extrema o abandono de desechos generará un cargo extra automático por limpieza profunda de forma penalizada.</p>
-
-    <p><span class="clausula-header">DÉCIMA PRIMERA. CONSUMO DE ALCOHOL Y ACTIVIDADES PROHIBIDAS</span> Queda prohibido el consumo de sustancias ilícitas o cualquier actividad ilegal. El consumo de bebidas alcohólicas deberá ser bajo un esquema de estricta moderación y responsabilidad por parte de El Arrendatario y sus invitados. Cualquier alteración al orden público, riña o queja vecinal derivada del consumo desmedido causará el desalojo inmediato de la propiedad sin derecho a ningún tipo de reembolso, procediendo al aviso formal a las autoridades competentes.</p>
-
-    <div id="notas-seccion-contrato" style="display:none;">
-      <p><strong>NOTAS Y ACUERDOS ADICIONALES:</strong></p>
-      <p id="out-notas" style="font-style: italic;"></p>
+    <div class="brand-header-print">
+      <div>
+        <div class="brand-title">Quinta Bugambilia</div>
+        <div class="brand-sub">Real del 14 · Hermosillo, Sonora</div>
+      </div>
+      <div class="doc-type">
+        Contrato de Arrendamiento Temporal
+      </div>
     </div>
 
-    <p style="margin-top: 2rem; font-size: 0.8rem; text-align: right;">Contrato emitido en Hermosillo, Sonora, el <span id="out-fecha-hoy"></span>.</p>
+    <div class="reunidos-box">
+      <strong>REUNIDOS:</strong> Por una parte, el ARRENDADOR, <strong>Javier Antonio Morales Mizquez</strong>, y por otra parte, el ARRENDATARIO, <strong id="out-nombre">________________________</strong> (ID/INE: <span id="out-ine">________________________</span>), acuerdan celebrar el presente contrato sujeto a las siguientes:
+    </div>
 
-    <div class="firmas-container firmas-print-grid">
+    <!-- TARJETAS DE RESUMEN FINANCIERO Y FECHAS -->
+    <div class="grid-summary">
+      <div class="summary-card">
+        <div class="label">Entrada (Check-in)</div>
+        <div class="val" id="out-card-entrada">--</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Salida (Check-out)</div>
+        <div class="val" id="out-card-salida">--</div>
+      </div>
+      <div class="summary-card">
+        <div class="label">Costo Total / Anticipo</div>
+        <div class="val" id="out-card-costo">--</div>
+      </div>
+    </div>
+
+    <div class="clausulas-body">
+      
+      <div class="clausula-item">
+        <span class="clausula-header">PRIMERA. OBJETO Y USO</span>
+        El Arrendador cede el uso temporal de la propiedad ubicada en el Fraccionamiento Real del Catorce, en Hermosillo, Sonora. El uso es exclusivamente recreativo y familiar. El Arrendatario declara recibir el inmueble y la alberca en buen estado y funcionales.
+      </div>
+
+      <div class="clausula-item">
+        <span class="clausula-header">SEGUNDA. PERIODO Y HORARIOS</span>
+        <strong>Entrada (Check-in):</strong> <span id="out-entrada"></span> a las <span id="out-hora-e"></span>.<br>
+        <strong>Salida (Check-out):</strong> <span id="out-salida"></span> a las <span id="out-hora-s"></span>.<br>
+        <em>Penalización por retraso: $300.00 MXN por cada hora o fracción de retraso en la salida.</em>
+      </div>
+
+      <div class="clausula-item">
+        <span class="clausula-header">TERCERA. PRECIO Y FORMA DE PAGO</span>
+        <strong>Costo total de la estancia:</strong> <span id="out-precio"></span> MXN.<br>
+        <strong>Anticipo de reserva (30%):</strong> <span id="out-anticipo"></span> MXN (No reembolsable salvo lo estipulado en la Cláusula Novena).<br>
+        <strong>Saldo restante:</strong> Deberá liquidarse antes de ingresar a la propiedad.<br>
+        <strong>Método de pago:</strong> Exclusivamente transferencia o depósito bancario. No se acepta efectivo.<br>
+        
+        <table class="tabla-banco">
+          <tr><td>Banco:</td><td>Santander</td><td>Titular:</td><td>Javier Antonio Morales Mizquez</td></tr>
+          <tr><td>CLABE:</td><td>014760655114097664</td><td>Cuenta / Tarjeta:</td><td>65511409766 / 5579 0890 0728 7264</td></tr>
+        </table>
+      </div>
+
+      <div class="clausula-item">
+        <span class="clausula-header">CUARTA. DEPÓSITO EN GARANTÍA</span>
+        Al ingresar, el Arrendatario entregará <strong id="out-deposito">$1,000.00 MXN</strong> como depósito en garantía. Se devolverá por transferencia dentro de las 24 horas posteriores al check-out, previa inspección del inmueble. El Arrendatario responderá por cualquier daño material causado por él o sus acompañantes.
+      </div>
+
+      <div class="clausula-item">
+        <span class="clausula-header">QUINTA. CAPACIDAD Y PERSONAS EXTRA</span>
+        • <strong>Capacidad base incluida:</strong> 12 personas + 7 huéspedes extra incluidos por acuerdo especial (Total hospedados: 19 personas).<br>
+        • <strong>Visitas adicionales (solo día):</strong> $250.00 MXN por persona (Máximo 7 adicionales).<br>
+        • <strong>Huéspedes adicionales (pernocta):</strong> $550.00 MXN por persona.<br>
+        El ingreso de personas no autorizadas causará el descuento automático del depósito o la rescisión inmediata del contrato.
+      </div>
+
+      <div class="clausula-item">
+        <span class="clausula-header">SEXTA. USO DE INSTALACIONES Y ALBERCA</span>
+        El Arrendatario debe entregar el inmueble en el mismo estado en que lo recibió.<br>
+        <strong>Alberca:</strong> Prohibido introducir alimentos, bebidas en envases de vidrio, desechos o aceites corporales en exceso. En caso de suciedad negligente que requiera filtrado profundo o cambio de agua, el costo se descontará del depósito.
+      </div>
+
+      <div class="clausula-item">
+        <span class="clausula-header">SÉPTIMA. EXENCIÓN DE RESPONSABILIDAD</span>
+        El Arrendador no se responsabiliza por accidentes, lesiones, enfermedades o fallecimientos ocurridos dentro de la propiedad, especialmente en la alberca. La supervisión de menores de edad y el uso responsable de las instalaciones es responsabilidad exclusiva del Arrendatario.
+      </div>
+
+      <div class="clausula-item">
+        <span class="clausula-header">OCTAVA. OBJETOS OLVIDADOS</span>
+        El Arrendador no se hace responsable por la pérdida o robo de objetos personales, dinero o joyas dejados en la propiedad.
+      </div>
+
+      <div class="clausula-item">
+        <span class="clausula-header">NOVENA. CANCELACIONES</span>
+        En caso de cancelación por parte del Arrendatario, las devoluciones del anticipo se regirán así:<br>
+        • <strong>Más de 30 días de anticipación:</strong> Reembolso del 80%.<br>
+        • <strong>Entre 11 y 30 días de anticipación:</strong> Reembolso del 50%.<br>
+        • <strong>10 días o menos de anticipación:</strong> Sin reembolso.
+      </div>
+
+      <div class="clausula-item">
+        <span class="clausula-header">DÉCIMA. REGLAS GENERALES Y LOGÍSTICA</span>
+        • <strong>Música y Ruido:</strong> Prohibida la música en vivo con escenario, equipos de sonido profesionales o luces de gran escala. Debe respetarse el reglamento de sonido del fraccionamiento.<br>
+        • <strong>Mascotas:</strong> No permitidas.<br>
+        • <strong>Proveedores y Decoración:</strong> Todo proveedor externo (catering, inflables, banquetes) debe retirar sus equipos y la totalidad de la basura generada antes del check-out. Dejar suciedad extrema generará un cargo extra por limpieza profunda.
+      </div>
+
+      <div class="clausula-item">
+        <span class="clausula-header">DÉCIMA PRIMERA. CONDUCTA Y SUSTANCIAS PROHIBIDAS</span>
+        Queda estrictamente prohibido el consumo de sustancias ilícitas. El consumo de alcohol debe ser moderado. Cualquier alteración al orden, riña o queja vecinal será motivo de desalojo inmediato sin derecho a reembolso y aviso a las autoridades.
+      </div>
+
+      <div id="notas-seccion-contrato" style="display:none;">
+        <strong>ACUERDOS ESPECIALES Y NOTAS:</strong>
+        <p id="out-notas" style="font-style: italic; margin-top: 4px;"></p>
+      </div>
+
+    </div>
+
+    <p style="margin-top: 1.5rem; font-size: 0.8rem; text-align: right; color: #444;">
+      Hermosillo, Sonora, a <span id="out-fecha-hoy">22 de julio de 2026</span>.
+    </p>
+
+    <div class="firmas-container">
       <div class="firmas-box">
         <div class="linea-firma"></div>
-        <strong>EL ARRENDADOR</strong><br>JAVIER ANTONIO MORALES MIZQUEZ
+        <strong>Firma del Arrendador</strong><br>
+        <span style="font-size: 0.8rem; color: #555;">Javier Antonio Morales Mizquez</span>
       </div>
       <div class="firmas-box">
         <div class="linea-firma"></div>
-        <strong>EL ARRENDATARIO</strong><br><span id="out-nombre2"></span>
+        <strong>Firma del Arrendatario</strong><br>
+        <span id="out-nombre2" style="font-size: 0.8rem; color: #555;">________________________</span>
       </div>
     </div>
     
     <div class="no-print-area">
         <button class="btn-print" onclick="window.print()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
           GUARDAR COMO PDF / IMPRIMIR
         </button>
     </div>
@@ -446,7 +617,7 @@
     });
   }
 
-  // Formato de fecha a texto (15 de mayo de 2026)
+  // Formato de fecha a texto (Ej. 21 de agosto de 2026)
   function formatDate(dateStr) {
     if(!dateStr) return "________________";
     const [year, month, day] = dateStr.split('-');
@@ -481,16 +652,30 @@
     const ineVal = document.getElementById('ineInput').value;
     document.getElementById('out-ine').innerText = ineVal ? ineVal : "________________";
     
-    document.getElementById('out-entrada').innerText = formatDate(document.getElementById('fechaEntrada').value);
-    document.getElementById('out-hora-e').innerText = formatTime(document.getElementById('horaEntrada').value);
+    const fechaE = formatDate(document.getElementById('fechaEntrada').value);
+    const horaE = formatTime(document.getElementById('horaEntrada').value);
+    const fechaS = formatDate(document.getElementById('fechaSalida').value);
+    const horaS = formatTime(document.getElementById('horaSalida').value);
     
-    document.getElementById('out-salida').innerText = formatDate(document.getElementById('fechaSalida').value);
-    document.getElementById('out-hora-s').innerText = formatTime(document.getElementById('horaSalida').value);
+    document.getElementById('out-entrada').innerText = fechaE;
+    document.getElementById('out-hora-e').innerText = horaE;
+    document.getElementById('out-salida').innerText = fechaS;
+    document.getElementById('out-hora-s').innerText = horaS;
     
-    document.getElementById('out-precio').innerText = document.getElementById('precioInput').value || "$0.00";
-    document.getElementById('out-anticipo').innerText = document.getElementById('anticipoInput').value || "$0.00";
+    const precio = document.getElementById('precioInput').value || "$0.00";
+    const anticipo = document.getElementById('anticipoInput').value || "$0.00";
+    const deposito = document.getElementById('depositoInput').value || "$1,000.00";
 
-    // Insertar Fecha de Hoy Automática
+    document.getElementById('out-precio').innerText = precio;
+    document.getElementById('out-anticipo').innerText = anticipo;
+    document.getElementById('out-deposito').innerText = deposito + " MXN";
+
+    // Llenar tarjetas visuales para la versión PDF/Impresa
+    document.getElementById('out-card-entrada').innerText = `${fechaE} (${horaE})`;
+    document.getElementById('out-card-salida').innerText = `${fechaS} (${horaS})`;
+    document.getElementById('out-card-costo').innerText = `${precio} / Ant: ${anticipo}`;
+
+    // Fecha de hoy
     document.getElementById('out-fecha-hoy').innerText = obtenerFechaActualTexto();
 
     // Notas Adicionales
@@ -511,7 +696,7 @@
     }, 100);
   }
 
-  // Función de limpieza de formulario para botón Nuevo
+  // Función de limpieza de formulario
   function clearForm() {
     document.getElementById('nombreInput').value = "";
     document.getElementById('ineInput').value = "";
@@ -521,6 +706,7 @@
     document.getElementById('horaSalida').value = "12:00";
     document.getElementById('precioInput').value = "";
     document.getElementById('anticipoInput').value = "";
+    document.getElementById('depositoInput').value = "$1,000.00";
     document.getElementById('notasInput').value = "";
     document.getElementById('contrato-final').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
