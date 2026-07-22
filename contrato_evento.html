@@ -675,9 +675,15 @@
     const select = document.getElementById('paqueteSelect');
     const basePrice = parseFloat(select.options[select.selectedIndex].getAttribute('data-price')) || 0;
     let extrasTotal = 0;
+    
     document.querySelectorAll('.extra-cb:checked').forEach(cb => extrasTotal += parseFloat(cb.value));
-    const m1 = document.getElementById('manualMonto1').value.replace(/[$,]/g, "");
-    if (!isNaN(parseFloat(m1)) && m1 !== "") extrasTotal += parseFloat(m1);
+    
+    const m1Input = document.getElementById('manualMonto1');
+    if (m1Input && m1Input.value) {
+      const m1 = m1Input.value.replace(/[$,]/g, "");
+      if (!isNaN(parseFloat(m1))) extrasTotal += parseFloat(m1);
+    }
+    
     const total = basePrice + extrasTotal;
     document.getElementById('precioInput').value = total.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     document.getElementById('anticipoInput').value = (total * 0.30).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -687,7 +693,8 @@
     if(!dateStr) return "________________";
     const parts = dateStr.split('-');
     if(parts.length !== 3) return "________________";
-    const date = new Date(parts[0], parts[1] - 1, parts[2]);
+    // Usar construcción local de la fecha para evitar desfases de zona horaria
+    const date = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
     return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
@@ -754,7 +761,7 @@
 
     const anotaciones = document.getElementById('anotacionesInput').value;
     const seccionAnots = document.getElementById('seccion-anotaciones');
-    if(anotaciones.trim() !== "") {
+    if(anotaciones && anotaciones.trim() !== "") {
         document.getElementById('out-anotaciones').innerText = anotaciones;
         seccionAnots.style.display = "block";
     } else {
@@ -763,6 +770,7 @@
 
     const box = document.getElementById('contrato-final');
     box.style.display = 'block';
+    
     setTimeout(() => {
       box.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
