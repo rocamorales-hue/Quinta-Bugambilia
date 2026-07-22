@@ -22,7 +22,6 @@
       --warm: #3b6280;
       --gold: #41965e; 
       --green: #2d734a; 
-      --green-bg: #eaf5ef; 
       --border: #b8d9c8;
       --accent-bg: #f0f7f3;
     }
@@ -546,13 +545,13 @@
     </div>
 
     <div class="reunidos-box">
-      <strong>REUNIDOS:</strong> Conste por el presente documento el Contrato de Arrendamiento Temporal que se celebra el día <strong id="out-fecha-contrato"></strong>, entre los suscritos: por una parte, el ARRENDADOR, <strong>Javier Antonio Morales Mizquez</strong> en representación de Quinta Bugambilia, y por la otra, el ARRENDATARIO, <strong id="out-nombre">________________________</strong> (ID/INE: <span id="out-ine">________________________</span>), bajo las siguientes:
+      <strong>REUNIDOS:</strong> En Hermosillo, Sonora, al <span id="out-fecha-contrato">22 de julio de 2026</span>, celebran el presente contrato el ARRENDADOR, <strong>Javier Antonio Morales Mizquez</strong> (Quinta Bugambilia), y el ARRENDATARIO, <strong id="out-nombre">________________________</strong> (INE/ID: <span id="out-ine">________________________</span>), bajo las siguientes cláusulas:
     </div>
 
     <!-- TARJETAS DE RESUMEN FINANCIERO Y FECHAS -->
     <div class="grid-summary">
       <div class="summary-card">
-        <div class="label">Horario del Evento</div>
+        <div class="label">Horario del Evento (7h máx.)</div>
         <div class="val" id="out-card-horario">--</div>
       </div>
       <div class="summary-card">
@@ -569,70 +568,49 @@
       
       <div class="clausula-item">
         <span class="clausula-header">PRIMERA. OBJETO Y UBICACIÓN</span>
-        El Arrendador otorga el uso temporal del inmueble ubicado en el Fraccionamiento Real del Catorce, Hermosillo, Sonora. El uso bajo esta modalidad está destinado exclusivamente para áreas exteriores, salvo servicios adicionales contratados explícitamente en este documento.
+        Arrendamiento temporal de áreas exteriores de la propiedad ubicada en Fraccionamiento Real del Catorce, Hermosillo, Sonora. Incluye palapa, alberca, hielera grande, mesas y manteles para el paquete contratado.
       </div>
 
       <div class="clausula-item">
-        <span class="clausula-header">SEGUNDA. VIGENCIA Y HORARIOS</span>
-        El presente contrato ampara el uso de las instalaciones por un período base de 7 horas, con entrada a las <strong id="out-hora-e"></strong> y salida a las <strong id="out-hora-s"></strong> del día <strong id="out-entrada"></strong>. En caso de que el Arrendatario desee extender el evento más allá de las <strong id="out-hora-s2"></strong>, podrá hacerlo bajo las siguientes condiciones: la extensión deberá solicitarse y pagarse previamente, tiene un costo de $500.00 MXN por hora adicional, y en ningún caso podrá rebasar las 01:00 AM, hora límite absoluta e improrrogable conforme al reglamento del Fraccionamiento Real del Catorce. A dicha hora, sin excepción, deberá haberse apagado todo sistema de sonido y desalojado la totalidad de invitados y proveedores. Todo retraso posterior a la hora de salida pactada generará un cargo automático de $1,000.00 MXN por cada hora o fracción, deducible del depósito de garantía.
+        <span class="clausula-header">SEGUNDA. DURACIÓN (7 HORAS) Y HORA LÍMITE ABSOLUTA</span>
+        El precio pactado ampara un <strong>bloque máximo de 7 horas de servicio</strong> (Entrada: <span id="out-hora-e"></span> / Salida: <span id="out-hora-s"></span> del día <span id="out-entrada"></span>).<br>
+        • <strong>Horas extra:</strong> Tienen un costo de $500.00 MXN c/u, sujetas a aprobación previa.<br>
+        • <strong>LÍMITE MÁXIMO 1:00 AM:</strong> Sin excepción y sin importar la hora de inicio o la contratación de horas extra, <strong>la hora límite de salida y apagado total de música es a la 1:00 AM</strong>.<br>
+        • <strong>Penalización por retraso:</strong> Pasada la hora de salida pactada (o la 1:00 AM como límite tope), se cobrarán $1,000.00 MXN por cada hora o fracción de retraso, descontados del depósito de garantía.
       </div>
 
       <div class="clausula-item">
-        <span class="clausula-header">TERCERA. COSTO Y PAQUETE</span>
-        El costo total acordado es de <strong id="out-precio"></strong> MXN. El Arrendatario contrata formalmente el paquete con capacidad para un máximo estricto de <strong id="out-personas"></strong> personas. El Arrendatario se compromete formalmente a respetar dicho límite; por cada persona excedente que ingrese a las instalaciones durante el desarrollo del evento, se aplicará un cobro obligatorio y punitivo de <strong>$250.00 MXN</strong>, deducible directamente del depósito en garantía o cobrado en el acto.
+        <span class="clausula-header">TERCERA. CAPACIDAD Y CONTROL DE INVITADOS</span>
+        Capacidad contratada: <strong id="out-personas">30</strong> personas. Cada persona adicional no autorizada generará un cargo obligatorio y punitivo de $250.00 MXN.
       </div>
 
       <div class="clausula-item">
-        <span class="clausula-header">CUARTA. INCLUSIONES BASE</span>
-        El paquete incluye uso de alberca, palapa, áreas exteriores, así como mesas y manteles blancos para el número de invitados contratados y una hielera grande.
-      </div>
-
-      <div class="clausula-item">
-        <span class="clausula-header">QUINTA. FORMA DE PAGO</span>
-        Se requiere un anticipo de <strong id="out-anticipo"></strong> (30%) para asegurar la fecha. El saldo restante deberá liquidarse en su totalidad antes de ingresar al inmueble.
+        <span class="clausula-header">CUARTA. PAGOS Y DEPÓSITO DE GARANTÍA</span>
+        • <strong>Anticipo (30%):</strong> <span id="out-anticipo"></span> para reservar. El saldo restante se liquida antes de ingresar al inmueble.<br>
+        • <strong>Depósito en garantía:</strong> <span id="out-deposito"></span> MXN (devuelto por transferencia dentro de las 24 hrs posteriores al evento si no existen daños).
         <table class="tabla-banco">
-          <tr><td>Banco:</td><td>Santander</td><td>Titular:</td><td>Javier Antonio Morales Mizquez</td></tr>
-          <tr><td>CLABE:</td><td>014760655114097664</td><td>Cuenta / Tarjeta:</td><td>65511409766 / 5579 0890 0728 7264</td></tr>
+          <tr><td>Banco: Santander</td><td>Titular: Javier Antonio Morales Mizquez</td></tr>
+          <tr><td>CLABE: 014760655114097664</td><td>Cuenta/Tarjeta: 65511409766 / 5579 0890 0728 7264</td></tr>
         </table>
       </div>
 
       <div class="clausula-item">
-        <span class="clausula-header">SEXTA. DEPÓSITO DE GARANTÍA</span>
-        El Arrendatario deja <strong id="out-deposito"></strong> MXN como garantía. Se devolverá por transferencia en un plazo máximo de 24 horas tras verificar que no existan daños. <strong>Importante:</strong> El uso de confeti, polvos de colores o vidrio en la alberca causará la pérdida total del depósito.
+        <span class="clausula-header">QUINTA. REGLAS DE ALBERCA Y PROPIEDAD</span>
+        • Prohibido introducir comida, envases de vidrio o mascotas a la alberca. El uso de confeti, polvos de colores o vidrio en el área de alberca causará la <strong>pérdida total del depósito</strong>.<br>
+        • Prohibido fumar en interiores, palapa y salón de juegos. Prohibido tirar colillas en el pasto sintético (daños se cobrarán al 100%).<br>
+        • Prohibido mover el mobiliario de su posición original sin autorización previa.
       </div>
 
       <div class="clausula-item">
-        <span class="clausula-header">SÉPTIMA. REGLAMENTO DE ALBERCA Y DESLINDE DE RESPONSABILIDAD</span>
-        Queda prohibido introducir comida, envases de vidrio, mascotas o cualquier sustancia contaminante al agua de la alberca. El Arrendatario declara expresamente conocer y aceptar los riesgos inherentes al uso de alberca y áreas acuáticas, asumiendo plena responsabilidad por cualquier accidente, lesión o incidente que pudiera ocurrir dentro de la propiedad durante el desarrollo del evento. El Arrendador queda liberado de toda responsabilidad civil, penal o de cualquier otra índole derivada del uso de las instalaciones, incluyendo el área de alberca. El Arrendatario se compromete expresamente a no emprender acción legal alguna en contra del Arrendador por dichos conceptos.
-      </div>
-
-      <div class="clausula-item">
-        <span class="clausula-header">OCTAVA. PROHIBICIÓN DE FUMAR E INSTALACIONES</span>
-        Queda <strong>estrictamente prohibido fumar</strong> en el interior de la casa principal, departamento, salón de juegos y área de palapa. Asimismo, se prohíbe tirar colillas de cigarro en el pasto sintético o áreas verdes. Cualquier quemadura en el pasto o mobiliario será penalizada con el cobro total de la reparación o reposición. De igual manera, el Arrendador se deslinda de toda responsabilidad legal o financiera por objetos, dinero, joyas o valores olvidados por el Arrendatario o sus invitados dentro de cualquier área de la propiedad.
-      </div>
-
-      <div class="clausula-item">
-        <span class="clausula-header">NOVENA. RESPONSABILIDAD DE MOBILIARIO</span>
-        El Arrendatario se compromete a cuidar el equipo y mobiliario (incluyendo piezas de madera fina). Cualquier daño será descontado del depósito o cobrado por separado si el monto excede la garantía. Prohibido mover el mobiliario de su lugar asignado sin previa autorización.
-      </div>
-
-      <div class="clausula-item">
-        <span class="clausula-header">DÉCIMA. SERVICIOS EXTERNOS, PROVEEDORES Y SONIDO</span>
-        Se permite música y catering externos bajo los límites fijados en la Cláusula Segunda. Asimismo, el Arrendatario asume plena responsabilidad solidaria y legal por el comportamiento, daños, suciedad o retrasos ocasionados por sus proveedores externos (músicos, djs, banquetes, decoradores), respondiendo económicamente por cualquier desperfecto o basura dejada en la propiedad.
-      </div>
-
-      <div class="clausula-item">
-        <span class="clausula-header">DÉCIMA PRIMERA. CANCELACIONES Y ACTIVIDADES PROHIBIDAS</span>
-        Con 21 días o más de antelación al evento se reembolsará el 80% del anticipo; en cancelaciones efectuadas entre 11 y 20 días previos se devolverá únicamente el 50%; con 10 días o menos de anticipación no habrá reembolso alguno bajo ninguna circunstancia. <strong>Queda estrictamente prohibido el consumo, venta o distribución de sustancias ilícitas o drogas, así como cualquier actividad ilegal dentro del inmueble; la violación de esta norma resultará en el desalojo inmediato de los asistentes y la cancelación del evento sin derecho a reembolso ni devolución del depósito.</strong>
-      </div>
-
-      <div class="clausula-item">
-        <span class="clausula-header">DÉCIMA SEGUNDA. MENORES DE EDAD</span>
-        Para efectos del conteo y capacidad del paquete contratado, se considerará como persona a todo individuo mayor de 6 años. Los menores de 5 años no generan cargo adicional. Sin embargo, todos los menores de edad presentes en el evento, independientemente de su edad, son responsabilidad exclusiva e indelegable del Arrendatario. Se exige la presencia de al menos un adulto responsable por cada grupo de menores que utilice el área de alberca. El Arrendatario se obliga a garantizar la supervisión constante de todos los menores durante toda la duración del evento, liberando al Arrendador de cualquier responsabilidad derivada de accidente, lesión o incidente que involucre a menores de edad.
+        <span class="clausula-header">SEXTA. PROVEEDORES EXTERNOS, CANCELACIONES Y CERO DROGAS</span>
+        • <strong>Proveedores:</strong> El Arrendatario responde por la basura, puntualidad y daños causados por sus proveedores (catering, música, decoración).<br>
+        • <strong>CERO TOLERANCIA A DROGAS:</strong> El uso, venta o distribución de sustancias ilícitas causará el desalojo inmediato sin reembolso.<br>
+        • <strong>Cancelaciones:</strong> +21 días antes (80% reembolso); 11 a 20 días antes (50% reembolso); 10 días o menos (Sin reembolso).<br>
+        • <strong>Deslinde:</strong> El Arrendatario asume la responsabilidad total por la seguridad de sus invitados y la supervisión de los asistentes, liberando al Arrendador de toda responsabilidad civil o penal por accidentes o pertenencias olvidadas.
       </div>
 
       <div id="seccion-adicionales" class="seccion-detalles" style="display:none;">
-        <strong>SERVICIOS ADICIONALES CONTRATADOS:</strong>
+        <strong>SERVICIOS ADICIONALES INCLUIDOS:</strong>
         <div id="out-notas" style="font-style: italic; margin-top: 4px;"></div>
       </div>
 
@@ -644,14 +622,12 @@
     </div>
 
     <div class="reglas-oro">
-      <p style="text-align: center; margin-bottom: 0.5rem; font-weight: bold; font-size: 0.9rem; text-transform: uppercase;">⚠️ REGLAMENTOS CLAVE DEL INMUEBLE</p>
+      <p style="text-align: center; margin-bottom: 0.5rem; font-weight: bold; font-size: 0.9rem; text-transform: uppercase;">⚠️ PUNTOS CLAVE A RECORDAR</p>
       <ul style="font-size: 0.82rem; padding-left: 20px; line-height: 1.5;">
-          <li><strong>HORA LÍMITE GENERAL:</strong> Fin de la música y salida obligatoria de invitados a la 1:00 AM.</li>
-          <li><strong>CONTROL DE INVITADOS:</strong> Límite estricto según paquete. Persona extra genera cobro de $250.00 MXN.</li>
-          <li><strong>SUSTANCIAS ILÍCITAS:</strong> Tolerancia cero. Su uso implica desalojo inmediato sin reembolso.</li>
-          <li><strong>ESPACIO LIBRE DE HUMO:</strong> Prohibido fumar en interiores, palapa y salón de juegos.</li>
-          <li><strong>CUIDADO DEL PASTO:</strong> Prohibido tirar colillas al pasto sintético (Riesgo de quemadura irreversible).</li>
-          <li><strong>PROHIBIDO VIDRIO:</strong> Nada de botellas o vasos de vidrio cerca del área de alberca.</li>
+          <li><strong>DURACIÓN DEL EVENTO:</strong> Máximo 7 horas de servicio.</li>
+          <li><strong>CIERRE ABSOLUTO:</strong> Salida obligatoria y fin de música a la 1:00 AM como límite tope.</li>
+          <li><strong>ALBERCA Y DEPÓSITO:</strong> Cero vidrio, cero confeti y cero polvos de colores para conservar el depósito.</li>
+          <li><strong>CUIDADO DEL LUGAR:</strong> Prohibido mover mobiliario y prohibido fumar sobre pasto sintético o en interiores.</li>
       </ul>
     </div>
 
@@ -742,7 +718,6 @@
     document.getElementById('out-entrada').innerText = fechaE;
     document.getElementById('out-hora-e').innerText = horaE;
     document.getElementById('out-hora-s').innerText = horaS;
-    document.getElementById('out-hora-s2').innerText = horaS;
     
     const precio = document.getElementById('precioInput').value || "$0.00";
     const anticipo = document.getElementById('anticipoInput').value || "$0.00";
