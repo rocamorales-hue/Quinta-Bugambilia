@@ -131,9 +131,8 @@
       gap: 0.5rem;
     }
 
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-    .grid-1 { display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
-
+    .grid-2 { display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
+    
     .field { display: flex; flex-direction: column; margin-bottom: 0.8rem; }
     label { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--warm); margin-bottom: 0.3rem; }
 
@@ -176,7 +175,7 @@
     .extra-left input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
     .extra-price { font-weight: 600; color: var(--green); font-size: 0.85rem; }
 
-    /* Total Indicator Banner */
+    /* Banner Total */
     .total-banner {
       background: var(--charcoal);
       color: #fff;
@@ -190,7 +189,7 @@
     .total-banner .lbl { font-size: 0.9rem; font-weight: 400; opacity: 0.9; }
     .total-banner .amount { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: var(--gold); }
 
-    /* Buttons */
+    /* Botones */
     .btn-action {
       width: 100%;
       padding: 0.9rem;
@@ -219,7 +218,7 @@
     }
     .btn-whatsapp:hover { background: #1ebc57; }
 
-    /* Output Box */
+    /* Output Container */
     #cotizacion-output {
       display: none;
       background: #fff;
@@ -258,7 +257,6 @@
       header { flex-direction: row; justify-content: space-between; padding: 0 2rem; height: 65px; }
       .nav-container { width: auto; }
       .grid-2 { grid-template-columns: 1fr 1fr; }
-      .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
     }
   </style>
 </head>
@@ -307,8 +305,8 @@
         <label>Tipo de Tarifa / Día Proyectado</label>
         <select id="tipoTarifa" onchange="calcularCotizacion()">
           <option value="auto">Automático según Fecha</option>
-          <option value="semana">Entre Semana ($6,590/noche)</option>
-          <option value="finde">Fin de Semana ($7,590/noche)</option>
+          <option value="semana">Entre Semana (Lun a Jue: $6,590/noche)</option>
+          <option value="finde">Fin de Semana (Vie a Dom: $7,590/noche)</option>
         </select>
       </div>
       <div class="field">
@@ -486,12 +484,16 @@
     } else if (tipoSel === 'finde') {
       precioNocheBase = PRECIO_FIN_SEMANA;
     } else if (fEntrada) {
-      // Auto-detección por día de la semana (Viernes=5, Sábado=6 es fin de semana)
+      // REGLA DE DÍAS:
+      // 0 = Domingo, 1 = Lunes, 2 = Martes, 3 = Miércoles, 4 = Jueves, 5 = Viernes, 6 = Sábado
       const dateParts = fEntrada.split('-');
       const dayOfWeek = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]).getDay();
-      if (dayOfWeek === 5 || dayOfWeek === 6) {
+      
+      // Viernes (5), Sábado (6) o Domingo (0) -> Tarifa Fin de Semana
+      if (dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0) {
         precioNocheBase = PRECIO_FIN_SEMANA;
       } else {
+        // Lunes (1) a Jueves (4) -> Tarifa Entre Semana
         precioNocheBase = PRECIO_ENTRE_SEMANA;
       }
     }
@@ -629,8 +631,7 @@ ${listaExtrasTexto}
     window.open(url, '_blank');
   }
 
-  // Inicializar fecha actual por defecto en Check-in
-  document.getElementById('fechaEntrada').valueToDate = new Date();
+  // Inicializar calculador al cargar
   calcularCotizacion();
 </script>
 </body>
