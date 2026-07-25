@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Quinta Bugambilia – Cotizador de Hospedaje</title>
+  <link rel="manifest" href="manifest.json">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ==========================================================================
+       RESET & VARIABLES GLOBALES (Alineado con el Sistema)
+       ========================================================================== */
+    *, *::before, *::after { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+
+    :root {
+      --sand: #ddeef7; 
+      --cream: #f2f9f4; 
+      --charcoal: #1e3a2f; 
+      --warm: #4a7fa5;
+      --gold: #5db87a; 
+      --green: #3a8f5e; 
+      --red: #b94040; 
+      --border: #b8d9c8;
+    }
+
+    body { 
+      font-family: 'DM Sans', sans-serif; 
+      background: var(--cream); 
+      color: var(--charcoal); 
+      min-height: 100vh; 
+      overflow-x: hidden; 
+    }
+
+    /* ==========================================================================
+       HEADER & NAVIGATION
+       ========================================================================== */
+    header { 
+      background: rgba(30, 58, 47, 0.95); 
+      backdrop-filter: blur(12px); 
+      -webkit-backdrop-filter: blur(12px);
+      color: #fff; 
+      padding: 1rem; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      gap: 0.8rem;
+      position: sticky; 
+      top: 0; 
+      z-index: 100; 
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .logo { 
+      font-family: 'Cormorant Garamond', serif; 
+      font-size: 1.4rem; 
+      font-weight: 400; 
+      letter-spacing: .05em; 
+      text-align: center;
+    }
+    .logo span { 
+      color: var(--gold); 
+      opacity: 0.9; 
+      font-size: 0.8rem; 
+      font-family: 'DM Sans', sans-serif;
+      margin-left: 0.3rem;
+      font-weight: 300;
+    }
+
+    .nav-container { 
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.4rem; 
+      width: 100%; 
+    }
+
+    .nav-link { 
+      background: rgba(255, 255, 255, 0.05); 
+      border: 1px solid rgba(255, 255, 255, 0.1); 
+      color: #fff; 
+      padding: 0.55rem 0.8rem; 
+      border-radius: 10px; 
+      font-size: 0.8rem; 
+      font-weight: 500;
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 0.4rem; 
+      text-decoration: none; 
+      transition: all 0.2s ease-in-out; 
+      -webkit-tap-highlight-color: transparent; 
+    }
+
+    .nav-link.active, .nav-link:hover { 
+      background: rgba(255, 255, 255, 0.2); 
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    /* ==========================================================================
+       MAIN LAYOUT & COTIZADOR
+       ========================================================================== */
+    main { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.1rem; font-weight: 400; text-align: center; margin-bottom: 0.2rem; }
+    .subtitle { color: var(--warm); font-size: .88rem; margin-bottom: 1.5rem; text-align: center; }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(0,0,0,.04);
+      padding: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      border-bottom: 2px solid var(--sand);
+      padding-bottom: 0.4rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .grid-1 { display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
+
+    .field { display: flex; flex-direction: column; margin-bottom: 0.8rem; }
+    label { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--warm); margin-bottom: 0.3rem; }
+
+    input[type="text"], input[type="number"], input[type="date"], select {
+      width: 100%; 
+      padding: 0.65rem 0.8rem; 
+      font-family: 'DM Sans', sans-serif; 
+      font-size: 0.9rem; 
+      color: var(--charcoal); 
+      background: var(--cream); 
+      border: 1px solid var(--border); 
+      border-radius: 8px; 
+      outline: none; 
+      transition: all 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--warm); 
+      background: #fff; 
+      box-shadow: 0 0 0 3px rgba(74,127,165,0.1);
+    }
+
+    /* Extras Checklist */
+    .extra-group-title { font-size: 0.8rem; font-weight: 700; color: var(--charcoal); margin: 0.8rem 0 0.4rem; text-transform: uppercase; }
+    .extra-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 0.4rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .extra-item:hover { background: #eaf4f0; }
+    .extra-left { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; }
+    .extra-left input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
+    .extra-price { font-weight: 600; color: var(--green); font-size: 0.85rem; }
+
+    /* Total Indicator Banner */
+    .total-banner {
+      background: var(--charcoal);
+      color: #fff;
+      padding: 1.2rem;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    .total-banner .lbl { font-size: 0.9rem; font-weight: 400; opacity: 0.9; }
+    .total-banner .amount { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: var(--gold); }
+
+    /* Buttons */
+    .btn-action {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--green);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 12px rgba(58, 143, 94, 0.25);
+      transition: all 0.2s;
+    }
+    .btn-action:hover { background: #317a50; }
+    
+    .btn-whatsapp {
+      background: #25D366;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+    }
+    .btn-whatsapp:hover { background: #1ebc57; }
+
+    /* Output Box */
+    #cotizacion-output {
+      display: none;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    }
+
+    #cotizacion-texto {
+      width: 100%;
+      min-height: 380px;
+      font-family: monospace, monospace;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      padding: 1rem;
+      background: #f8faf9;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #222;
+      resize: vertical;
+      white-space: pre-wrap;
+    }
+
+    .output-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    footer { text-align: center; padding: 1.5rem; font-size: .75rem; color: var(--warm); border-top: 1px solid var(--border); margin-top: 2rem; }
+
+    @media(min-width: 768px) {
+      header { flex-direction: row; justify-content: space-between; padding: 0 2rem; height: 65px; }
+      .nav-container { width: auto; }
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+      .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Quinta Bugambilia <span>· Real del 14</span></div>
+  <div class="nav-container">
+    <a href="index.html" class="nav-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
+      <span>Calendario</span>
+    </a>
+    <a href="cotizador.html" class="nav-link active">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span>Cotizador Hospedaje</span>
+    </a>
+    <a href="ventas.html" class="nav-link"><span>Ventas</span></a>
+    <a href="contrato_hospedaje.html" class="nav-link"><span>Contratos Hospedaje</span></a>
+    <a href="contrato_evento.html" class="nav-link"><span>Contratos Evento</span></a>
+  </div>
+</header>
+
+<main>
+  <h1>Cotizador de Hospedaje</h1>
+  <p class="subtitle">Calcula tarifas de estancia, personas adicionales y extras en segundos</p>
+
+  <!-- APARTADO 1: HOSPEDAJE & FECHAS -->
+  <div class="card">
+    <div class="card-title">
+      1. Fechas y Estancia
+    </div>
+    
+    <div class="grid-2">
+      <div class="field">
+        <label>Fecha Entrada (Check-In)</label>
+        <input type="date" id="fechaEntrada" onchange="calcularCotizacion()">
+      </div>
+      <div class="field">
+        <label>Fecha Salida (Check-Out)</label>
+        <input type="date" id="fechaSalida" onchange="calcularCotizacion()">
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Tipo de Tarifa / Día Proyectado</label>
+        <select id="tipoTarifa" onchange="calcularCotizacion()">
+          <option value="auto">Automático según Fecha</option>
+          <option value="semana">Entre Semana ($6,590/noche)</option>
+          <option value="finde">Fin de Semana ($7,590/noche)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Número de Noches</label>
+        <input type="number" id="numNoches" min="1" value="1" oninput="calcularCotizacion()">
+      </div>
+    </div>
+  </div>
+
+  <!-- APARTADO 2: PERSONAS EXTRAS -->
+  <div class="card">
+    <div class="card-title">
+      2. Personas Extra (Base 12 pers. incluidas)
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Pers. Extra Hospedadas ($500 c/u x noche)</label>
+        <input type="number" id="pExtraDormir" min="0" max="7" value="0" placeholder="Máx 7 extra (19 total)" oninput="calcularCotizacion()">
+      </div>
+      <div class="field">
+        <label>Visitas de Día / Pasadía ($250 c/u x día)</label>
+        <input type="number" id="pExtraDia" min="0" value="0" placeholder="3:00 PM a 11:00 PM" oninput="calcularCotizacion()">
+      </div>
+    </div>
+  </div>
+
+  <!-- APARTADO 3: EXTRAS (EQUIPOS Y ACCESOS) -->
+  <div class="card">
+    <div class="card-title">
+      3. Renta de Equipos & Accesos Adicionales
+    </div>
+
+    <div class="extra-group-title">Equipos de Confort & Ambientación</div>
+    
+    <div class="extra-item" onclick="toggleExtra('chkCalenton')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkCalenton" value="480" onchange="calcularCotizacion()">
+        <span>Calentón Ambiental de Gas</span>
+      </div>
+      <span class="extra-price">+$480</span>
+    </div>
+
+    <div class="extra-item" onclick="toggleExtra('chkAerocooler')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkAerocooler" value="480" onchange="calcularCotizacion()">
+        <span>Aerocooler Portátil</span>
+      </div>
+      <span class="extra-price">+$480</span>
+    </div>
+
+    <div class="extra-item" onclick="toggleExtra('chkMesaSnacks')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkMesaSnacks" value="350" onchange="calcularCotizacion()">
+        <span>Mesa para Snacks</span>
+      </div>
+      <span class="extra-price">+$350</span>
+    </div>
+
+    <div class="extra-item" onclick="toggleExtra('chkTorreLuces')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkTorreLuces" value="650" onchange="calcularCotizacion()">
+        <span>Torre de Luces y Humo</span>
+      </div>
+      <span class="extra-price">+$650</span>
+    </div>
+
+    <div class="extra-group-title">Accesos Adicionales</div>
+
+    <div class="extra-item" onclick="toggleExtra('chkCasaCompleta')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkCasaCompleta" value="1500" onchange="calcularCotizacion()">
+        <span>Casa Principal (Acceso Completo)</span>
+      </div>
+      <span class="extra-price">+$1,500</span>
+    </div>
+
+    <div class="extra-item" onclick="toggleExtra('chkCasaSinCuartos')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkCasaSinCuartos" value="1000" onchange="calcularCotizacion()">
+        <span>Casa Principal (Sin acceso a recámaras)</span>
+      </div>
+      <span class="extra-price">+$1,000</span>
+    </div>
+
+    <div class="extra-item" onclick="toggleExtra('chkDepaIndep')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkDepaIndep" value="1000" onchange="calcularCotizacion()">
+        <span>Departamento Independiente</span>
+      </div>
+      <span class="extra-price">+$1,000</span>
+    </div>
+
+    <div class="extra-item" onclick="toggleExtra('chkSalonJuegos')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkSalonJuegos" value="1200" onchange="calcularCotizacion()">
+        <span>Salón de Entretenimiento / Juegos</span>
+      </div>
+      <span class="extra-price">+$1,200</span>
+    </div>
+
+    <!-- BANNER TOTAL -->
+    <div class="total-banner">
+      <div>
+        <div class="lbl">TOTAL ESTIMADO</div>
+        <small style="opacity:0.7; font-size:0.7rem;">Incluye estancia base + extras seleccionados</small>
+      </div>
+      <div class="amount" id="totalMontoLabel">$6,590.00</div>
+    </div>
+
+    <button class="btn-action" onclick="generarTextoCotizacion()">
+      ⚡ Generar Cotización Formal para WhatsApp
+    </button>
+  </div>
+
+  <!-- RESULTADO FINAL COTIZACIÓN -->
+  <div id="cotizacion-output">
+    <div class="card-title">Cotización Lista para Enviar</div>
+    <textarea id="cotizacion-texto" readonly></textarea>
+
+    <div class="output-buttons">
+      <button class="btn-action" onclick="copiarTexto()">
+        📋 Copiar Texto
+      </button>
+      <button class="btn-action btn-whatsapp" onclick="enviarWhatsApp()">
+        💬 Enviar por WhatsApp
+      </button>
+    </div>
+  </div>
+</main>
+
+<footer>Quinta Bugambilia 2026 · Real del 14, Hermosillo, Sonora</footer>
+
+<script>
+  const PRECIO_ENTRE_SEMANA = 6590;
+  const PRECIO_FIN_SEMANA = 7590;
+  const PRECIO_EXTRA_DORMIR = 500;
+  const PRECIO_EXTRA_DIA = 250;
+
+  function toggleExtra(id) {
+    if (event.target.tagName !== 'INPUT') {
+      const cb = document.getElementById(id);
+      cb.checked = !cb.checked;
+    }
+    calcularCotizacion();
+  }
+
+  function formatMoney(amount) {
+    return '$' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+  }
+
+  function calcularCotizacion() {
+    const fEntrada = document.getElementById('fechaEntrada').value;
+    const fSalida = document.getElementById('fechaSalida').value;
+    let noches = parseInt(document.getElementById('numNoches').value) || 1;
+    
+    // Auto calcular noches si ambas fechas están seleccionadas
+    if (fEntrada && fSalida) {
+      const d1 = new Date(fEntrada);
+      const d2 = new Date(fSalida);
+      const diffTime = d2 - d1;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      if (diffDays > 0) {
+        noches = diffDays;
+        document.getElementById('numNoches').value = noches;
+      }
+    }
+
+    // Determinar precio base por noche
+    let precioNocheBase = PRECIO_ENTRE_SEMANA;
+    const tipoSel = document.getElementById('tipoTarifa').value;
+
+    if (tipoSel === 'semana') {
+      precioNocheBase = PRECIO_ENTRE_SEMANA;
+    } else if (tipoSel === 'finde') {
+      precioNocheBase = PRECIO_FIN_SEMANA;
+    } else if (fEntrada) {
+      // Auto-detección por día de la semana (Viernes=5, Sábado=6 es fin de semana)
+      const dateParts = fEntrada.split('-');
+      const dayOfWeek = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]).getDay();
+      if (dayOfWeek === 5 || dayOfWeek === 6) {
+        precioNocheBase = PRECIO_FIN_SEMANA;
+      } else {
+        precioNocheBase = PRECIO_ENTRE_SEMANA;
+      }
+    }
+
+    let subtotalHospedaje = precioNocheBase * noches;
+
+    // Personas extra
+    const pDormir = parseInt(document.getElementById('pExtraDormir').value) || 0;
+    const pDia = parseInt(document.getElementById('pExtraDia').value) || 0;
+
+    let subtotalExtrasPersonas = (pDormir * PRECIO_EXTRA_DORMIR * noches) + (pDia * PRECIO_EXTRA_DIA);
+
+    // Extras seleccionados
+    let subtotalEquiposYAccesos = 0;
+    const checkIds = ['chkCalenton', 'chkAerocooler', 'chkMesaSnacks', 'chkTorreLuces', 'chkCasaCompleta', 'chkCasaSinCuartos', 'chkDepaIndep', 'chkSalonJuegos'];
+    
+    checkIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.checked) {
+        subtotalEquiposYAccesos += parseFloat(el.value);
+      }
+    });
+
+    const totalGeneral = subtotalHospedaje + subtotalExtrasPersonas + subtotalEquiposYAccesos;
+    document.getElementById('totalMontoLabel').innerText = formatMoney(totalGeneral);
+
+    return {
+      noches,
+      precioNocheBase,
+      subtotalHospedaje,
+      pDormir,
+      pDia,
+      subtotalExtrasPersonas,
+      subtotalEquiposYAccesos,
+      totalGeneral
+    };
+  }
+
+  function generarTextoCotizacion() {
+    const data = calcularCotizacion();
+    const fEntradaRaw = document.getElementById('fechaEntrada').value;
+    const fSalidaRaw = document.getElementById('fechaSalida').value;
+
+    let fechasTexto = "A convenir";
+    if (fEntradaRaw) {
+      const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
+      const parts1 = fEntradaRaw.split('-');
+      const d1 = new Date(parts1[0], parts1[1] - 1, parts1[2]);
+      fechasTexto = d1.toLocaleDateString('es-MX', opciones);
+
+      if (fSalidaRaw) {
+        const parts2 = fSalidaRaw.split('-');
+        const d2 = new Date(parts2[0], parts2[1] - 1, parts2[2]);
+        fechasTexto += " al " + d2.toLocaleDateString('es-MX', opciones);
+      }
+    }
+
+    // Detalle de Extras seleccionados para incluir en texto
+    let listaExtrasTexto = "";
+    if (data.pDormir > 0) listaExtrasTexto += `• ${data.pDormir} Persona(s) extra hospedada(s): ${formatMoney(data.pDormir * PRECIO_EXTRA_DORMIR * data.noches)}\n`;
+    if (data.pDia > 0) listaExtrasTexto += `• ${data.pDia} Visita(s) de día (pasadía): ${formatMoney(data.pDia * PRECIO_EXTRA_DIA)}\n`;
+    
+    if (document.getElementById('chkCalenton').checked) listaExtrasTexto += `• Calentón ambiental: $480\n`;
+    if (document.getElementById('chkAerocooler').checked) listaExtrasTexto += `• Aerocooler portátil: $480\n`;
+    if (document.getElementById('chkMesaSnacks').checked) listaExtrasTexto += `• Mesa para snacks: $350\n`;
+    if (document.getElementById('chkTorreLuces').checked) listaExtrasTexto += `• Torre de luces y humo: $650\n`;
+    if (document.getElementById('chkCasaCompleta').checked) listaExtrasTexto += `• Acceso Completo Casa Principal: $1,500\n`;
+    if (document.getElementById('chkCasaSinCuartos').checked) listaExtrasTexto += `• Casa Principal (sin cuartos): $1,000\n`;
+    if (document.getElementById('chkDepaIndep').checked) listaExtrasTexto += `• Departamento Independiente: $1,000\n`;
+    if (document.getElementById('chkSalonJuegos').checked) listaExtrasTexto += `• Salón de entretenimiento: $1,200\n`;
+
+    if (listaExtrasTexto === "") listaExtrasTexto = "• Ninguno (Paquete Base)\n";
+
+    const textoFinal = 
+`🏡 *QUINTA BUGAMBILIA* 🏡
+Tu estancia en Hermosillo · Fracc. Real del 14
+
+📅 *COTIZACIÓN DE HOSPEDAJE*
+• *Fecha(s):* ${fechasTexto}
+• *Duración:* ${data.noches} noche(s)
+• *Tarifa Noche:* ${formatMoney(data.precioNocheBase)}
+
+💵 *DESGLOSE ECONÓMICO:*
+• Estancia Base (${data.noches} noche/s): ${formatMoney(data.subtotalHospedaje)}
+• Conceptos Adicionales / Extras:
+${listaExtrasTexto}
+💰 *TOTAL ESTIMADO:* ${formatMoney(data.totalGeneral)}
+
+----------------------------------------
+
+🌿 *TARIFAS DE HOSPEDAJE (Base hasta 12 personas)*
+
+🛏️ *DISTRIBUCIÓN DE HOSPEDAJE*
+(2 Recámaras en Casa Principal + 1 Departamento Independiente)
+•⁠ ⁠*Recámara 1:* King Size + TV + A/C + Baño privado.
+•⁠ ⁠*Recámara 2:* 2 Camas Queen + TV + A/C.
+•⁠ ⁠*Depa Independiente:* 2 Camas Queen + Sala propia + TV + A/C + Baño completo.
+👉 *Total:* 12 personas cómodas (1 King + 4 Queen). Colchones inflables sin costo.
+
+🎉 *AMENIDADES & ÁREA SOCIAL*
+•⁠ ⁠*Área de Asador:* Asador de gas profesional (gas incluido), máquina de hielo, refrigerador grande, barra con bancos y comedor de parota.
+•⁠ ⁠*Salón de Juegos:* Mesa de billar profesional, futbolito, área con TV, sillón y mesa con sillas.
+•⁠ ⁠*Entretenimiento:* TV exterior de gran formato, sistema de sonido ambiental y WiFi de alta velocidad.
+•⁠ ⁠*Zona de Alberca:* Con sombra, tobogán y aro de básquet acuático.
+•⁠ ⁠*Deportes & Recreación:* Cancha de fútbol, básquetbol, trampolín profesional y fogatero con iluminación vintage.
+•⁠ ⁠*Instalaciones:* Amplias áreas verdes (cero polvo), 4 baños completos + 2 medios baños, estacionamiento amplio y limpieza profesional.
+
+⏰ *HORARIOS*
+•⁠ ⁠*Check-in:* 3:00 PM | *Check-out:* 12:00 PM.
+•⁠ ⁠*Visitas de día (3:00 PM - 11:00 PM):* $250 p/p.
+•⁠ ⁠*Persona extra con hospedaje:* $500 p/p (Máximo 19 personas).
+
+📍 *UBICACIÓN:* Fracc. Real del 14, Hermosillo, Sonora. Zona residencial con acceso controlado y seguridad. 
+
+📝 *RESERVACIÓN:* 30% de anticipo para separar fecha. Saldo restante al hacer check-in.
+
+¿Te gustaría consultar disponibilidad para alguna fecha en específico?`;
+
+    document.getElementById('cotizacion-texto').value = textoFinal;
+    const box = document.getElementById('cotizacion-output');
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function copiarTexto() {
+    const area = document.getElementById('cotizacion-texto');
+    area.select();
+    document.execCommand('copy');
+    alert('¡Cotización copiada al portapapeles!');
+  }
+
+  function enviarWhatsApp() {
+    const texto = document.getElementById('cotizacion-texto').value;
+    const url = "https://api.whatsapp.com/send?text=" + encodeURIComponent(texto);
+    window.open(url, '_blank');
+  }
+
+  // Inicializar fecha actual por defecto en Check-in
+  document.getElementById('fechaEntrada').valueToDate = new Date();
+  calcularCotizacion();
+</script>
+</body>
+</html>
