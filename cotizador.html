@@ -1,3 +1,23 @@
+¡Entendido al 100%! Vamos a hacer una actualización importante en el motor de cálculo de `cotizador.html` para llevarlo al siguiente nivel:
+
+### 🛠️ Mejoras integradas:
+
+1. **Calendario Unificado de Selección de Rango (Check-in a Check-out):** Reemplazamos los dos inputs por un selector claro y directo que te permite marcar la **Fecha de Entrada** y **Fecha de Salida**.
+2. **Cálculo Noche por Noche (Precisión Absoluta):** El sistema analiza de manera individual cada día que abarca la estancia:
+* **Domingo, Viernes y Sábado:** Toma la tarifa de Fin de Semana ($7,590).
+* **Lunes, Martes, Miércoles y Jueves:** Toma la tarifa Entre Semana ($6,590).
+*Ejemplo exacto:* Entrar un domingo y salir un martes calcula **1 noche de Fin de Semana ($7,590)** + **1 noche Entre Semana ($6,590)** = **$14,180** base.
+
+
+3. **Módulo de Descuento (Directo antes del Total):** Añadimos un campo donde puedes aplicar un descuento (en pesos o porcentaje) para ajustar el precio antes de generar el total final.
+
+---
+
+### Código Completo Actualizado (`cotizador.html`)
+
+Reemplaza todo el contenido de tu archivo `cotizador.html` por este código:
+
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -8,7 +28,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <style>
     /* ==========================================================================
-       RESET & VARIABLES GLOBALES (Alineado con el Sistema)
+       RESET & VARIABLES GLOBALES
        ========================================================================== */
     *, *::before, *::after { 
       box-sizing: border-box; 
@@ -39,28 +59,29 @@
        HEADER & NAVIGATION
        ========================================================================== */
     header { 
-      background: rgba(30, 58, 47, 0.95); 
-      backdrop-filter: blur(12px); 
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(30, 58, 47, 0.96); 
+      backdrop-filter: blur(14px); 
+      -webkit-backdrop-filter: blur(14px);
       color: #fff; 
-      padding: 1rem; 
+      padding: 0.8rem 1rem; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
-      gap: 0.8rem;
+      gap: 0.7rem;
       position: sticky; 
       top: 0; 
       z-index: 100; 
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .logo { 
       font-family: 'Cormorant Garamond', serif; 
-      font-size: 1.4rem; 
+      font-size: 1.45rem; 
       font-weight: 400; 
       letter-spacing: .05em; 
       text-align: center;
+      line-height: 1.2;
     }
     .logo span { 
       color: var(--gold); 
@@ -75,26 +96,32 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 0.4rem; 
+      align-items: center;
+      gap: 0.35rem; 
       width: 100%; 
+      max-width: 1100px;
     }
 
     .nav-link { 
-      background: rgba(255, 255, 255, 0.05); 
-      border: 1px solid rgba(255, 255, 255, 0.1); 
+      flex: 1 1 auto;
+      min-width: max-content;
+      background: rgba(255, 255, 255, 0.06); 
+      border: 1px solid rgba(255, 255, 255, 0.12); 
       color: #fff; 
-      padding: 0.55rem 0.8rem; 
-      border-radius: 10px; 
-      font-size: 0.8rem; 
+      padding: 0.5rem 0.65rem; 
+      border-radius: 8px; 
+      font-size: 0.75rem; 
       font-weight: 500;
       cursor: pointer; 
-      display: flex; 
+      display: inline-flex; 
       align-items: center; 
       justify-content: center; 
-      gap: 0.4rem; 
+      gap: 0.35rem; 
       text-decoration: none; 
+      white-space: nowrap;
       transition: all 0.2s ease-in-out; 
       -webkit-tap-highlight-color: transparent; 
+      font-family: 'DM Sans', sans-serif;
     }
 
     .nav-link.active, .nav-link:hover { 
@@ -175,6 +202,17 @@
     .extra-left input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
     .extra-price { font-weight: 600; color: var(--green); font-size: 0.85rem; }
 
+    /* Desglose de Noches */
+    .desglose-box {
+      background: #f4f9f6;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      padding: 0.8rem;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
     /* Banner Total */
     .total-banner {
       background: var(--charcoal);
@@ -254,8 +292,9 @@
     footer { text-align: center; padding: 1.5rem; font-size: .75rem; color: var(--warm); border-top: 1px solid var(--border); margin-top: 2rem; }
 
     @media(min-width: 768px) {
-      header { flex-direction: row; justify-content: space-between; padding: 0 2rem; height: 65px; }
-      .nav-container { width: auto; }
+      header { flex-direction: row; justify-content: space-between; padding: 0.6rem 2rem; }
+      .nav-container { width: auto; justify-content: flex-end; }
+      .logo { font-size: 1.6rem; text-align: left; }
       .grid-2 { grid-template-columns: 1fr 1fr; }
     }
   </style>
@@ -265,28 +304,24 @@
 <header>
   <div class="logo">Quinta Bugambilia <span>· Real del 14</span></div>
   <div class="nav-container">
-    <a href="index.html" class="nav-link">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line></svg>
-      <span>Calendario</span>
-    </a>
-    <a href="cotizador.html" class="nav-link active">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      <span>Cotizador Hospedaje</span>
-    </a>
-    <a href="ventas.html" class="nav-link"><span>Ventas</span></a>
-    <a href="contrato_hospedaje.html" class="nav-link"><span>Contratos Hospedaje</span></a>
-    <a href="contrato_evento.html" class="nav-link"><span>Contratos Evento</span></a>
+    <a href="index.html" class="nav-link">Calendario</a>
+    <a href="cotizador.html" class="nav-link active">Cotizador</a>
+    <a href="index.html#section-contratos" class="nav-link">Ev. + Hosp.</a>
+    <a href="contrato_hospedaje.html" class="nav-link">Hosp.</a>
+    <a href="contrato_evento.html" class="nav-link">Evento</a>
+    <a href="ventas.html" class="nav-link">Res. de Ventas</a>
+    <a href="rentas.html" class="nav-link">Res. de Rentas</a>
   </div>
 </header>
 
 <main>
   <h1>Cotizador de Hospedaje</h1>
-  <p class="subtitle">Calcula tarifas de estancia, personas adicionales y extras en segundos</p>
+  <p class="subtitle">Calcula de forma exacta las noches de entre semana, fin de semana, extras y descuentos</p>
 
   <!-- APARTADO 1: HOSPEDAJE & FECHAS -->
   <div class="card">
     <div class="card-title">
-      1. Fechas y Estancia
+      1. Rango de Estancia (Fechas de Entrada y Salida)
     </div>
     
     <div class="grid-2">
@@ -300,19 +335,9 @@
       </div>
     </div>
 
-    <div class="grid-2">
-      <div class="field">
-        <label>Tipo de Tarifa / Día Proyectado</label>
-        <select id="tipoTarifa" onchange="calcularCotizacion()">
-          <option value="auto">Automático según Fecha</option>
-          <option value="semana">Entre Semana (Lun a Jue: $6,590/noche)</option>
-          <option value="finde">Fin de Semana (Vie a Dom: $7,590/noche)</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Número de Noches</label>
-        <input type="number" id="numNoches" min="1" value="1" oninput="calcularCotizacion()">
-      </div>
+    <!-- Desglose automático generado dinámicamente -->
+    <div id="desgloseFechas" class="desglose-box">
+      Seleccione la fecha de entrada y salida para calcular el desglose exacto de noches.
     </div>
   </div>
 
@@ -407,14 +432,35 @@
       </div>
       <span class="extra-price">+$1,200</span>
     </div>
+  </div>
+
+  <!-- APARTADO 4: DESCUENTO -->
+  <div class="card">
+    <div class="card-title">
+      4. Aplicar Descuento Especial
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Tipo de Descuento</label>
+        <select id="tipoDescuento" onchange="calcularCotizacion()">
+          <option value="monto">Monto Fijo en Pesos ($)</option>
+          <option value="porcentaje">Porcentaje (%)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Valor del Descuento</label>
+        <input type="number" id="valDescuento" min="0" value="0" placeholder="Ej. 500 o 10" oninput="calcularCotizacion()">
+      </div>
+    </div>
 
     <!-- BANNER TOTAL -->
     <div class="total-banner">
       <div>
-        <div class="lbl">TOTAL ESTIMADO</div>
-        <small style="opacity:0.7; font-size:0.7rem;">Incluye estancia base + extras seleccionados</small>
+        <div class="lbl">TOTAL NETO ESTIMADO</div>
+        <small id="subtotalPrevioLabel" style="opacity:0.75; font-size:0.75rem;">Subtotal sin desc: $0.00</small>
       </div>
-      <div class="amount" id="totalMontoLabel">$6,590.00</div>
+      <div class="amount" id="totalMontoLabel">$0.00</div>
     </div>
 
     <button class="btn-action" onclick="generarTextoCotizacion()">
@@ -459,52 +505,56 @@
   }
 
   function calcularCotizacion() {
-    const fEntrada = document.getElementById('fechaEntrada').value;
-    const fSalida = document.getElementById('fechaSalida').value;
-    let noches = parseInt(document.getElementById('numNoches').value) || 1;
+    const fEntradaRaw = document.getElementById('fechaEntrada').value;
+    const fSalidaRaw = document.getElementById('fechaSalida').value;
     
-    // Auto calcular noches si ambas fechas están seleccionadas
-    if (fEntrada && fSalida) {
-      const d1 = new Date(fEntrada);
-      const d2 = new Date(fSalida);
-      const diffTime = d2 - d1;
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      if (diffDays > 0) {
-        noches = diffDays;
-        document.getElementById('numNoches').value = noches;
-      }
-    }
+    let nochesSemana = 0;
+    let nochesFinSemana = 0;
+    let totalNoches = 0;
+    let subtotalBaseEstancia = 0;
 
-    // Determinar precio base por noche
-    let precioNocheBase = PRECIO_ENTRE_SEMANA;
-    const tipoSel = document.getElementById('tipoTarifa').value;
+    const desgloseBox = document.getElementById('desgloseFechas');
 
-    if (tipoSel === 'semana') {
-      precioNocheBase = PRECIO_ENTRE_SEMANA;
-    } else if (tipoSel === 'finde') {
-      precioNocheBase = PRECIO_FIN_SEMANA;
-    } else if (fEntrada) {
-      // REGLA DE DÍAS:
-      // 0 = Domingo, 1 = Lunes, 2 = Martes, 3 = Miércoles, 4 = Jueves, 5 = Viernes, 6 = Sábado
-      const dateParts = fEntrada.split('-');
-      const dayOfWeek = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]).getDay();
+    if (fEntradaRaw && fSalidaRaw) {
+      const parts1 = fEntradaRaw.split('-');
+      const parts2 = fSalidaRaw.split('-');
       
-      // Viernes (5), Sábado (6) o Domingo (0) -> Tarifa Fin de Semana
-      if (dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0) {
-        precioNocheBase = PRECIO_FIN_SEMANA;
-      } else {
-        // Lunes (1) a Jueves (4) -> Tarifa Entre Semana
-        precioNocheBase = PRECIO_ENTRE_SEMANA;
-      }
-    }
+      let curDate = new Date(parts1[0], parts1[1] - 1, parts1[2]);
+      const endDate = new Date(parts2[0], parts2[1] - 1, parts2[2]);
 
-    let subtotalHospedaje = precioNocheBase * noches;
+      if (endDate > curDate) {
+        // Recorrer noche por noche
+        while (curDate < endDate) {
+          totalNoches++;
+          const dayOfWeek = curDate.getDay(); 
+          // 0 = Domingo, 5 = Viernes, 6 = Sábado -> Fin de semana
+          if (dayOfWeek === 0 || dayOfWeek === 5 || dayOfWeek === 6) {
+            nochesFinSemana++;
+            subtotalBaseEstancia += PRECIO_FIN_SEMANA;
+          } else {
+            // 1, 2, 3, 4 (Lun-Jue) -> Entre semana
+            nochesSemana++;
+            subtotalBaseEstancia += PRECIO_ENTRE_SEMANA;
+          }
+          curDate.setDate(curDate.getDate() + 1);
+        }
+
+        desgloseBox.innerHTML = `<strong>Resumen de Estancia (${totalNoches} noche/s):</strong><br>` +
+          `• Noches Entre Semana (Lun-Jue): <strong>${nochesSemana}</strong> x ${formatMoney(PRECIO_ENTRE_SEMANA)} = <strong>${formatMoney(nochesSemana * PRECIO_ENTRE_SEMANA)}</strong><br>` +
+          `• Noches Fin de Semana (Vie-Dom): <strong>${nochesFinSemana}</strong> x ${formatMoney(PRECIO_FIN_SEMANA)} = <strong>${formatMoney(nochesFinSemana * PRECIO_FIN_SEMANA)}</strong><br>` +
+          `• <strong>Subtotal Base Hospedaje: ${formatMoney(subtotalBaseEstancia)}</strong>`;
+      } else {
+        desgloseBox.innerHTML = `<span style="color:red;">La fecha de salida debe ser posterior a la fecha de entrada.</span>`;
+      }
+    } else {
+      desgloseBox.innerHTML = `Seleccione la fecha de entrada y salida para calcular el desglose exacto de noches.`;
+    }
 
     // Personas extra
     const pDormir = parseInt(document.getElementById('pExtraDormir').value) || 0;
     const pDia = parseInt(document.getElementById('pExtraDia').value) || 0;
 
-    let subtotalExtrasPersonas = (pDormir * PRECIO_EXTRA_DORMIR * noches) + (pDia * PRECIO_EXTRA_DIA);
+    let subtotalExtrasPersonas = (pDormir * PRECIO_EXTRA_DORMIR * totalNoches) + (pDia * PRECIO_EXTRA_DIA);
 
     // Extras seleccionados
     let subtotalEquiposYAccesos = 0;
@@ -517,17 +567,37 @@
       }
     });
 
-    const totalGeneral = subtotalHospedaje + subtotalExtrasPersonas + subtotalEquiposYAccesos;
+    const subtotalBruto = subtotalBaseEstancia + subtotalExtrasPersonas + subtotalEquiposYAccesos;
+
+    // Cálculo de Descuento
+    const tipoDesc = document.getElementById('tipoDescuento').value;
+    const valDesc = parseFloat(document.getElementById('valDescuento').value) || 0;
+    let montoDescuento = 0;
+
+    if (valDesc > 0) {
+      if (tipoDesc === 'porcentaje') {
+        montoDescuento = subtotalBruto * (valDesc / 100);
+      } else {
+        montoDescuento = valDesc;
+      }
+    }
+
+    const totalGeneral = Math.max(0, subtotalBruto - montoDescuento);
+
+    document.getElementById('subtotalPrevioLabel').innerText = `Subtotal: ${formatMoney(subtotalBruto)} | Desc: -${formatMoney(montoDescuento)}`;
     document.getElementById('totalMontoLabel').innerText = formatMoney(totalGeneral);
 
     return {
-      noches,
-      precioNocheBase,
-      subtotalHospedaje,
+      totalNoches,
+      nochesSemana,
+      nochesFinSemana,
+      subtotalBaseEstancia,
       pDormir,
       pDia,
       subtotalExtrasPersonas,
       subtotalEquiposYAccesos,
+      subtotalBruto,
+      montoDescuento,
       totalGeneral
     };
   }
@@ -538,22 +608,19 @@
     const fSalidaRaw = document.getElementById('fechaSalida').value;
 
     let fechasTexto = "A convenir";
-    if (fEntradaRaw) {
+    if (fEntradaRaw && fSalidaRaw) {
       const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
       const parts1 = fEntradaRaw.split('-');
       const d1 = new Date(parts1[0], parts1[1] - 1, parts1[2]);
-      fechasTexto = d1.toLocaleDateString('es-MX', opciones);
-
-      if (fSalidaRaw) {
-        const parts2 = fSalidaRaw.split('-');
-        const d2 = new Date(parts2[0], parts2[1] - 1, parts2[2]);
-        fechasTexto += " al " + d2.toLocaleDateString('es-MX', opciones);
-      }
+      const parts2 = fSalidaRaw.split('-');
+      const d2 = new Date(parts2[0], parts2[1] - 1, parts2[2]);
+      
+      fechasTexto = d1.toLocaleDateString('es-MX', opciones) + " al " + d2.toLocaleDateString('es-MX', opciones);
     }
 
-    // Detalle de Extras seleccionados para incluir en texto
+    // Detalle de Extras seleccionados
     let listaExtrasTexto = "";
-    if (data.pDormir > 0) listaExtrasTexto += `• ${data.pDormir} Persona(s) extra hospedada(s): ${formatMoney(data.pDormir * PRECIO_EXTRA_DORMIR * data.noches)}\n`;
+    if (data.pDormir > 0) listaExtrasTexto += `• ${data.pDormir} Persona(s) extra hospedada(s): ${formatMoney(data.pDormir * PRECIO_EXTRA_DORMIR * data.totalNoches)}\n`;
     if (data.pDia > 0) listaExtrasTexto += `• ${data.pDia} Visita(s) de día (pasadía): ${formatMoney(data.pDia * PRECIO_EXTRA_DIA)}\n`;
     
     if (document.getElementById('chkCalenton').checked) listaExtrasTexto += `• Calentón ambiental: $480\n`;
@@ -567,19 +634,23 @@
 
     if (listaExtrasTexto === "") listaExtrasTexto = "• Ninguno (Paquete Base)\n";
 
+    let textoDescuento = "";
+    if (data.montoDescuento > 0) {
+      textoDescuento = `\n🏷️ *DESCUENTO APLICADO:* -${formatMoney(data.montoDescuento)}\n`;
+    }
+
     const textoFinal = 
 `🏡 *QUINTA BUGAMBILIA* 🏡
 Tu estancia en Hermosillo · Fracc. Real del 14
 
 📅 *COTIZACIÓN DE HOSPEDAJE*
 • *Fecha(s):* ${fechasTexto}
-• *Duración:* ${data.noches} noche(s)
-• *Tarifa Noche:* ${formatMoney(data.precioNocheBase)}
+• *Duración:* ${data.totalNoches} noche(s) total (${data.nochesSemana} entre semana / ${data.nochesFinSemana} fin de semana)
 
 💵 *DESGLOSE ECONÓMICO:*
-• Estancia Base (${data.noches} noche/s): ${formatMoney(data.subtotalHospedaje)}
+• Subtotal Hospedaje Base: ${formatMoney(data.subtotalBaseEstancia)}
 • Conceptos Adicionales / Extras:
-${listaExtrasTexto}
+${listaExtrasTexto}${textoDescuento}
 💰 *TOTAL ESTIMADO:* ${formatMoney(data.totalGeneral)}
 
 ----------------------------------------
@@ -631,8 +702,9 @@ ${listaExtrasTexto}
     window.open(url, '_blank');
   }
 
-  // Inicializar calculador al cargar
   calcularCotizacion();
 </script>
 </body>
 </html>
+
+```
