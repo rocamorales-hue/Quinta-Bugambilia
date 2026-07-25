@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Quinta Bugambilia – Cotizador de Hospedaje</title>
+  <title>Quinta Bugambilia – Cotizador Multi-Servicio</title>
   <link rel="manifest" href="manifest.json">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <style>
@@ -110,11 +110,43 @@
     }
 
     /* ==========================================================================
-       MAIN LAYOUT & COTIZADOR
+       MAIN LAYOUT & TABS
        ========================================================================== */
     main { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
     h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.1rem; font-weight: 400; text-align: center; margin-bottom: 0.2rem; }
     .subtitle { color: var(--warm); font-size: .88rem; margin-bottom: 1.5rem; text-align: center; }
+
+    /* Selector de Tipo de Cotización (Tabs) */
+    .mode-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      background: rgba(30, 58, 47, 0.08);
+      padding: 0.4rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      padding: 0.75rem 0.5rem;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--charcoal);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .tab-btn.active {
+      background: var(--charcoal);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(30, 58, 47, 0.2);
+    }
 
     .card {
       background: #fff;
@@ -143,7 +175,7 @@
     .field { display: flex; flex-direction: column; margin-bottom: 0.8rem; }
     label { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--warm); margin-bottom: 0.3rem; }
 
-    input[type="text"], input[type="number"], input[type="date"], select {
+    input[type="text"], input[type="number"], input[type="date"], input[type="time"], select {
       width: 100%; 
       padding: 0.65rem 0.8rem; 
       font-family: 'DM Sans', sans-serif; 
@@ -269,6 +301,9 @@
       margin-top: 1rem;
     }
 
+    .mode-section { display: none; }
+    .mode-section.active { display: block; }
+
     footer { text-align: center; padding: 1.5rem; font-size: .75rem; color: var(--warm); border-top: 1px solid var(--border); margin-top: 2rem; }
 
     @media(min-width: 768px) {
@@ -295,38 +330,73 @@
 </header>
 
 <main>
-  <h1>Cotizador de Hospedaje</h1>
-  <p class="subtitle">Calcula de forma exacta las noches de entre semana, fin de semana, extras y descuentos</p>
+  <h1>Cotizador de Servicios</h1>
+  <p class="subtitle">Selecciona el tipo de servicio para calcular costos y generar la cotización</p>
 
-  <!-- APARTADO 1: HOSPEDAJE & FECHAS -->
+  <!-- PESTAÑAS DE MODALIDAD -->
+  <div class="mode-tabs">
+    <button class="tab-btn active" id="tab-hospedaje" onclick="setModo('hospedaje')">🏠 Hospedaje</button>
+    <button class="tab-btn" id="tab-evento" onclick="setModo('evento')">🎉 Evento</button>
+    <button class="tab-btn" id="tab-combo" onclick="setModo('combo')">✨ Ev. + Hosp.</button>
+  </div>
+
+  <!-- SECCIÓN DIVERGENTE DE FECHAS Y PARAMETROS -->
   <div class="card">
-    <div class="card-title">
-      1. Rango de Estancia (Fechas de Entrada y Salida)
-    </div>
+    <div class="card-title" id="titulo-parametros">1. Rango y Parámetros del Servicio</div>
     
-    <div class="grid-2">
-      <div class="field">
-        <label>Fecha Entrada (Check-In)</label>
-        <input type="date" id="fechaEntrada" onchange="calcularCotizacion()">
+    <!-- MODO HOSPEDAJE / COMBO -->
+    <div id="sec-fechas-hospedaje" class="mode-section active">
+      <div class="grid-2">
+        <div class="field">
+          <label>Fecha Entrada (Check-In)</label>
+          <input type="date" id="fechaEntrada" onchange="calcularCotizacion()">
+        </div>
+        <div class="field">
+          <label>Fecha Salida (Check-Out)</label>
+          <input type="date" id="fechaSalida" onchange="calcularCotizacion()">
+        </div>
       </div>
-      <div class="field">
-        <label>Fecha Salida (Check-Out)</label>
-        <input type="date" id="fechaSalida" onchange="calcularCotizacion()">
+      <div id="desgloseFechas" class="desglose-box">
+        Seleccione las fechas para calcular el desglose exacto de noches.
       </div>
     </div>
 
-    <!-- Desglose automático generado dinámicamente -->
-    <div id="desgloseFechas" class="desglose-box">
-      Seleccione la fecha de entrada y salida para calcular el desglose exacto de noches.
+    <!-- MODO EVENTO (SOLO DIA) -->
+    <div id="sec-fechas-evento" class="mode-section">
+      <div class="grid-2">
+        <div class="field">
+          <label>Fecha del Evento</label>
+          <input type="date" id="fechaEventoSolo" onchange="calcularCotizacion()">
+        </div>
+        <div class="field">
+          <label>Horario del Evento (7 Horas entre 3:00 PM y 1:00 AM)</label>
+          <input type="text" id="horarioEvento" value="4:00 PM - 11:00 PM" placeholder="Ej. 16:00 a 23:00 hrs" oninput="calcularCotizacion()">
+        </div>
+      </div>
+    </div>
+
+    <!-- PAQUETE DE EVENTO (VISIBLE EN EVENTO Y COMBO) -->
+    <div id="sec-paquete-evento" class="mode-section" style="margin-top: 1rem;">
+      <div class="field">
+        <label>Paquete de Evento (Base de Personas / Aforo)</label>
+        <select id="paqueteSelect" onchange="calcularCotizacion()">
+          <option value="4600" data-aforo="20">20 personas — $4,600</option>
+          <option value="6540" data-aforo="30">30 personas — $6,540</option>
+          <option value="8240" data-aforo="40">40 personas — $8,240</option>
+          <option value="9700" data-aforo="50">50 personas — $9,700</option>
+          <option value="10420" data-aforo="60">60 personas — $10,420</option>
+          <option value="11140" data-aforo="70">70 personas — $11,140</option>
+          <option value="11860" data-aforo="80">80 personas — $11,860</option>
+          <option value="12580" data-aforo="90">90 personas — $12,580</option>
+          <option value="13900" data-aforo="100">100 personas — $13,900</option>
+        </select>
+      </div>
     </div>
   </div>
 
-  <!-- APARTADO 2: PERSONAS EXTRAS -->
-  <div class="card">
-    <div class="card-title">
-      2. Personas Extra (Base 12 pers. incluidas)
-    </div>
-
+  <!-- APARTADO PERSONAS EXTRA (SOLO HOSPEDAJE / COMBO) -->
+  <div class="card mode-section active" id="sec-personas-extra">
+    <div class="card-title">2. Personas Extra (Base 12 pers. incluidas en hospedaje)</div>
     <div class="grid-2">
       <div class="field">
         <label>Pers. Extra Hospedadas ($500 c/u x noche)</label>
@@ -339,14 +409,44 @@
     </div>
   </div>
 
-  <!-- APARTADO 3: EXTRAS (EQUIPOS Y ACCESOS) -->
+  <!-- APARTADO EXTRAS Y EQUIPOS -->
   <div class="card">
-    <div class="card-title">
-      3. Renta de Equipos & Accesos Adicionales
+    <div class="card-title">3. Renta de Equipos & Accesos Adicionales</div>
+
+    <div class="extra-group-title">Equipos de Evento & Ambientación</div>
+    
+    <div class="extra-item" onclick="toggleExtra('chkBrincolin')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkBrincolin" value="500" onchange="calcularCotizacion()">
+        <span>Brincolín Estándar</span>
+      </div>
+      <span class="extra-price">+$500</span>
     </div>
 
-    <div class="extra-group-title">Equipos de Confort & Ambientación</div>
-    
+    <div class="extra-item" onclick="toggleExtra('chkBrincolinAcuatico')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkBrincolinAcuatico" value="1200" onchange="calcularCotizacion()">
+        <span>Brincolín Acuático Grande</span>
+      </div>
+      <span class="extra-price">+$1,200</span>
+    </div>
+
+    <div class="extra-item" onclick="toggleExtra('chkFutbolito')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkFutbolito" value="400" onchange="calcularCotizacion()">
+        <span>Mesa de Futbolito</span>
+      </div>
+      <span class="extra-price">+$400</span>
+    </div>
+
+    <div class="extra-item" onclick="toggleExtra('chkBocina')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkBocina" value="400" onchange="calcularCotizacion()">
+        <span>Bocina de Alta Potencia</span>
+      </div>
+      <span class="extra-price">+$400</span>
+    </div>
+
     <div class="extra-item" onclick="toggleExtra('chkCalenton')">
       <div class="extra-left">
         <input type="checkbox" id="chkCalenton" value="480" onchange="calcularCotizacion()">
@@ -363,22 +463,6 @@
       <span class="extra-price">+$480</span>
     </div>
 
-    <div class="extra-item" onclick="toggleExtra('chkMesaSnacks')">
-      <div class="extra-left">
-        <input type="checkbox" id="chkMesaSnacks" value="350" onchange="calcularCotizacion()">
-        <span>Mesa para Snacks</span>
-      </div>
-      <span class="extra-price">+$350</span>
-    </div>
-
-    <div class="extra-item" onclick="toggleExtra('chkTorreLuces')">
-      <div class="extra-left">
-        <input type="checkbox" id="chkTorreLuces" value="650" onchange="calcularCotizacion()">
-        <span>Torre de Luces y Humo</span>
-      </div>
-      <span class="extra-price">+$650</span>
-    </div>
-
     <div class="extra-group-title">Accesos Adicionales</div>
 
     <div class="extra-item" onclick="toggleExtra('chkCasaCompleta')">
@@ -387,14 +471,6 @@
         <span>Casa Principal (Acceso Completo)</span>
       </div>
       <span class="extra-price">+$1,500</span>
-    </div>
-
-    <div class="extra-item" onclick="toggleExtra('chkCasaSinCuartos')">
-      <div class="extra-left">
-        <input type="checkbox" id="chkCasaSinCuartos" value="1000" onchange="calcularCotizacion()">
-        <span>Casa Principal (Sin acceso a recámaras)</span>
-      </div>
-      <span class="extra-price">+$1,000</span>
     </div>
 
     <div class="extra-item" onclick="toggleExtra('chkDepaIndep')">
@@ -414,11 +490,9 @@
     </div>
   </div>
 
-  <!-- APARTADO 4: DESCUENTO -->
+  <!-- APARTADO DESCUENTO & TOTAL -->
   <div class="card">
-    <div class="card-title">
-      4. Aplicar Descuento Especial
-    </div>
+    <div class="card-title">4. Descuento Especial y Total</div>
 
     <div class="grid-2">
       <div class="field">
@@ -454,12 +528,8 @@
     <textarea id="cotizacion-texto" readonly></textarea>
 
     <div class="output-buttons">
-      <button class="btn-action" onclick="copiarTexto()">
-        📋 Copiar Texto
-      </button>
-      <button class="btn-action btn-whatsapp" onclick="enviarWhatsApp()">
-        💬 Enviar por WhatsApp
-      </button>
+      <button class="btn-action" onclick="copiarTexto()">📋 Copiar Texto</button>
+      <button class="btn-action btn-whatsapp" onclick="enviarWhatsApp()">💬 Enviar por WhatsApp</button>
     </div>
   </div>
 </main>
@@ -467,10 +537,43 @@
 <footer>Quinta Bugambilia 2026 · Real del 14, Hermosillo, Sonora</footer>
 
 <script>
+  let modoActual = 'hospedaje'; // hospedaje | evento | combo
+
   const PRECIO_ENTRE_SEMANA = 6590;
   const PRECIO_FIN_SEMANA = 7590;
   const PRECIO_EXTRA_DORMIR = 500;
   const PRECIO_EXTRA_DIA = 250;
+
+  function setModo(modo) {
+    modoActual = modo;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`tab-${modo}`).classList.add('active');
+
+    // Manejo de visibilidad por pestañas
+    const secFechasHosp = document.getElementById('sec-fechas-hospedaje');
+    const secFechasEv = document.getElementById('sec-fechas-evento');
+    const secPaqEv = document.getElementById('sec-paquete-evento');
+    const secPersExtra = document.getElementById('sec-personas-extra');
+
+    if (modo === 'hospedaje') {
+      secFechasHosp.classList.add('active');
+      secFechasEv.classList.remove('active');
+      secPaqEv.classList.remove('active');
+      secPersExtra.classList.add('active');
+    } else if (modo === 'evento') {
+      secFechasHosp.classList.remove('active');
+      secFechasEv.classList.add('active');
+      secPaqEv.classList.add('active');
+      secPersExtra.classList.remove('active');
+    } else if (modo === 'combo') {
+      secFechasHosp.classList.add('active');
+      secFechasEv.classList.remove('active');
+      secPaqEv.classList.add('active');
+      secPersExtra.classList.add('active');
+    }
+
+    calcularCotizacion();
+  }
 
   function toggleExtra(id) {
     if (event.target.tagName !== 'INPUT') {
@@ -485,71 +588,74 @@
   }
 
   function calcularCotizacion() {
-    const fEntradaRaw = document.getElementById('fechaEntrada').value;
-    const fSalidaRaw = document.getElementById('fechaSalida').value;
-    
+    let subtotalHospedaje = 0;
+    let subtotalEvento = 0;
+    let totalNoches = 0;
     let nochesSemana = 0;
     let nochesFinSemana = 0;
-    let totalNoches = 0;
-    let subtotalBaseEstancia = 0;
 
-    const desgloseBox = document.getElementById('desgloseFechas');
+    // 1. Cálculo de Hospedaje (si aplica)
+    if (modoActual === 'hospedaje' || modoActual === 'combo') {
+      const fEntradaRaw = document.getElementById('fechaEntrada').value;
+      const fSalidaRaw = document.getElementById('fechaSalida').value;
+      const desgloseBox = document.getElementById('desgloseFechas');
 
-    if (fEntradaRaw && fSalidaRaw) {
-      const parts1 = fEntradaRaw.split('-');
-      const parts2 = fSalidaRaw.split('-');
-      
-      let curDate = new Date(parts1[0], parts1[1] - 1, parts1[2]);
-      const endDate = new Date(parts2[0], parts2[1] - 1, parts2[2]);
+      if (fEntradaRaw && fSalidaRaw) {
+        const parts1 = fEntradaRaw.split('-');
+        const parts2 = fSalidaRaw.split('-');
+        let curDate = new Date(parts1[0], parts1[1] - 1, parts1[2]);
+        const endDate = new Date(parts2[0], parts2[1] - 1, parts2[2]);
 
-      if (endDate > curDate) {
-        // Recorrer noche por noche
-        while (curDate < endDate) {
-          totalNoches++;
-          const dayOfWeek = curDate.getDay(); 
-          // 0 = Domingo, 5 = Viernes, 6 = Sábado -> Fin de semana
-          if (dayOfWeek === 0 || dayOfWeek === 5 || dayOfWeek === 6) {
-            nochesFinSemana++;
-            subtotalBaseEstancia += PRECIO_FIN_SEMANA;
-          } else {
-            // 1, 2, 3, 4 (Lun-Jue) -> Entre semana
-            nochesSemana++;
-            subtotalBaseEstancia += PRECIO_ENTRE_SEMANA;
+        if (endDate > curDate) {
+          while (curDate < endDate) {
+            totalNoches++;
+            const dayOfWeek = curDate.getDay();
+            if (dayOfWeek === 0 || dayOfWeek === 5 || dayOfWeek === 6) {
+              nochesFinSemana++;
+              subtotalHospedaje += PRECIO_FIN_SEMANA;
+            } else {
+              nochesSemana++;
+              subtotalHospedaje += PRECIO_ENTRE_SEMANA;
+            }
+            curDate.setDate(curDate.getDate() + 1);
           }
-          curDate.setDate(curDate.getDate() + 1);
+          desgloseBox.innerHTML = `<strong>Hospedaje (${totalNoches} noche/s):</strong> ${nochesSemana} entre semana ($6,590) + ${nochesFinSemana} fin de semana ($7,590) = <strong>${formatMoney(subtotalHospedaje)}</strong>`;
+        } else {
+          desgloseBox.innerHTML = `<span style="color:red;">La fecha de salida debe ser posterior a la de entrada.</span>`;
         }
-
-        desgloseBox.innerHTML = `<strong>Resumen de Estancia (${totalNoches} noche/s):</strong><br>` +
-          `• Noches Entre Semana (Lun-Jue): <strong>${nochesSemana}</strong> x ${formatMoney(PRECIO_ENTRE_SEMANA)} = <strong>${formatMoney(nochesSemana * PRECIO_ENTRE_SEMANA)}</strong><br>` +
-          `• Noches Fin de Semana (Vie-Dom): <strong>${nochesFinSemana}</strong> x ${formatMoney(PRECIO_FIN_SEMANA)} = <strong>${formatMoney(nochesFinSemana * PRECIO_FIN_SEMANA)}</strong><br>` +
-          `• <strong>Subtotal Base Hospedaje: ${formatMoney(subtotalBaseEstancia)}</strong>`;
       } else {
-        desgloseBox.innerHTML = `<span style="color:red;">La fecha de salida debe ser posterior a la fecha de entrada.</span>`;
+        desgloseBox.innerHTML = `Seleccione la fecha de entrada y salida para calcular el hospedaje.`;
       }
-    } else {
-      desgloseBox.innerHTML = `Seleccione la fecha de entrada y salida para calcular el desglose exacto de noches.`;
     }
 
-    // Personas extra
-    const pDormir = parseInt(document.getElementById('pExtraDormir').value) || 0;
-    const pDia = parseInt(document.getElementById('pExtraDia').value) || 0;
+    // 2. Cálculo de Evento (si aplica)
+    if (modoActual === 'evento' || modoActual === 'combo') {
+      const selectPaq = document.getElementById('paqueteSelect');
+      subtotalEvento = parseFloat(selectPaq.value) || 0;
+    }
 
-    let subtotalExtrasPersonas = (pDormir * PRECIO_EXTRA_DORMIR * totalNoches) + (pDia * PRECIO_EXTRA_DIA);
+    // 3. Personas Extra (Solo Hospedaje / Combo)
+    let subtotalExtrasPersonas = 0;
+    let pDormir = 0, pDia = 0;
+    if (modoActual === 'hospedaje' || modoActual === 'combo') {
+      pDormir = parseInt(document.getElementById('pExtraDormir').value) || 0;
+      pDia = parseInt(document.getElementById('pExtraDia').value) || 0;
+      subtotalExtrasPersonas = (pDormir * PRECIO_EXTRA_DORMIR * Math.max(1, totalNoches)) + (pDia * PRECIO_EXTRA_DIA);
+    }
 
-    // Extras seleccionados
-    let subtotalEquiposYAccesos = 0;
-    const checkIds = ['chkCalenton', 'chkAerocooler', 'chkMesaSnacks', 'chkTorreLuces', 'chkCasaCompleta', 'chkCasaSinCuartos', 'chkDepaIndep', 'chkSalonJuegos'];
-    
+    // 4. Extras seleccionados
+    let subtotalEquipos = 0;
+    const checkIds = ['chkBrincolin', 'chkBrincolinAcuatico', 'chkFutbolito', 'chkBocina', 'chkCalenton', 'chkAerocooler', 'chkCasaCompleta', 'chkDepaIndep', 'chkSalonJuegos'];
     checkIds.forEach(id => {
       const el = document.getElementById(id);
       if (el && el.checked) {
-        subtotalEquiposYAccesos += parseFloat(el.value);
+        subtotalEquipos += parseFloat(el.value);
       }
     });
 
-    const subtotalBruto = subtotalBaseEstancia + subtotalExtrasPersonas + subtotalEquiposYAccesos;
+    const subtotalBruto = subtotalHospedaje + subtotalEvento + subtotalExtrasPersonas + subtotalEquipos;
 
-    // Cálculo de Descuento
+    // 5. Descuento
     const tipoDesc = document.getElementById('tipoDescuento').value;
     const valDesc = parseFloat(document.getElementById('valDescuento').value) || 0;
     let montoDescuento = 0;
@@ -568,14 +674,15 @@
     document.getElementById('totalMontoLabel').innerText = formatMoney(totalGeneral);
 
     return {
+      subtotalHospedaje,
+      subtotalEvento,
       totalNoches,
       nochesSemana,
       nochesFinSemana,
-      subtotalBaseEstancia,
       pDormir,
       pDia,
       subtotalExtrasPersonas,
-      subtotalEquiposYAccesos,
+      subtotalEquipos,
       subtotalBruto,
       montoDescuento,
       totalGeneral
@@ -584,84 +691,149 @@
 
   function generarTextoCotizacion() {
     const data = calcularCotizacion();
-    const fEntradaRaw = document.getElementById('fechaEntrada').value;
-    const fSalidaRaw = document.getElementById('fechaSalida').value;
+    let textoFinal = "";
 
-    let fechasTexto = "A convenir";
-    if (fEntradaRaw && fSalidaRaw) {
-      const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
-      const parts1 = fEntradaRaw.split('-');
-      const d1 = new Date(parts1[0], parts1[1] - 1, parts1[2]);
-      const parts2 = fSalidaRaw.split('-');
-      const d2 = new Date(parts2[0], parts2[1] - 1, parts2[2]);
-      
-      fechasTexto = d1.toLocaleDateString('es-MX', opciones) + " al " + d2.toLocaleDateString('es-MX', opciones);
-    }
+    const opciones = { day: 'numeric', month: 'long', year: 'numeric' };
 
-    // Detalle de Extras seleccionados
+    // DETALLE EXTRAS
     let listaExtrasTexto = "";
-    if (data.pDormir > 0) listaExtrasTexto += `• ${data.pDormir} Persona(s) extra hospedada(s): ${formatMoney(data.pDormir * PRECIO_EXTRA_DORMIR * data.totalNoches)}\n`;
-    if (data.pDia > 0) listaExtrasTexto += `• ${data.pDia} Visita(s) de día (pasadía): ${formatMoney(data.pDia * PRECIO_EXTRA_DIA)}\n`;
+    if (data.pDormir > 0) listaExtrasTexto += `• ${data.pDormir} Persona(s) extra a dormir: ${formatMoney(data.pDormir * PRECIO_EXTRA_DORMIR * Math.max(1, data.totalNoches))}\n`;
+    if (data.pDia > 0) listaExtrasTexto += `• ${data.pDia} Visita(s) de día: ${formatMoney(data.pDia * PRECIO_EXTRA_DIA)}\n`;
     
-    if (document.getElementById('chkCalenton').checked) listaExtrasTexto += `• Calentón ambiental: $480\n`;
+    if (document.getElementById('chkBrincolin').checked) listaExtrasTexto += `• Brincolín Estándar: $500\n`;
+    if (document.getElementById('chkBrincolinAcuatico').checked) listaExtrasTexto += `• Brincolín Acuático Grande: $1,200\n`;
+    if (document.getElementById('chkFutbolito').checked) listaExtrasTexto += `• Mesa de Futbolito: $400\n`;
+    if (document.getElementById('chkBocina').checked) listaExtrasTexto += `• Bocina de Alta Potencia: $400\n`;
+    if (document.getElementById('chkCalenton').checked) listaExtrasTexto += `• Calentón ambiental de gas: $480\n`;
     if (document.getElementById('chkAerocooler').checked) listaExtrasTexto += `• Aerocooler portátil: $480\n`;
-    if (document.getElementById('chkMesaSnacks').checked) listaExtrasTexto += `• Mesa para snacks: $350\n`;
-    if (document.getElementById('chkTorreLuces').checked) listaExtrasTexto += `• Torre de luces y humo: $650\n`;
-    if (document.getElementById('chkCasaCompleta').checked) listaExtrasTexto += `• Acceso Completo Casa Principal: $1,500\n`;
-    if (document.getElementById('chkCasaSinCuartos').checked) listaExtrasTexto += `• Casa Principal (sin cuartos): $1,000\n`;
+    if (document.getElementById('chkCasaCompleta').checked) listaExtrasTexto += `• Casa Principal (Acceso Completo): $1,500\n`;
     if (document.getElementById('chkDepaIndep').checked) listaExtrasTexto += `• Departamento Independiente: $1,000\n`;
     if (document.getElementById('chkSalonJuegos').checked) listaExtrasTexto += `• Salón de entretenimiento: $1,200\n`;
 
-    if (listaExtrasTexto === "") listaExtrasTexto = "• Ninguno (Paquete Base)\n";
+    if (listaExtrasTexto === "") listaExtrasTexto = "• Ninguno (Servicio Base)\n";
 
-    let textoDescuento = "";
+    let textoDesc = "";
     if (data.montoDescuento > 0) {
-      textoDescuento = `\n🏷️ *DESCUENTO APLICADO:* -${formatMoney(data.montoDescuento)}\n`;
+      textoDesc = `\n🏷️ *DESCUENTO APLICADO:* -${formatMoney(data.montoDescuento)}\n`;
     }
 
-    const textoFinal = 
+    // PLANTILLA SEGÚN MODO
+    if (modoActual === 'hospedaje') {
+      const fEntradaRaw = document.getElementById('fechaEntrada').value;
+      const fSalidaRaw = document.getElementById('fechaSalida').value;
+      let fechasTexto = "A convenir";
+      if (fEntradaRaw && fSalidaRaw) {
+        const d1 = new Date(fEntradaRaw.split('-')[0], fEntradaRaw.split('-')[1] - 1, fEntradaRaw.split('-')[2]);
+        const d2 = new Date(fSalidaRaw.split('-')[0], fSalidaRaw.split('-')[1] - 1, fSalidaRaw.split('-')[2]);
+        fechasTexto = d1.toLocaleDateString('es-MX', opciones) + " al " + d2.toLocaleDateString('es-MX', opciones);
+      }
+
+      textoFinal = 
 `🏡 *QUINTA BUGAMBILIA* 🏡
 Tu estancia en Hermosillo · Fracc. Real del 14
 
 📅 *COTIZACIÓN DE HOSPEDAJE*
 • *Fecha(s):* ${fechasTexto}
-• *Duración:* ${data.totalNoches} noche(s) total (${data.nochesSemana} entre semana / ${data.nochesFinSemana} fin de semana)
+• *Duración:* ${data.totalNoches} noche(s) (${data.nochesSemana} entre semana / ${data.nochesFinSemana} fin de semana)
 
 💵 *DESGLOSE ECONÓMICO:*
-• Subtotal Hospedaje Base: ${formatMoney(data.subtotalBaseEstancia)}
-• Conceptos Adicionales / Extras:
-${listaExtrasTexto}${textoDescuento}
+• Hospedaje Base (hasta 12 pers): ${formatMoney(data.subtotalHospedaje)}
+• Servicios / Extras:
+${listaExtrasTexto}${textoDesc}
+💰 *TOTAL ESTIMADO:* ${formatMoney(data.totalGeneral)}
+
+----------------------------------------
+🛏️ *INCLUYE HOSPEDAJE (Hasta 12 personas)*
+• Recámara 1: King Size + TV + A/C + Baño.
+• Recámara 2: 2 Camas Queen + TV + A/C.
+• Depa Independiente: 2 Camas Queen + Sala + TV + Baño.
+• Alberca con tobogán, Asador profesional, Salón de Juegos (billar, futbolito), Canchas y WiFi.
+
+⏰ *Check-in:* 3:00 PM | *Check-out:* 12:00 PM.
+📝 *RESERVACIÓN:* 30% de anticipo. Saldo al Check-in.`;
+
+    } else if (modoActual === 'evento') {
+      const fEvRaw = document.getElementById('fechaEventoSolo').value;
+      let fEvTexto = "A convenir";
+      if (fEvRaw) {
+        const d = new Date(fEvRaw.split('-')[0], fEvRaw.split('-')[1] - 1, fEvRaw.split('-')[2]);
+        fEvTexto = d.toLocaleDateString('es-MX', opciones);
+      }
+      const horEv = document.getElementById('horarioEvento').value || "Por definir";
+      const aforoSel = document.getElementById('paqueteSelect').options[document.getElementById('paqueteSelect').selectedIndex].getAttribute('data-aforo');
+
+      textoFinal = 
+`🎉 *QUINTA BUGAMBILIA - EVENTOS* 🎉
+El lugar perfecto para tu celebración · Fracc. Real del 14
+
+📅 *COTIZACIÓN DE EVENTO*
+• *Fecha del Evento:* ${fEvTexto}
+• *Horario Reservado:* ${horEv} (7 horas de servicio)
+• *Paquete de Invitados:* ${aforoSel} personas
+
+💵 *DESGLOSE ECONÓMICO:*
+• Paquete Base Evento (${aforoSel} pers): ${formatMoney(data.subtotalEvento)}
+• Equipos y Servicios Adicionales:
+${listaExtrasTexto}${textoDesc}
 💰 *TOTAL ESTIMADO:* ${formatMoney(data.totalGeneral)}
 
 ----------------------------------------
 
-🌿 *TARIFAS DE HOSPEDAJE (Base hasta 12 personas)*
+✨ *TU EVENTO INCLUYE:*
+• Mesas con manteles blancos y Sillas Tiffany.
+• Hielera grande, refrigerador y máquina de hielo.
+• Asador de gas profesional (gas incluido), barra con bancos y comedor de parota.
+• Zona de Alberca: Con sombra, tobogán y aro de básquet acuático.
+• Deportes & Recreación: Cancha de fútbol, básquetbol, trampolín profesional y fogatero con iluminación vintage.
+• Entretenimiento: TV exterior de gran formato, sistema de sonido ambiental y WiFi de alta velocidad.
+• Instalaciones: Amplias áreas verdes (cero polvo), 1 baño completo + 2 medios baños exteriores, estacionamiento y limpieza profesional.
 
-🛏️ *DISTRIBUCIÓN DE HOSPEDAJE*
-(2 Recámaras en Casa Principal + 1 Departamento Independiente)
-•⁠ ⁠*Recámara 1:* King Size + TV + A/C + Baño privado.
-•⁠ ⁠*Recámara 2:* 2 Camas Queen + TV + A/C.
-•⁠ ⁠*Depa Independiente:* 2 Camas Queen + Sala propia + TV + A/C + Baño completo.
-👉 *Total:* 12 personas cómodas (1 King + 4 Queen). Colchones inflables sin costo.
+🏠 *ACCESOS ADICIONALES (Costo extra):*
+• Salón de Juegos (Billar, futbolito, TV, sillón y A/C).
+• Departamento Independiente (Recámara con baño completo).
+• Casa Principal (Recámaras, cocina y estancia).
 
-🎉 *AMENIDADES & ÁREA SOCIAL*
-•⁠ ⁠*Área de Asador:* Asador de gas profesional (gas incluido), máquina de hielo, refrigerador grande, barra con bancos y comedor de parota.
-•⁠ ⁠*Salón de Juegos:* Mesa de billar profesional, futbolito, área con TV, sillón y mesa con sillas.
-•⁠ ⁠*Entretenimiento:* TV exterior de gran formato, sistema de sonido ambiental y WiFi de alta velocidad.
-•⁠ ⁠*Zona de Alberca:* Con sombra, tobogán y aro de básquet acuático.
-•⁠ ⁠*Deportes & Recreación:* Cancha de fútbol, básquetbol, trampolín profesional y fogatero con iluminación vintage.
-•⁠ ⁠*Instalaciones:* Amplias áreas verdes (cero polvo), 4 baños completos + 2 medios baños, estacionamiento amplio y limpieza profesional.
+⏰ *HORARIO DE RENTA:* 7 horas de servicio (a elegir entre las 3:00 PM y la 1:00 AM).
+📌 *POLÍTICAS:* El evento base es en áreas exteriores. No se permite exceder el número de personas contratadas sin previo aviso.
+📍 *UBICACIÓN:* Fracc. Real del 14, Hermosillo, Sonora.
+📝 *RESERVACIÓN:* 30% de anticipo para apartar fecha.
 
-⏰ *HORARIOS*
-•⁠ ⁠*Check-in:* 3:00 PM | *Check-out:* 12:00 PM.
-•⁠ ⁠*Visitas de día (3:00 PM - 11:00 PM):* $250 p/p.
-•⁠ ⁠*Persona extra con hospedaje:* $500 p/p (Máximo 19 personas).
+¿Para qué fecha y cuántos invitados tienes en mente?`;
 
-📍 *UBICACIÓN:* Fracc. Real del 14, Hermosillo, Sonora. Zona residencial con acceso controlado y seguridad. 
+    } else if (modoActual === 'combo') {
+      const fEntradaRaw = document.getElementById('fechaEntrada').value;
+      const fSalidaRaw = document.getElementById('fechaSalida').value;
+      let fechasTexto = "A convenir";
+      if (fEntradaRaw && fSalidaRaw) {
+        const d1 = new Date(fEntradaRaw.split('-')[0], fEntradaRaw.split('-')[1] - 1, fEntradaRaw.split('-')[2]);
+        const d2 = new Date(fSalidaRaw.split('-')[0], fSalidaRaw.split('-')[1] - 1, fSalidaRaw.split('-')[2]);
+        fechasTexto = d1.toLocaleDateString('es-MX', opciones) + " al " + d2.toLocaleDateString('es-MX', opciones);
+      }
+      const aforoSel = document.getElementById('paqueteSelect').options[document.getElementById('paqueteSelect').selectedIndex].getAttribute('data-aforo');
 
-📝 *RESERVACIÓN:* 30% de anticipo para separar fecha. Saldo restante al hacer check-in.
+      textoFinal = 
+`✨ *QUINTA BUGAMBILIA* ✨
+Paquete Combinado: Evento + Hospedaje
 
-¿Te gustaría consultar disponibilidad para alguna fecha en específico?`;
+📅 *COTIZACIÓN EVENTO + HOSPEDAJE*
+• *Fechas de Estancia:* ${fechasTexto} (${data.totalNoches} noche/s)
+• *Aforo Autorizado para Evento:* ${aforoSel} personas
+
+💵 *DESGLOSE ECONÓMICO:*
+• Subtotal Hospedaje Base (${data.totalNoches} noche/s): ${formatMoney(data.subtotalHospedaje)}
+• Paquete de Evento (${aforoSel} pers): ${formatMoney(data.subtotalEvento)}
+• Extras y Servicios Adicionales:
+${listaExtrasTexto}${textoDesc}
+💰 *TOTAL ESTIMADO:* ${formatMoney(data.totalGeneral)}
+
+----------------------------------------
+🌿 *EL PAQUETE COMBINADO INCLUYE:*
+• Hospedaje para hasta 12 personas en dormitorios (Casa + Depa).
+• Mesas con manteles blancos y Sillas Tiffany para ${aforoSel} personas.
+• Salón de juegos, Alberca, Asador profesional y áreas recreativas.
+
+📝 *RESERVACIÓN:* 30% de anticipo. Saldo restante el día del check-in.`;
+    }
 
     document.getElementById('cotizacion-texto').value = textoFinal;
     const box = document.getElementById('cotizacion-output');
@@ -682,7 +854,7 @@ ${listaExtrasTexto}${textoDescuento}
     window.open(url, '_blank');
   }
 
-  calcularCotizacion();
+  setModo('hospedaje');
 </script>
 </body>
 </html>
