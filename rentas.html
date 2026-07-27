@@ -28,6 +28,7 @@
       --red-bg: #faeaea; 
       --amber-bg: #ddeef7; 
       --border: #b8d9c8;
+      --whatsapp: #25D366;
     }
 
     body { 
@@ -201,7 +202,7 @@
     }
     .search-input:focus { border-color: var(--green); background: #fff; }
 
-    /* ── METRICS BAR (Cards apiladas inteligentemente en celular) ── */
+    /* ── METRICS BAR ── */
     .summary-bar {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -247,8 +248,32 @@
     }
 
     .card-head { padding: 0.9rem 1rem 0.6rem; display: flex; justify-content: space-between; align-items: flex-start; gap: .4rem; }
-    .card-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; color: var(--charcoal); line-height: 1.2; }
-    .card-index { font-size: .65rem; color: var(--warm); opacity: .7; margin-top: .1rem; }
+    
+    /* Estilos para el enlace de WhatsApp en el nombre */
+    .card-name-link {
+      text-decoration: none;
+      display: inline-block;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .card-name { 
+      font-family: 'Cormorant Garamond', serif; 
+      font-size: 1.2rem; 
+      font-weight: 600; 
+      color: var(--green); 
+      line-height: 1.2; 
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: opacity 0.2s;
+    }
+    .card-name:active { opacity: 0.7; }
+    .card-name svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--whatsapp);
+    }
+    
+    .card-index { font-size: .65rem; color: var(--warm); opacity: .7; margin-top: .2rem; }
 
     .card-badge { font-size: .6rem; font-weight: 600; text-transform: uppercase; padding: .2rem .5rem; border-radius: 7px; white-space: nowrap; }
     .badge-green { background: var(--green-bg); color: var(--green); }
@@ -268,7 +293,7 @@
     .view-btn svg { width: 14px; height: 14px; stroke: var(--warm); }
     .view-btn.active svg { stroke: #fff; }
 
-    /* ── TABLE VIEW (Desplazamiento táctil lateral fluido) ── */
+    /* ── TABLE VIEW ── */
     .table-wrap { display: none; background: #fff; border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .table-wrap.visible { display: block; }
     table { width: 100%; border-collapse: collapse; font-size: .78rem; }
@@ -370,7 +395,6 @@
 <footer>Quinta Bugambilia 2026 · Datos sincronizados con pestaña Rentas 2026</footer>
 
 <script>
-  // REEMPLAZA ESTA URL CON TU NUEVO ENLACE DE GOOGLE SHEETS SI PERSISTE EL 404
   const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSo8m2mzpqf5Z_Znr_F6ZRDOqbZJ7zXuRzIkKkZHjU5A8ZvD3ejb7t6Pq_6YR28j12cAQCqQCqVFSve/pub?gid=652812646&single=true&output=csv';
 
   const COL_START = 3;
@@ -548,8 +572,20 @@
       const name = nameIdx >= 0 ? r.fields[nameIdx] : (r.fields[0] || `Registro ${idx+1}`);
       const badgeHtml = r.month ? `<span class="card-badge badge-green">${r.month}</span>` : '';
 
+      // --- 🟢 CONSTRUCCIÓN DEL MENSAJE DE WHATSAPP 🟢 ---
+      let waText = `¡Hola! Aquí tienes los detalles de tu reservación en *Quinta Bugambilia* 🌺\n\n`;
+      waText += `👤 *A nombre de:* ${name}\n`;
+      
       const fieldRows = headers.map((h, i) => {
         const val = r.fields[i] || '';
+        
+        // Agregar a WhatsApp si hay dato (excluyendo el nombre que ya lo pusimos arriba)
+        if (val && i !== nameIdx) {
+          const moneyVal = parseMoney(val);
+          const displayForWa = (moneyVal > 0 && isMoney(val)) ? formatMXN(moneyVal) : val;
+          waText += `*${h}:* ${displayForWa}\n`;
+        }
+
         if (i === nameIdx) return '';
         if (!val) return `<div class="field-row"><span class="field-key">${h}</span><span class="field-val empty">—</span></div>`;
         const moneyVal = parseMoney(val);
@@ -561,10 +597,27 @@
         </div>`;
       }).join('');
 
+      // Agregando las notas extra al mensaje de WhatsApp
+      waText += `\n*Información Importante:*\n`;
+      waText += `💳 El pago tiene que ser liquidado vía transferencia electrónica o depósito antes de ingresar al inmueble.\n`;
+      waText += `📍 *Ubicación:* Fraccionamiento Real del 14, Hermosillo, Sonora.\n`;
+      waText += `🗺️ *Mapa:* https://maps.google.com/?q=28.958324,-111.029503\n`;
+      waText += `🔐 *Acceso a Real del 14:* Manzana 13 Lote 36 (Usa este dato en caseta).\n`;
+      waText += `📜 Te invitamos cordialmente a seguir el reglamento de la Quinta para disfrutar al máximo tu estancia.\n`;
+      waText += `💧 *Nota adicional:* Les pedimos de la manera más atenta hacer un uso consciente y cuidadoso del agua, ya que actualmente el fraccionamiento mantiene ciertas restricciones de suministro. ¡Agradecemos mucho su comprensión y apoyo!\n`;
+
+      const waLink = `https://wa.me/?text=${encodeURIComponent(waText)}`;
+      // ----------------------------------------------------
+
       return `<div class="renta-card" style="animation:fadeUp .3s ease ${idx*0.02}s both">
         <div class="card-head">
           <div>
-            <div class="card-name">${name}</div>
+            <a href="${waLink}" target="_blank" class="card-name-link" title="Enviar detalles por WhatsApp">
+              <div class="card-name">
+                ${name}
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+              </div>
+            </a>
             <div class="card-index"># ${idx+1}</div>
           </div>
           ${badgeHtml}
