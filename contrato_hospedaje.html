@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Quinta Bugambilia – Contrato de Hospedaje</title>
+  <title>Quinta Bugambilia – Contrato de Evento con Hospedaje</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     /* ==========================================================================
@@ -155,6 +155,35 @@
     input:focus, textarea:focus { border-color: var(--warm); background: #fff; box-shadow: 0 0 0 3px rgba(59, 98, 128, 0.12); }
     textarea { resize: vertical; min-height: 70px; }
 
+    /* Estilos para Sección de Extras */
+    .extras-container {
+      background: var(--accent-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .extras-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+    .extra-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .extra-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--green);
+      cursor: pointer;
+    }
+
     .btn-calc { 
       width: 100%; background: #e2f0e8; color: var(--green); border: 1px solid #b2dac2; border-radius: 8px; 
       padding: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: bold; margin-top: 6px;
@@ -301,7 +330,7 @@
       color: #333;
     }
 
-    #notas-seccion-contrato { 
+    #extras-seccion-contrato, #notas-seccion-contrato { 
       margin-top: 1.2rem; 
       padding: 1rem; 
       border: 1px dashed var(--border); 
@@ -380,8 +409,8 @@
 </header>
 
 <main>
-  <h1>Generar Contrato</h1>
-  <p class="subtitle">Panel de redacción para contratos de hospedaje de Quinta Bugambilia</p>
+  <h1>Generar Contrato de Evento con Hospedaje</h1>
+  <p class="subtitle">Panel de redacción para contratos de eventos con hospedaje de Quinta Bugambilia</p>
 
   <div class="alert-box">
     <strong>📋 Gestión Legal y Operativa:</strong>
@@ -424,9 +453,37 @@
       </div>
     </div>
 
+    <!-- SECCIÓN DE EXTRAS Y SERVICIOS ADICIONALES -->
+    <div class="extras-container">
+      <label style="margin-bottom:0.2rem;">Equipos y Servicios Adicionales</label>
+      <div class="extras-grid">
+        <label class="extra-item">
+          <input type="checkbox" class="chk-extra" value="Calentón ambiental" data-precio="480" onchange="calcularExtras()">
+          Calentón ambiental ($480)
+        </label>
+        <label class="extra-item">
+          <input type="checkbox" class="chk-extra" value="Aerocooler portátil" data-precio="480" onchange="calcularExtras()">
+          Aerocooler portátil ($480)
+        </label>
+        <label class="extra-item">
+          <input type="checkbox" class="chk-extra" value="Mesa para snacks" data-precio="350" onchange="calcularExtras()">
+          Mesa para snacks ($350)
+        </label>
+        <label class="extra-item">
+          <input type="checkbox" class="chk-extra" value="Torre de luces y humo" data-precio="650" onchange="calcularExtras()">
+          Torre de luces y humo ($650)
+        </label>
+      </div>
+    </div>
+
     <div class="row-3">
       <div class="field">
-        <label>Precio Total</label>
+        <label>Precio Renta Base</label>
+        <input type="text" id="precioRentaInput" placeholder="$0.00" onkeyup="formatCurrency(this); actualizarPrecioTotal();" inputmode="decimal">
+      </div>
+
+      <div class="field">
+        <label>Precio Total (Con Extras)</label>
         <input type="text" id="precioInput" placeholder="$0.00" onkeyup="formatCurrency(this)" inputmode="decimal">
       </div>
 
@@ -435,8 +492,10 @@
         <input type="text" id="anticipoInput" placeholder="$0.00" onkeyup="formatCurrency(this)" inputmode="decimal">
         <button class="btn-calc" onclick="calcularAnticipo()">CALCULAR 30%</button>
       </div>
+    </div>
 
-      <div class="field">
+    <div class="row" style="margin-bottom: 1rem;">
+      <div class="field" style="margin-bottom:0;">
         <label>Depósito en Garantía</label>
         <input type="text" id="depositoInput" value="$1,000.00" onkeyup="formatCurrency(this)" inputmode="decimal">
       </div>
@@ -462,12 +521,12 @@
         <div class="brand-sub">Real del 14 · Hermosillo, Sonora</div>
       </div>
       <div class="doc-type">
-        Contrato de Arrendamiento Temporal
+        Contrato de Evento con Hospedaje
       </div>
     </div>
 
     <div class="reunidos-box">
-      <strong>REUNIDOS:</strong> Por una parte, el ARRENDADOR, <strong>Javier Antonio Morales Mizquez</strong>, y por otra parte, el ARRENDATARIO, <strong id="out-nombre">________________________</strong> (ID/INE: <span id="out-ine">________________________</span>), acuerdan celebrar el presente contrato sujeto a las siguientes:
+      <strong>REUNIDOS:</strong> Por una parte, el ARRENDADOR, <strong>Javier Antonio Morales Mizquez</strong>, y por otra parte, el ARRENDATARIO, <strong id="out-nombre">________________________</strong> (ID/INE: <span id="out-ine">________________________</span>), acuerdan celebrar el presente <strong>Contrato de Evento con Hospedaje</strong> sujeto a las siguientes:
     </div>
 
     <!-- TARJETAS DE RESUMEN FINANCIERO Y FECHAS -->
@@ -490,7 +549,7 @@
       
       <div class="clausula-item">
         <span class="clausula-header">PRIMERA. OBJETO Y USO</span>
-        El Arrendador cede el uso temporal de la propiedad ubicada en el Fraccionamiento Real del Catorce, en Hermosillo, Sonora. El uso es exclusivamente recreativo y familiar. El Arrendatario declara recibir el inmueble y la alberca en buen estado y funcionales.
+        El Arrendador cede el uso temporal de la propiedad ubicada en el Fraccionamiento Real del Catorce, en Hermosillo, Sonora, para la realización de un evento social y servicio de hospedaje. El Arrendatario declara recibir el inmueble y la alberca en buen estado y funcionales.
       </div>
 
       <div class="clausula-item">
@@ -502,7 +561,7 @@
 
       <div class="clausula-item">
         <span class="clausula-header">TERCERA. PRECIO Y FORMA DE PAGO</span>
-        <strong>Costo total de la estancia:</strong> <span id="out-precio"></span> MXN.<br>
+        <strong>Costo total del evento con hospedaje:</strong> <span id="out-precio"></span> MXN.<br>
         <strong>Anticipo de reserva (30%):</strong> <span id="out-anticipo"></span> MXN (No reembolsable salvo lo estipulado en la Cláusula Novena).<br>
         <strong>Saldo restante:</strong> Deberá liquidarse antes de ingresar a la propiedad.<br>
         <strong>Método de pago:</strong> Exclusivamente transferencia o depósito bancario. No se acepta efectivo.<br>
@@ -515,12 +574,12 @@
 
       <div class="clausula-item">
         <span class="clausula-header">CUARTA. DEPÓSITO EN GARANTÍA</span>
-        Al ingresar, el Arrendatario entregará <strong id="out-deposito">$1,000.00 MXN</strong> como depósito en garantía. Se devolverá por transferencia dentro de las 24 horas posteriores al check-out, previa inspección del inmueble. El Arrendatario responderá por cualquier daño material causado por él o sus acompañantes.
+        Al ingresar, el Arrendatario entregará <strong id="out-deposito">$1,000.00 MXN</strong> como depósito en garantía. Se devolverá por transferencia dentro de las 24 horas posteriores al check-out, previa inspección del inmueble. El Arrendatario responderá por cualquier daño material causado por él o sus invitados/acompañantes.
       </div>
 
       <div class="clausula-item">
         <span class="clausula-header">QUINTA. CAPACIDAD</span>
-        • <strong>Capacidad base incluida:</strong> 12 personas.
+        • <strong>Capacidad base incluida:</strong> 12 personas para hospedaje.
       </div>
 
       <div class="clausula-item">
@@ -531,7 +590,7 @@
 
       <div class="clausula-item">
         <span class="clausula-header">SÉPTIMA. EXENCIÓN DE RESPONSABILIDAD</span>
-        El Arrendador no se responsabiliza por accidentes, lesiones, enfermedades o fallecimientos ocurridos dentro de la propiedad, especialmente en la alberca. La supervisión de menores de edad y el uso responsable de las instalaciones es responsabilidad exclusiva del Arrendatario.
+        El Arrendador no se responsabiliza por accidentes, lesiones, enfermedades o fallecimientos ocurridos dentro de la propiedad durante el evento o estancia, especialmente en la alberca. La supervisión de menores de edad y el uso responsable de las instalaciones es responsabilidad exclusiva del Arrendatario.
       </div>
 
       <div class="clausula-item">
@@ -548,7 +607,7 @@
       </div>
 
       <div class="clausula-item">
-        <span class="clausula-header">DÉCIMA. REGLAS GENERALES Y LOGÍSTICA</span>
+        <span class="clausula-header">DÉCIMA. REGLAS GENERALES Y LOGÍSTICA DEL EVENTO</span>
         • <strong>Música y Ruido:</strong> Prohibida la música en vivo con escenario, equipos de sonido profesionales o luces de gran escala. Debe respetarse el reglamento de sonido del fraccionamiento.<br>
         • <strong>Mobiliario:</strong> Prohibido mover el mobiliario de su lugar asignado.<br>
         • <strong>Mascotas:</strong> No permitidas.<br>
@@ -560,6 +619,12 @@
         Queda estrictamente prohibido el consumo de sustancias ilícitas. Cualquier alteración al orden, riña o queja vecinal será motivo de desalojo inmediato sin derecho a reembolso y aviso a las autoridades.
       </div>
 
+      <!-- SECCIÓN DE EXTRAS EN EL CONTRATO IMPRESO -->
+      <div id="extras-seccion-contrato" style="display:none;">
+        <strong>EQUIPOS Y SERVICIOS ADICIONALES CONTRATADOS:</strong>
+        <ul id="out-extras-lista" style="margin-left: 1.2rem; margin-top: 4px; font-size: 0.85rem;"></ul>
+      </div>
+
       <div id="notas-seccion-contrato" style="display:none;">
         <strong>ACUERDOS ESPECIALES Y NOTAS:</strong>
         <p id="out-notas" style="font-style: italic; margin-top: 4px;"></p>
@@ -568,7 +633,7 @@
     </div>
 
     <p style="margin-top: 1.5rem; font-size: 0.8rem; text-align: right; color: #444;">
-      Hermosillo, Sonora, a <span id="out-fecha-hoy">22 de julio de 2026</span>.
+      Hermosillo, Sonora, a <span id="out-fecha-hoy">26 de julio de 2026</span>.
     </p>
 
     <div class="firmas-container">
@@ -604,15 +669,46 @@
     input.value = value;
   }
 
+  // Convertir string de dinero a Float
+  function parseCurrency(str) {
+    if (!str) return 0;
+    return parseFloat(str.replace(/[$,]/g, "")) || 0;
+  }
+
+  // Convertir Float a String con formato $
+  function toCurrencyStr(num) {
+    return num.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  }
+
+  // Recalcular el total acumulado con los extras
+  function calcularExtras() {
+    actualizarPrecioTotal();
+  }
+
+  function actualizarPrecioTotal() {
+    const precioBase = parseCurrency(document.getElementById('precioRentaInput').value);
+    let totalExtras = 0;
+
+    const checkboxes = document.querySelectorAll('.chk-extra:checked');
+    checkboxes.forEach(chk => {
+      totalExtras += parseFloat(chk.getAttribute('data-precio')) || 0;
+    });
+
+    const precioTotal = precioBase + totalExtras;
+    if (precioTotal > 0) {
+      document.getElementById('precioInput').value = toCurrencyStr(precioTotal);
+    } else {
+      document.getElementById('precioInput').value = "";
+    }
+  }
+
   // Cálculo del 30%
   function calcularAnticipo() {
     const pStr = document.getElementById('precioInput').value;
-    if (!pStr) return alert("Ingresa primero el Precio Total");
-    const pNum = parseFloat(pStr.replace(/[$,]/g, ""));
+    if (!pStr) return alert("Ingresa primero el Precio Total o el Precio Renta Base");
+    const pNum = parseCurrency(pStr);
     const ant = pNum * 0.30;
-    document.getElementById('anticipoInput').value = ant.toLocaleString('en-US', {
-      style: 'currency', currency: 'USD'
-    });
+    document.getElementById('anticipoInput').value = toCurrencyStr(ant);
   }
 
   // Formato de fecha a texto (Ej. 21 de agosto de 2026)
@@ -673,6 +769,24 @@
     document.getElementById('out-card-salida').innerText = `${fechaS} (${horaS})`;
     document.getElementById('out-card-costo').innerText = `${precio} / Ant: ${anticipo}`;
 
+    // Desglose de Extras seleccionados
+    const checkboxes = document.querySelectorAll('.chk-extra:checked');
+    const seccionExtras = document.getElementById('extras-seccion-contrato');
+    const listaExtras = document.getElementById('out-extras-lista');
+    listaExtras.innerHTML = "";
+
+    if (checkboxes.length > 0) {
+      checkboxes.forEach(chk => {
+        const li = document.createElement('li');
+        const precioExtra = parseFloat(chk.getAttribute('data-precio'));
+        li.innerText = `${chk.value} – ${toCurrencyStr(precioExtra)} MXN`;
+        listaExtras.appendChild(li);
+      });
+      seccionExtras.style.display = "block";
+    } else {
+      seccionExtras.style.display = "none";
+    }
+
     // Fecha de hoy
     document.getElementById('out-fecha-hoy').innerText = obtenerFechaActualTexto();
 
@@ -702,10 +816,16 @@
     document.getElementById('horaEntrada').value = "15:00";
     document.getElementById('fechaSalida').value = "";
     document.getElementById('horaSalida').value = "12:00";
+    document.getElementById('precioRentaInput').value = "";
     document.getElementById('precioInput').value = "";
     document.getElementById('anticipoInput').value = "";
     document.getElementById('depositoInput').value = "$1,000.00";
     document.getElementById('notasInput').value = "";
+
+    // Desmarcar checkboxes de extras
+    const checkboxes = document.querySelectorAll('.chk-extra');
+    checkboxes.forEach(chk => chk.checked = false);
+
     document.getElementById('contrato-final').style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
