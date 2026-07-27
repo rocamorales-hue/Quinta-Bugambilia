@@ -214,6 +214,15 @@
     .extra-left input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; }
     .extra-price { font-weight: 600; color: var(--green); font-size: 0.85rem; }
 
+    /* Custom Extra Box */
+    .custom-extra-box {
+      background: #f8faf9;
+      border: 1px dashed var(--border);
+      padding: 0.8rem;
+      border-radius: 8px;
+      margin-top: 0.8rem;
+    }
+
     /* Desglose de Noches */
     .desglose-box {
       background: #f4f9f6;
@@ -463,6 +472,37 @@
       <span class="extra-price">+$480</span>
     </div>
 
+    <div class="extra-item" onclick="toggleExtra('chkMesaSnacks')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkMesaSnacks" value="350" onchange="calcularCotizacion()">
+        <span>Mesa para snacks</span>
+      </div>
+      <span class="extra-price">+$350</span>
+    </div>
+
+    <div class="extra-item" onclick="toggleExtra('chkTorreLuces')">
+      <div class="extra-left">
+        <input type="checkbox" id="chkTorreLuces" value="650" onchange="calcularCotizacion()">
+        <span>Torre de luces y humo</span>
+      </div>
+      <span class="extra-price">+$650</span>
+    </div>
+
+    <!-- CAMPO EXTRA PERSONALIZADO MANUAL -->
+    <div class="custom-extra-box">
+      <div class="extra-group-title" style="margin-top:0;">Extra Personalizado / Servicio Adicional</div>
+      <div class="grid-2">
+        <div class="field" style="margin-bottom:0;">
+          <label>Descripción del Extra</label>
+          <input type="text" id="customExtraNombre" placeholder="Ej. Inflable especial, Servicio Mesero, etc." oninput="calcularCotizacion()">
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Precio / Monto ($)</label>
+          <input type="number" id="customExtraPrecio" min="0" placeholder="Ej. 500" oninput="calcularCotizacion()">
+        </div>
+      </div>
+    </div>
+
     <div class="extra-group-title">Accesos Adicionales</div>
 
     <div class="extra-item" onclick="toggleExtra('chkCasaCompleta')">
@@ -645,13 +685,17 @@
 
     // 4. Extras seleccionados
     let subtotalEquipos = 0;
-    const checkIds = ['chkBrincolin', 'chkBrincolinAcuatico', 'chkFutbolito', 'chkBocina', 'chkCalenton', 'chkAerocooler', 'chkCasaCompleta', 'chkDepaIndep', 'chkSalonJuegos'];
+    const checkIds = ['chkBrincolin', 'chkBrincolinAcuatico', 'chkFutbolito', 'chkBocina', 'chkCalenton', 'chkAerocooler', 'chkMesaSnacks', 'chkTorreLuces', 'chkCasaCompleta', 'chkDepaIndep', 'chkSalonJuegos'];
     checkIds.forEach(id => {
       const el = document.getElementById(id);
       if (el && el.checked) {
         subtotalEquipos += parseFloat(el.value);
       }
     });
+
+    // Extra personalizado manual
+    const customPrecio = parseFloat(document.getElementById('customExtraPrecio').value) || 0;
+    subtotalEquipos += customPrecio;
 
     const subtotalBruto = subtotalHospedaje + subtotalEvento + subtotalExtrasPersonas + subtotalEquipos;
 
@@ -706,9 +750,17 @@
     if (document.getElementById('chkBocina').checked) listaExtrasTexto += `• Bocina de Alta Potencia: $400\n`;
     if (document.getElementById('chkCalenton').checked) listaExtrasTexto += `• Calentón ambiental de gas: $480\n`;
     if (document.getElementById('chkAerocooler').checked) listaExtrasTexto += `• Aerocooler portátil: $480\n`;
+    if (document.getElementById('chkMesaSnacks').checked) listaExtrasTexto += `• Mesa para snacks: $350\n`;
+    if (document.getElementById('chkTorreLuces').checked) listaExtrasTexto += `• Torre de luces y humo: $650\n`;
     if (document.getElementById('chkCasaCompleta').checked) listaExtrasTexto += `• Casa Principal (Acceso Completo): $1,500\n`;
     if (document.getElementById('chkDepaIndep').checked) listaExtrasTexto += `• Departamento Independiente: $1,000\n`;
     if (document.getElementById('chkSalonJuegos').checked) listaExtrasTexto += `• Salón de entretenimiento: $1,200\n`;
+
+    const customNombre = document.getElementById('customExtraNombre').value.trim();
+    const customPrecio = parseFloat(document.getElementById('customExtraPrecio').value) || 0;
+    if (customPrecio > 0) {
+      listaExtrasTexto += `• ${customNombre || 'Servicio / Extra adicional'}: ${formatMoney(customPrecio)}\n`;
+    }
 
     if (listaExtrasTexto === "") listaExtrasTexto = "• Ninguno (Servicio Base)\n";
 
@@ -810,29 +862,59 @@ ${listaExtrasTexto}${textoDesc}
         fechasTexto = d1.toLocaleDateString('es-MX', opciones) + " al " + d2.toLocaleDateString('es-MX', opciones);
       }
       const aforoSel = document.getElementById('paqueteSelect').options[document.getElementById('paqueteSelect').selectedIndex].getAttribute('data-aforo');
+      const cantNoches = Math.max(1, data.totalNoches);
+
+      let bloqueExtras = "";
+      if (listaExtrasTexto !== "• Ninguno (Servicio Base)\n") {
+        bloqueExtras = `\n➕ *SERVICIOS Y EQUIPOS EXTRA:*\n${listaExtrasTexto}`;
+      }
 
       textoFinal = 
 `✨ *QUINTA BUGAMBILIA* ✨
-Paquete Combinado: Evento + Hospedaje
+Cotización Combinada: Evento (${aforoSel} personas) + Hospedaje
 
-📅 *COTIZACIÓN EVENTO + HOSPEDAJE*
-• *Fechas de Estancia:* ${fechasTexto} (${data.totalNoches} noche/s)
-• *Aforo Autorizado para Evento:* ${aforoSel} personas
+📅 *COTIZACIÓN DE EVENTO Y HOSPEDAJE*
+• *Fecha(s):* ${fechasTexto}
+• *Aforo para Evento:* ${aforoSel} personas
+• *Hospedaje:* Incluido para hasta 12 personas (${cantNoches} noche/s)
+• *Ubicación:* Fracc. Real del 14, Hermosillo, Sonora 📍
 
-💵 *DESGLOSE ECONÓMICO:*
-• Subtotal Hospedaje Base (${data.totalNoches} noche/s): ${formatMoney(data.subtotalHospedaje)}
-• Paquete de Evento (${aforoSel} pers): ${formatMoney(data.subtotalEvento)}
-• Extras y Servicios Adicionales:
-${listaExtrasTexto}${textoDesc}
-💰 *TOTAL ESTIMADO:* ${formatMoney(data.totalGeneral)}
+💰 *INVERSIÓN TOTAL:* ${formatMoney(data.totalGeneral)}${textoDesc}${bloqueExtras}
+⚠️ *NOTA IMPORTANTE:* Por el momento, los SÁBADOS de AGOSTO ya se encuentran totalmente AGOTADOS / SIN DISPONIBILIDAD. (Consulta disponibilidad para viernes, domingos o días entre semana).
 
-----------------------------------------
-🌿 *EL PAQUETE COMBINADO INCLUYE:*
-• Hospedaje para hasta 12 personas en dormitorios (Casa + Depa).
-• Mesas con manteles blancos y Sillas Tiffany para ${aforoSel} personas.
-• Salón de juegos, Alberca, Asador profesional y áreas recreativas.
+🌿 *¿QUÉ INCLUYE TU PAQUETE COMBINADO?*
 
-📝 *RESERVACIÓN:* 30% de anticipo. Saldo restante el día del check-in.`;
+🏡 *1. HOSPEDAJE COMPLETO (Hasta 12 personas)*
+• Casa Principal: Recámaras, cocina equipada y estancia.
+• Departamento Independiente: Recámara privada con baño completo.
+• Salón de Juegos: Mesa de billar, futbolito, TV, sillón confortable y A/C.
+
+🎉 *2. MOBILIARIO PARA EVENTO (${aforoSel} personas)*
+• Mesas completas con manteles blancos.
+• Sillas Tiffany elegantes.
+
+🏊‍♂️ *3. ÁREAS RECREATIVAS Y DEPORTIVAS*
+• Zona de Alberca: Con áreas de sombra, tobogán y aro de básquetbol acuático.
+• Deportes & Recreación: Cancha de fútbol, cancha de básquetbol y trampolín profesional.
+• Ambiente Exterior: Fogatero con iluminación vintage y amplias áreas verdes (cero polvo).
+
+🔥 *4. ÁREA DE COCINA EXTERIOR Y ASADOR*
+• Asador de gas profesional (gas incluido).
+• Barra exterior con bancos y comedor formal de parota.
+• Hielera grande, refrigerador y máquina de hielo a tu disposición.
+
+🎵 *5. EQUIPAMIENTO Y COMODIDADES*
+• TV exterior de gran formato.
+• Sistema de sonido ambiental.
+• WiFi de alta velocidad.
+• Instalaciones sanitarias: 1 baño completo + 2 medios baños exteriores.
+• Estacionamiento privado y servicio de limpieza profesional.
+
+📝 *CONDICIONES Y RESERVACIÓN*
+• Anticipo: 30% para apartar tu fecha.
+• Saldo restante: Se liquida el día del check-in.
+
+📲 ¿Te gustaría revisar fechas disponibles entre semana o en domingo? ¡Con gusto te atendemos! 😊👇`;
     }
 
     document.getElementById('cotizacion-texto').value = textoFinal;
