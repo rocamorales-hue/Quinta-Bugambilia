@@ -112,9 +112,7 @@
     /* ==========================================================================
        MAIN CONTENT & FORM LAYOUT
        ========================================================================== */
-    main { max-width: 850px; margin: 0 auto; padding: 1rem 0.5rem 3rem; }
-    h1 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; margin-bottom: .2rem; text-align: center; }
-    .subtitle { color: var(--warm); font-size: .85rem; margin-bottom: 1.5rem; text-align: center; }
+    main { max-width: 850px; margin: 0 auto; padding: 1.5rem 0.5rem 3rem; }
 
     .form-container { 
       background: #fff; 
@@ -199,17 +197,6 @@
       box-shadow: 0 4px 12px rgba(17, 34, 28, 0.15);
     }
     .btn-generar:active { background: #2c5444; }
-
-    .alert-box {
-      background-color: #fcf8e3;
-      border: 1px solid #faebcc;
-      border-radius: 10px;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      font-size: 0.8rem;
-      color: #8a6d3b;
-    }
-    .alert-box ul { margin-left: 1.2rem; margin-top: 0.4rem; }
 
     /* ==========================================================================
        CONTRATO VISTA PREVIA & ESTILO MODERNO
@@ -368,7 +355,7 @@
 
     @media print {
       body, main { background: #fff !important; padding: 0 !important; margin: 0 !important; color: #000 !important; }
-      header, .form-container, .no-print-area, .alert-box, footer, .subtitle, h1 { display: none !important; }
+      header, .form-container, .no-print-area, footer { display: none !important; }
       #contrato-final { 
         display: block !important; 
         border: none !important; 
@@ -409,16 +396,6 @@
 </header>
 
 <main>
-  <h1>Generar Contrato de Evento con Hospedaje</h1>
-  <p class="subtitle">Panel de redacción para contratos de eventos con hospedaje de Quinta Bugambilia</p>
-
-  <div class="alert-box">
-    <strong>📋 Gestión Legal y Operativa:</strong>
-    <ul>
-      <li>Recuerda validar el recibo del anticipo mediante transferencia antes de confirmar de forma definitiva la fecha en agenda.</li>
-      <li>Verifica los datos de identificación oficial (INE/Pasaporte) al momento de autorizar el check-in.</li>
-    </ul>
-  </div>
 
   <div class="form-container">
     <div class="field">
