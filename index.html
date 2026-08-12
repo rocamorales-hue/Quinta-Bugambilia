@@ -9,7 +9,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js?v=2').then((reg) => {
-          reg.update(); // Fuerza la actualización en los celulares
+          reg.update();
         });
       });
     }
@@ -49,7 +49,7 @@
     }
 
     /* ==========================================================================
-       HEADER & NAVIGATION (OPTIMIZADO Y PULIDO)
+       HEADER & NAVIGATION
        ========================================================================== */
     header { 
       background: rgba(30, 58, 47, 0.96); 
@@ -149,7 +149,6 @@
       box-shadow: 0 4px 12px rgba(93, 184, 122, 0.25);
     }
 
-    /* Modificadores de secciones activas */
     .app-section { display: none; }
     .app-section.active-section { display: block; }
 
@@ -190,7 +189,7 @@
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); width: 100%; }
     .cal-day-name { background: var(--sand); padding: .4rem 0; text-align: center; font-size: .6rem; font-weight: 600; text-transform: uppercase; color: var(--warm); border-bottom: 1px solid var(--border); }
 
-    .cal-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-height: 65px; padding: .2rem; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+    .cal-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-height: 68px; padding: .2rem; position: relative; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
     .cal-cell:nth-child(7n){border-right:none;}
     .cal-cell.empty{background:var(--sand);opacity:.3;}
     .cal-cell.free{background:var(--green-bg);}
@@ -204,8 +203,8 @@
 
     .session-tags { display: flex; flex-direction: column; gap: 2px; width: 100%; margin-top: auto; }
     .session-tag { font-size: .5rem; padding: 1px 2px; border-radius: 3px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; line-height: 1.1; display: block; text-align: center; }
-    .tag-busy { background: rgba(185, 64, 64, .08); color: var(--red); border: 1px solid rgba(185,64,64,0.1); }
-    .tag-free { background: rgba(58, 143, 94, .08); color: var(--green); border: 1px solid rgba(58,143,94,0.1); }
+    .tag-busy { background: rgba(185, 64, 64, .12); color: var(--red); border: 1px solid rgba(185,64,64,0.15); }
+    .tag-free { background: rgba(58, 143, 94, .12); color: var(--green); border: 1px solid rgba(58,143,94,0.15); }
 
     /* ==========================================================================
        CONTRATOS PANEL STYLE
@@ -249,7 +248,7 @@
     footer { text-align: center; padding: 1.5rem; font-size: .7rem; color: var(--warm); border-top: 1px solid var(--border); margin-top: 2rem; }
 
     /* ==========================================================================
-       MEDIA QUERY: OPTIMIZACIÓN PARA ESCRITORIO Y TABLETAS
+       MEDIA QUERIES Y MODO IMPRESIÓN
        ========================================================================== */
     @media(min-width: 900px) {
       header { flex-direction: row; justify-content: space-between; padding: 0.6rem 2rem; }
@@ -269,8 +268,8 @@
     @media print {
       body, main { background: #fff; padding: 0; margin: 0; color: #000; }
       header, .form-container, h1, .subtitle, .no-print-area, .legend, .year-nav-container, #calendar-wrap, footer { display: none !important; }
-      #contrato-final { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100%; }
-      .firmas-print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 50px; }
+      #contrato-final { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100%; page-break-inside: avoid; }
+      .firmas-print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 50px; page-break-inside: avoid; }
       @page { margin: 1.5cm; }
     }
   </style>
@@ -446,7 +445,7 @@
       <div class="row">
         <div class="field">
           <label>Precio Total Calculado ($)</label>
-          <input type="text" id="precioInput" placeholder="Calculado automáticamente">
+          <input type="text" id="precioInput" placeholder="Calculado automáticamente" readonly>
         </div>
         <div class="field">
           <label>Depósito en Garantía (Reembolsable)</label>
@@ -497,7 +496,7 @@
 
       <p><span class="clausula-title">SEXTA. OCUPACIÓN Y USO DE INSTALACIONES.</span> La ocupación máxima permitida para el evento es de <span id="out-aforo-evento2" style="font-weight:bold;"></span> personas y de 12 personas para el hospedaje nocturno. Se permite el uso de las áreas externas del inmueble y las habitaciones destinadas al hospedaje. Cualquier exceso de ocupación no autorizado en el evento o en el hospedaje dará lugar a la rescisión inmediata del contrato sin derecho a reembolso.</p>
 
-      <p><span class="clausula-title">SÉPTIMA. ACCESO AL SALÓN DE JUEGOS.</span> Se otorga acceso al salón de juegos. Queda expresamente estipulado que cualquier daño o desperfecto a cualquier equipo o mobiliario correrá por cargo del ARRENDATARIO. Se recomienda limitar el acceso a niños y controlar strictly el aforo en esta área para evitar incidentes.</p>
+      <p><span class="clausula-title">SÉPTIMA. ACCESO AL SALÓN DE JUEGOS.</span> Se otorga acceso al salón de juegos. Queda expresamente estipulado que cualquier daño o desperfecto a cualquier equipo o mobiliario correrá por cargo del ARRENDATARIO. Se recomienda limitar el acceso a niños y controlar estrictamente el aforo en esta área para evitar incidentes.</p>
 
       <p><span class="clausula-title">OCTAVA. CONDICIONES DE USO Y RESPONSABILIDADES.</span> El inmueble deberá usarse exclusivamente para los fines establecidos. EL ARRENDATARIO se compromete a firmar el reglamento de uso y hospedaje antes de ingresar. EL ARRENDADOR no se hace responsable por accidentes, lesiones, enfermedades o pérdidas de objetos personales durante el uso y estancia en el inmueble.</p>
 
@@ -566,7 +565,7 @@ function switchSection(sectionId) {
   }
 }
 
-// ================= LÓGICA DEL CALENDARIO ORIGINAL =================
+// ================= LÓGICA DEL CALENDARIO =================
 function parseCSVLine(line) {
   const cols = []; let cur = '', inQ = false;
   for (let i = 0; i < line.length; i++) {
@@ -625,7 +624,7 @@ async function loadData() {
     renderNav();
     renderCalendar(currentMonth);
   } catch(e) {
-    document.getElementById('calendar-wrap').innerHTML = '<div style="padding:2rem;text-align:center;color:red;font-size:0.85rem;">Error al cargar datos.</div>';
+    document.getElementById('calendar-wrap').innerHTML = '<div style="padding:2rem;text-align:center;color:red;font-size:0.85rem;">Error al cargar datos. Por favor reintente.</div>';
   }
 }
 
@@ -703,13 +702,15 @@ function renderCalendar(month) {
   wrap.innerHTML = html + '</div>';
 }
 
-// ================= LÓGICA DE CONTRATOS =================
+// ================= LÓGICA DE CONTRATOS Y FORMULARIO =================
 function toggleCheckbox(e, id) {
-  const cb = document.getElementById(id);
   if (e.target.tagName !== 'INPUT') {
-    cb.checked = !cb.checked;
+    const cb = document.getElementById(id);
+    if (cb) {
+      cb.checked = !cb.checked;
+      calcularTotal();
+    }
   }
-  calcularTotal();
 }
 
 function calcularTotal() {
