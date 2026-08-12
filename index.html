@@ -38,6 +38,8 @@
       --red-bg: #faeaea; 
       --amber-bg: #ddeef7; 
       --border: #b8d9c8;
+      --whatsapp: #25D366;
+      --whatsapp-dark: #128C7E;
     }
 
     body { 
@@ -153,7 +155,7 @@
     .app-section.active-section { display: block; }
 
     /* ==========================================================================
-       MAIN CONTENT & CALENDAR SYSTEM
+       CALENDAR SYSTEM
        ========================================================================== */
     main { max-width: 1100px; margin: 0 auto; padding: 1rem 0.5rem 3rem; }
     h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; margin-bottom: .2rem; text-align: center; }
@@ -245,6 +247,92 @@
     .no-print-area { display: flex; justify-content: center; margin-top: 1.5rem; }
     .btn-print { background: var(--green); color: #fff; border: none; padding: 0.7rem 1.5rem; font-size: 0.85rem; font-weight: 500; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: background 0.2s; }
 
+    /* ==========================================================================
+       SERVICIOS WHATSAPP STYLE
+       ========================================================================== */
+    .wa-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .wa-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--cream);
+      padding-bottom: 0.6rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .wa-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--charcoal);
+    }
+    .wa-preview {
+      background: #efeae2;
+      color: #111b21;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      padding: 1rem;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      border: 1px solid #d1d7db;
+      max-height: 320px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    .btn-copy {
+      background: var(--whatsapp);
+      color: white;
+      border: none;
+      padding: 0.65rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s, transform 0.1s;
+      width: 100%;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-copy:hover { background: var(--whatsapp-dark); }
+    .btn-copy:active { transform: scale(0.98); }
+    .btn-copy svg { width: 16px; height: 16px; fill: currentColor; }
+
+    #toast {
+      visibility: hidden;
+      min-width: 250px;
+      background-color: var(--charcoal);
+      color: #fff;
+      text-align: center;
+      border-radius: 8px;
+      padding: 12px;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-size: 0.85rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      opacity: 0;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    #toast.show { visibility: visible; opacity: 1; }
+
     footer { text-align: center; padding: 1.5rem; font-size: .7rem; color: var(--warm); border-top: 1px solid var(--border); margin-top: 2rem; }
 
     /* ==========================================================================
@@ -263,6 +351,7 @@
       .year-nav { padding: 0.2rem 0 0.6rem; }
       .form-container, #contrato-final { padding: 2rem; }
       .firmas-container { grid-template-columns: 1fr 1fr; gap: 3rem; }
+      .btn-copy { width: auto; }
     }
 
     @media print {
@@ -287,6 +376,10 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       <span>Cotizador</span>
     </a>
+    <button class="nav-btn" id="btn-sec-serv" onclick="switchSection('servicios')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Servicios WA</span>
+    </button>
     <button class="nav-btn" id="btn-sec-con" onclick="switchSection('contratos')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       <span>Ev. + Hosp.</span>
@@ -315,6 +408,7 @@
 </header>
 
 <main>
+  <!-- SECCIÓN CALENDARIO -->
   <div id="section-calendario" class="app-section active-section">
     <h1>Disponibilidad 2026</h1>
     <p class="subtitle">Calendario en tiempo real</p>
@@ -334,6 +428,95 @@
     </div>
   </div>
 
+  <!-- SECCIÓN SERVICIOS Y TEXTOS WHATSAPP -->
+  <div id="section-servicios" class="app-section">
+    <h1>Plantillas para WhatsApp</h1>
+    <p class="subtitle">Copia directamente las tarifas o datos bancarios para enviar a tus clientes</p>
+
+    <!-- TARJETA 1: SERVICIOS Y PAQUETES -->
+    <div class="wa-card">
+      <div class="wa-card-header">
+        <span class="wa-card-title">🌴 Cotizador / Formas de Renta</span>
+        <button class="btn-copy" onclick="copiarTexto('wa-servicios')">
+          <svg viewBox="0 0 24 24"><path d="M19 3h-14c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-14c0-1.1-.9-2-2-2zm0 16h-14v-14h14v14zm-11-3h8v-2h-8v2zm0-4h8v-2h-8v2zm0-4h8v-2h-8v2z"/></svg>
+          Copiar Mensaje de Servicios
+        </button>
+      </div>
+      <div class="wa-preview" id="wa-servicios">🌿 *QUINTA BUGAMBILIA* 🌿
+📍 *Real del 14, Hermosillo*
+
+Tenemos 3 formas de rentar, según lo que necesites:
+
+🏡 *1. SOLO HOSPEDAJE* (hasta 12 personas)
+🔹 *Lun-Jue:* $6,590 / noche
+🔹 *Vie-Dom:* $7,590 / noche
+▪️ 2 recámaras + depa independiente (1 King + 4 Queen)
+▪️ Alberca con tobogán y aro de básquet acuático
+▪️ Asador de gas profesional (gas incluido)
+▪️ Salón de juegos: billar, futbolito, TV, A/C
+▪️ Cancha de fútbol/básquet + trampolín
+▪️ Fogatero con iluminación vintage
+▪️ TV exterior, sonido ambiental, WiFi alta velocidad
+▪️ 4 baños completos + 2 medios baños
+⏰ *Check-in 3:00 PM | Check-out 12:00 PM*
+
+━━━━━━━━━━━━━━━
+
+🎉 *2. SOLO EVENTO* (7 hrs, área exterior)
+🔹 *20p:* $4,600  |  *30p:* $6,540  |  *40p:* $8,240
+🔹 *50p:* $9,700  |  *100p:* $13,400
+▪️ Mesas con mantel blanco + sillas Tiffany
+▪️ Asador de gas profesional (gas incluido)
+▪️ Hielera grande + máquina de hielo
+▪️ Alberca con tobogán y aro de básquet acuático
+▪️ Cancha deportiva + trampolín profesional
+▪️ Fogatero con iluminación vintage
+▪️ TV exterior y sonido ambiental
+▪️ 1 baño completo + 2 medios baños ext.
+⏰ *Horario a elegir entre 3:00 PM - 1:00 AM*
+💡 _Renta extra disponible: Salón de Juegos, Depa o Casa Principal_
+
+━━━━━━━━━━━━━━━
+
+🔥 *3. EVENTO + HOSPEDAJE*
+🔹 *20p:* $12,190  |  *30p:* $14,130  |  *40p:* $15,830
+🔹 *50p:* $17,290  |  *80p:* $19,450  |  *100p:* $21,490
+▪️ Todo lo del evento (mobiliario, alberca, asador, cancha, fogatero)
+▪️ + Hospedaje completo para 12 personas
+▪️ Salón de juegos con billar y A/C
+▪️ Casa + depa independiente
+⏰ *Check-in 3:00 PM | Salida invitados 1:00 AM | Check-out hospedados 12:00 PM (día siguiente)*
+
+━━━━━━━━━━━━━━━
+📌 *Reserva con 30% de anticipo*
+🛡️ *Zona con acceso controlado y seguridad*</div>
+    </div>
+
+    <!-- TARJETA 2: DATOS BANCARIOS -->
+    <div class="wa-card">
+      <div class="wa-card-header">
+        <span class="wa-card-title">💳 Datos Bancarios para Reserva</span>
+        <button class="btn-copy" onclick="copiarTexto('wa-banco')">
+          <svg viewBox="0 0 24 24"><path d="M19 3h-14c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-14c0-1.1-.9-2-2-2zm0 16h-14v-14h14v14zm-11-3h8v-2h-8v2zm0-4h8v-2h-8v2zm0-4h8v-2h-8v2z"/></svg>
+          Copiar Datos de Banco
+        </button>
+      </div>
+      <div class="wa-preview" id="wa-banco">🏦 *DATOS BANCARIOS PARA RESERVA* 🏦
+
+🏡 *Quinta Bugambilia*
+📍 *Ubicación:* Real del 14, Hermosillo, Sonora.
+
+🔹 *Banco:* Santander
+🔹 *Titular:* Javier Antonio Morales Mizquez
+🔹 *Número de tarjeta:* `5579089007287264`
+🔹 *CLABE:* `014760655114097664`
+🔹 *Número de cuenta:* `65511409766`
+
+📲 _Por favor envíanos tu comprobante por este medio para confirmar y registrar tu fecha en nuestro calendario._</div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN CONTRATOS -->
   <div id="section-contratos" class="app-section">
     <h1>Contrato de Arrendamiento y Hospedaje</h1>
     <p class="subtitle">Panel integral de reservas y cálculo de arrendamiento + hospedaje</p>
@@ -502,7 +685,7 @@
 
       <p><span class="clausula-title">NOVENA. CANCELACIONES.</span> En caso de cancelación por parte del ARRENDATARIO: más de 20 días de anticipación (reembolso del 80% del anticipo), entre 4 y 19 días (reembolso del 50% del anticipo), menos de 3 días (no habrá reembolso).</p>
 
-      <p><span class="clausula-title">DÉCIMA. PROHIBICIONES Y REGLAS DE CONVIVENCIA.</span> Queda estrictamente prohibido el uso de sustancias ilegales, la introducción de mascotas (salvo acuerdo previo por escrito) y generar ruido excesivo fuera de los horarios permitidos por la localidad. El incumplimiento dará lugar a la terminación inmediata del contrato y desalojo sin derecho a reembolso.</p>
+      <p><span class="clausula-title">DÉCIMA. PROHIBICIONES Y REGLAS DE CONVIVENCIA.</span> Queda strictly prohibido el uso de sustancias ilegales, la introducción de mascotas (salvo acuerdo previo por escrito) y generar ruido excesivo fuera de los horarios permitidos por la localidad. El incumplimiento dará lugar a la terminación inmediata del contrato y desalojo sin derecho a reembolso.</p>
 
       <p><span class="clausula-title">DÉCIMA PRIMERA. LIMPIEZA Y DAÑOS.</span> EL ARRENDATARIO es responsable de entregar el inmueble en condiciones de orden y limpieza aceptables. Si los daños ocasionados a la propiedad, mobiliario o blancos exceden el monto del depósito de garantía, EL ARRENDATARIO se compromete formalmente a cubrir la diferencia de inmediato.</p>
 
@@ -536,6 +719,8 @@
   </div>
 </main>
 
+<div id="toast">¡Texto copiado al portapapeles! 📋</div>
+
 <footer> Rentas Quinta Bugambilia 2026 </footer>
 
 <script>
@@ -559,10 +744,40 @@ function switchSection(sectionId) {
   if (sectionId === 'calendario') {
     document.getElementById('section-calendario').classList.add('active-section');
     document.getElementById('btn-sec-cal').classList.add('active');
+  } else if (sectionId === 'servicios') {
+    document.getElementById('section-servicios').classList.add('active-section');
+    document.getElementById('btn-sec-serv').classList.add('active');
   } else if (sectionId === 'contratos') {
     document.getElementById('section-contratos').classList.add('active-section');
     document.getElementById('btn-sec-con').classList.add('active');
   }
+}
+
+// ================= COPIADO DE TEXTOS DE WHATSAPP =================
+function copiarTexto(elementId) {
+  const container = document.getElementById(elementId);
+  const textToCopy = container.innerText;
+
+  navigator.clipboard.writeText(textToCopy).then(() => {
+    mostrarToast("¡Texto copiado listo para WhatsApp!");
+  }).catch(err => {
+    const textarea = document.createElement("textarea");
+    textarea.value = textToCopy;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+    mostrarToast("¡Texto copiado al portapapeles!");
+  });
+}
+
+function mostrarToast(mensaje) {
+  const toast = document.getElementById("toast");
+  toast.innerText = mensaje;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2500);
 }
 
 // ================= LÓGICA DEL CALENDARIO =================
@@ -624,7 +839,7 @@ async function loadData() {
     renderNav();
     renderCalendar(currentMonth);
   } catch(e) {
-    document.getElementById('calendar-wrap').innerHTML = '<div style="padding:2rem;text-align:center;color:red;font-size:0.85rem;">Error al cargar datos. Por favor reintente.</div>';
+    document.getElementById('calendar-wrap').innerHTML = '<div style="padding:2rem;text-align:center;color:red;font-size:0.85rem;">Error al cargar datos.</div>';
   }
 }
 
@@ -702,7 +917,7 @@ function renderCalendar(month) {
   wrap.innerHTML = html + '</div>';
 }
 
-// ================= LÓGICA DE CONTRATOS Y FORMULARIO =================
+// ================= LÓGICA DE CONTRATOS =================
 function toggleCheckbox(e, id) {
   if (e.target.tagName !== 'INPUT') {
     const cb = document.getElementById(id);
