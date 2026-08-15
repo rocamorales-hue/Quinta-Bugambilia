@@ -4,194 +4,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Quinta Bugambilia – Servicios y Copiado WhatsApp</title>
+  <meta name="description" content="Quinta Bugambilia · Real del 14, Hermosillo — panel interno de disponibilidad, cotizaciones y contratos." />
+  <meta name="theme-color" content="#1e3a2f" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js?v=3').then((reg) => { reg.update(); });
+      });
+    }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --sand: #ddeef7;
-      --cream: #f2f9f4;
-      --charcoal: #1e3a2f;
-      --warm: #4a7fa5;
-      --gold: #5db87a;
-      --green: #3a8f5e;
-      --border: #b8d9c8;
-      --whatsapp: #25D366;
-      --whatsapp-dark: #128C7E;
-    }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--cream);
-      color: var(--charcoal);
-      min-height: 100vh;
-      padding-bottom: 3rem;
-    }
-
-    header {
-      background: rgba(30, 58, 47, 0.96);
-      color: #fff;
-      padding: 1rem;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.6rem;
-      font-weight: 400;
-    }
-    .logo span {
-      color: var(--gold);
-      font-size: 0.85rem;
-      font-family: 'DM Sans', sans-serif;
-    }
-
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 1.5rem 1rem;
-    }
-
-    h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2rem;
-      text-align: center;
-      margin-bottom: 0.2rem;
-    }
-
-    .subtitle {
-      color: var(--warm);
-      font-size: 0.9rem;
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    /* CARDS CONTENEDORAS */
-    .card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.2rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      border-bottom: 2px solid var(--cream);
-      padding-bottom: 0.6rem;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .card-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.35rem;
-      font-weight: 600;
-      color: var(--charcoal);
-    }
-
-    /* CAJA DE TEXTO PREFORMATO WHATSAPP */
-    .wa-preview {
-      background: #efeae2; /* Fondo estilo chat WhatsApp */
-      color: #111b21;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      font-size: 0.88rem;
-      line-height: 1.45;
-      padding: 1rem;
-      border-radius: 10px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      border: 1px solid #d1d7db;
-      max-height: 320px;
-      overflow-y: auto;
-      margin-bottom: 1rem;
-    }
-
-    /* BOTONES DE COPIAR Y ACCIONES */
-    .btn-copy {
-      background: var(--whatsapp);
-      color: white;
-      border: none;
-      padding: 0.65rem 1.2rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: background 0.2s, transform 0.1s;
-      width: 100%;
-      justify-content: center;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .btn-copy:hover {
-      background: var(--whatsapp-dark);
-    }
-
-    .btn-copy:active {
-      transform: scale(0.98);
-    }
-
-    .btn-copy svg {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
-    }
-
-    /* NOTIFICACIÓN TOAST SOBRE EL COPIADO */
-    #toast {
-      visibility: hidden;
-      min-width: 250px;
-      background-color: var(--charcoal);
-      color: #fff;
-      text-align: center;
-      border-radius: 8px;
-      padding: 12px;
-      position: fixed;
-      z-index: 1000;
-      left: 50%;
-      bottom: 30px;
-      transform: translateX(-50%);
-      font-size: 0.85rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      opacity: 0;
-      transition: opacity 0.3s, visibility 0.3s;
-    }
-
-    #toast.show {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    @media (min-width: 600px) {
-      .btn-copy {
-        width: auto;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header>
-  <div class="logo">Quinta Bugambilia <span>· Plantillas WhatsApp</span></div>
-</header>
-
-<main>
+<div id="site-header"></div>
+<script>
+  window.QB_PAGE = 'servicios';
+</script>
+<script src="nav.js"></script>
+<main id="main-content">
   <h1>Servicios y Datos de Pago</h1>
   <p class="subtitle">Haz clic en el botón verde para copiar el mensaje formateado directamente a tu portapapeles</p>
 

@@ -1,15 +1,17 @@
 {
-  "short_name": "MiApp",
-  "name": "Nombre de Mi Pagina",
+  "short_name": "Q. Bugambilia",
+  "name": "Quinta Bugambilia — Panel Interno",
   "icons": [
     {
       "src": "icon.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": ".",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#1e3a2f",
+  "background_color": "#f2f9f4"
 }

@@ -1,11 +1,20 @@
 // Cambiamos la versión de la caché para forzar la actualización automática en todos los dispositivos
-const CACHE_NAME = 'bugambilia-v2';
+const CACHE_NAME = 'bugambilia-v3';
 
 const ASSETS = [
   './',
   './index.html',
   './cotizador.html',
-  './manifest.json'
+  './servicios.html',
+  './eventohospedaje.html',
+  './contrato_hospedaje.html',
+  './contrato_evento.html',
+  './ventas.html',
+  './rentas.html',
+  './style.css',
+  './nav.js',
+  './manifest.json',
+  './icon.png'
 ];
 
 // Instalación inmediata
