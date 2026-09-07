@@ -28,6 +28,12 @@
 </script>
 <script src="nav.js"></script>
 <main id="main-content">
+  <!-- Sub-menú interno: esta página integra 3 apartados en uno solo -->
+  <div class="mode-tabs" role="tablist" aria-label="Apartados del panel">
+    <button class="tab-btn active" id="btn-sec-cal" role="tab" aria-selected="true" onclick="switchSection('calendario')">Calendario</button>
+    <button class="tab-btn" id="btn-sec-serv" role="tab" aria-selected="false" onclick="switchSection('servicios')">Servicios WA</button>
+    <button class="tab-btn" id="btn-sec-con" role="tab" aria-selected="false" onclick="switchSection('contratos')">Ev. + Hosp.</button>
+  </div>
 
   <!-- SECCIÓN CALENDARIO -->
   <div id="section-calendario" class="app-section active-section">
@@ -50,7 +56,7 @@
   </div>
 
   <!-- SECCIÓN SERVICIOS Y TEXTOS WHATSAPP -->
-  <div id="section-servicios" class="app-section active-section">
+  <div id="section-servicios" class="app-section">
     <h1>Plantillas para WhatsApp</h1>
     <p class="subtitle">Copia directamente las tarifas o datos bancarios para enviar a tus clientes</p>
 
@@ -138,7 +144,7 @@ Tenemos 3 formas de rentar, según lo que necesites:
   </div>
 
   <!-- SECCIÓN CONTRATOS -->
-  <div id="section-contratos" class="app-section active-section">
+  <div id="section-contratos" class="app-section">
     <h1>Contrato de Arrendamiento y Hospedaje</h1>
     <p class="subtitle">Panel integral de reservas y cálculo de arrendamiento + hospedaje</p>
 
@@ -306,7 +312,7 @@ Tenemos 3 formas de rentar, según lo que necesites:
 
       <p><span class="clausula-title">NOVENA. CANCELACIONES.</span> En caso de cancelación por parte del ARRENDATARIO: más de 20 días de anticipación (reembolso del 80% del anticipo), entre 4 y 19 días (reembolso del 50% del anticipo), menos de 3 días (no habrá reembolso).</p>
 
-      <p><span class="clausula-title">DÉCIMA. PROHIBICIONES Y REGLAS DE CONVIVENCIA.</span> Queda strictly prohibido el uso de sustancias ilegales, la introducción de mascotas (salvo acuerdo previo por escrito) y generar ruido excesivo fuera de los horarios permitidos por la localidad. El incumplimiento dará lugar a la terminación inmediata del contrato y desalojo sin derecho a reembolso.</p>
+      <p><span class="clausula-title">DÉCIMA. PROHIBICIONES Y REGLAS DE CONVIVENCIA.</span> Queda estrictamente prohibido el uso de sustancias ilegales, la introducción de mascotas (salvo acuerdo previo por escrito) y generar ruido excesivo fuera de los horarios permitidos por la localidad. El incumplimiento dará lugar a la terminación inmediata del contrato y desalojo sin derecho a reembolso.</p>
 
       <p><span class="clausula-title">DÉCIMA PRIMERA. LIMPIEZA Y DAÑOS.</span> EL ARRENDATARIO es responsable de entregar el inmueble en condiciones de orden y limpieza aceptables. Si los daños ocasionados a la propiedad, mobiliario o blancos exceden el monto del depósito de garantía, EL ARRENDATARIO se compromete formalmente a cubrir la diferencia de inmediato.</p>
 
@@ -352,6 +358,31 @@ const DAY_NAMES_DESKTOP = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 let calendarData = {};
 let currentMonth = new Date().getMonth();
 const YEAR = 2026;
+
+// ================= NAVEGACIÓN Y APARTADOS =================
+function switchSection(sectionId) {
+  document.querySelectorAll('.app-section').forEach(section => {
+    section.classList.remove('active-section');
+  });
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+    btn.setAttribute('aria-selected', 'false');
+  });
+  
+  if (sectionId === 'calendario') {
+    document.getElementById('section-calendario').classList.add('active-section');
+    document.getElementById('btn-sec-cal').classList.add('active');
+    document.getElementById('btn-sec-cal').setAttribute('aria-selected', 'true');
+  } else if (sectionId === 'servicios') {
+    document.getElementById('section-servicios').classList.add('active-section');
+    document.getElementById('btn-sec-serv').classList.add('active');
+    document.getElementById('btn-sec-serv').setAttribute('aria-selected', 'true');
+  } else if (sectionId === 'contratos') {
+    document.getElementById('section-contratos').classList.add('active-section');
+    document.getElementById('btn-sec-con').classList.add('active');
+    document.getElementById('btn-sec-con').setAttribute('aria-selected', 'true');
+  }
+}
 
 // ================= COPIADO DE TEXTOS DE WHATSAPP =================
 function copiarTexto(elementId) {
