@@ -18,52 +18,6 @@
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-
-  <style>
-    /* Estilos para el banner interactivo del cliente */
-    .client-banner {
-      background-color: #e8f5e9;
-      border: 1px solid #c8e6c9;
-      color: #2e7d32;
-      padding: 12px;
-      border-radius: 6px;
-      margin-bottom: 1.5rem;
-      text-align: center;
-      font-weight: 500;
-    }
-
-    .link-share-box {
-      background: #f4f4f4;
-      border: 1px dashed #ccc;
-      padding: 15px;
-      border-radius: 6px;
-      margin-top: 1rem;
-      text-align: center;
-    }
-
-    .btn-copy-link {
-      background-color: #1e3a2f;
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 600;
-      margin-top: 8px;
-    }
-
-    @media print {
-      .no-print-area, .form-container, .client-banner, .link-share-box {
-        display: none !important;
-      }
-      #canvasFirma {
-        display: none !important;
-      }
-      #imgFirmaRender {
-        display: block !important;
-      }
-    }
-  </style>
 </head>
 <body>
 
@@ -75,8 +29,7 @@
 <script src="nav.js"></script>
 <main id="main-content">
 
-  <!-- VISTA DE ADMINISTRADOR (FORMULARIO) -->
-  <div class="form-container" id="admin-form-area">
+  <div class="form-container">
     <div class="field">
       <label>Nombre del Arrendatario</label>
       <input type="text" id="nombreInput" placeholder="Ej. Juan Pérez">
@@ -162,27 +115,15 @@
       <textarea id="notasInput" placeholder="Ej. Extensión de horario, especificaciones del servicio, etc."></textarea>
     </div>
 
-    <button class="btn-generar" onclick="generarEnlaceParaCliente()">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      GENERAR ENLACE DE FIRMA PARA EL CLIENTE
+    <button class="btn-generar" onclick="generarContrato()">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      GENERAR VISTA PREVIA DEL CONTRATO
     </button>
   </div>
 
-  <!-- CAJA CON ENLACE GENERADO (SOLO PARA ADMIN) -->
-  <div id="linkContainer" class="link-share-box" style="display:none;">
-    <strong>¡Contrato generado con éxito!</strong>
-    <p style="font-size:0.9rem; color:#555; margin:5px 0;">Copia este enlace y envíaselo a tu cliente por WhatsApp o correo para que lo firme:</p>
-    <input type="text" id="generatedLinkInput" readonly style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; text-align:center;">
-    <button class="btn-copy-link" onclick="copiarEnlace()">Copiar Enlace</button>
-  </div>
-
-  <!-- VISTA PREVIA DEL CONTRATO (VISUALIZADA POR ADMIN O CLIENTE) -->
-  <div id="contrato-final" style="display:none;">
+  <!-- VISTA PREVIA DEL CONTRATO -->
+  <div id="contrato-final">
     
-    <div id="clientBanner" class="client-banner" style="display:none;">
-      📄 <strong>Contrato de Hospedaje:</strong> Por favor revise los términos y condiciones. Firme digitalmente en la parte inferior para formalizar su reserva.
-    </div>
-
     <div class="brand-header-print">
       <div>
         <div class="brand-title">Quinta Bugambilia</div>
@@ -318,28 +259,17 @@
         <strong>Firma del Arrendador</strong><br>
         <span style="font-size: 0.8rem; color: #555;">Javier Antonio Morales Mizquez</span>
       </div>
-
-      <!-- ÁREA DE FIRMA DIGITAL CON CANVAS Y CONTROL PARA IMPRESIÓN -->
       <div class="firmas-box">
-        <div id="signature-pad-wrapper" style="position: relative; margin-bottom: 5px; text-align: center;">
-          <canvas id="canvasFirma" width="300" height="110" style="border: 1px dashed #999; border-radius: 4px; background: #fafafa; cursor: crosshair; touch-action: none; width: 100%; max-width: 300px; height: 110px;"></canvas>
-          <img id="imgFirmaRender" src="" alt="Firma del Arrendatario" style="display: none; max-width: 100%; max-height: 100px; margin: 0 auto;" />
-        </div>
-        
-        <div class="no-print-area" style="margin-bottom: 6px;">
-          <button type="button" onclick="limpiarFirma()" style="background:#e74c3c; color:#fff; border:none; padding:4px 10px; border-radius:3px; font-size:0.75rem; cursor:pointer;">Limpiar Firma</button>
-        </div>
-
         <div class="linea-firma"></div>
         <strong>Firma del Arrendatario</strong><br>
         <span id="out-nombre2" style="font-size: 0.8rem; color: #555;">________________________</span>
       </div>
     </div>
     
-    <div class="no-print-area" style="text-align: center; margin-top: 1.5rem;">
+    <div class="no-print-area">
         <button class="btn-print" onclick="window.print()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-          GUARDAR CONTRATO FIRMADO (PDF)
+          GUARDAR COMO PDF / IMPRIMIR
         </button>
     </div>
   </div>
@@ -356,15 +286,18 @@
     input.value = value;
   }
 
+  // Convertir string de dinero a Float
   function parseCurrency(str) {
     if (!str) return 0;
     return parseFloat(str.replace(/[$,]/g, "")) || 0;
   }
 
+  // Convertir Float a String con formato $
   function toCurrencyStr(num) {
     return num.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
   }
 
+  // Recalcular el total acumulado con los extras
   function calcularExtras() {
     actualizarPrecioTotal();
   }
@@ -386,6 +319,7 @@
     }
   }
 
+  // Cálculo del 30%
   function calcularAnticipo() {
     const pStr = document.getElementById('precioInput').value;
     if (!pStr) return alert("Ingresa primero el Precio Total o el Precio Renta Base");
@@ -394,6 +328,7 @@
     document.getElementById('anticipoInput').value = toCurrencyStr(ant);
   }
 
+  // Formato de fecha a texto (Ej. 21 de agosto de 2026)
   function formatDate(dateStr) {
     if(!dateStr) return "________________";
     const [year, month, day] = dateStr.split('-');
@@ -401,6 +336,7 @@
     return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
+  // Formato de hora a 12h (AM/PM)
   function formatTime(timeStr) {
     if(!timeStr) return "____";
     let [hh, mm] = timeStr.split(':');
@@ -409,89 +345,58 @@
     return `${hh}:${mm} ${ampm}`;
   }
 
+  // Obtener fecha de hoy en texto formal
   function obtenerFechaActualTexto() {
     const hoy = new Date();
     return hoy.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
-  // ==========================================
-  // GENERACIÓN DE ENLACE DIGITAL PARA CLIENTE
-  // ==========================================
-  function generarEnlaceParaCliente() {
+  function generarContrato() {
     const n = document.getElementById('nombreInput').value;
     if(!n) return alert("Ingresa el nombre del Arrendatario");
-
-    const extrasSeleccionados = [];
-    document.querySelectorAll('.chk-extra:checked').forEach(chk => {
-      extrasSeleccionados.push({ label: chk.value, precio: chk.getAttribute('data-precio') });
-    });
-
-    const datosContrato = {
-      n: n,
-      ine: document.getElementById('ineInput').value,
-      fe: document.getElementById('fechaEntrada').value,
-      he: document.getElementById('horaEntrada').value,
-      fs: document.getElementById('fechaSalida').value,
-      hs: document.getElementById('horaSalida').value,
-      p: document.getElementById('precioInput').value,
-      a: document.getElementById('anticipoInput').value,
-      d: document.getElementById('depositoInput').value,
-      ext: extrasSeleccionados,
-      nt: document.getElementById('notasInput').value
-    };
-
-    // Encriptación simple en base64 para construir el enlace en la URL
-    const jsonString = JSON.stringify(datosContrato);
-    const encodedData = btoa(encodeURIComponent(jsonString));
-    const fullLink = `${window.location.origin}${window.location.pathname}?c=${encodedData}`;
-
-    document.getElementById('generatedLinkInput').value = fullLink;
-    document.getElementById('linkContainer').style.display = 'block';
-
-    // Rellenar visualización en pantalla
-    renderizarContrato(datosContrato);
-    document.getElementById('contrato-final').style.display = 'block';
-  }
-
-  function copiarEnlace() {
-    const copyText = document.getElementById('generatedLinkInput');
-    copyText.select();
-    copyText.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(copyText.value);
-    alert("¡Enlace copiado al portapapeles! Envíaselo al cliente por WhatsApp.");
-  }
-
-  function renderizarContrato(data) {
-    document.getElementById('out-nombre').innerText = data.n;
-    document.getElementById('out-nombre2').innerText = data.n;
-    document.getElementById('out-ine').innerText = data.ine ? data.ine : "________________";
     
-    const fechaE = formatDate(data.fe);
-    const horaE = formatTime(data.he);
-    const fechaS = formatDate(data.fs);
-    const horaS = formatTime(data.hs);
-
+    // Rellenar datos principales
+    document.getElementById('out-nombre').innerText = n;
+    document.getElementById('out-nombre2').innerText = n;
+    
+    // Rellenar INE
+    const ineVal = document.getElementById('ineInput').value;
+    document.getElementById('out-ine').innerText = ineVal ? ineVal : "________________";
+    
+    const fechaE = formatDate(document.getElementById('fechaEntrada').value);
+    const horaE = formatTime(document.getElementById('horaEntrada').value);
+    const fechaS = formatDate(document.getElementById('fechaSalida').value);
+    const horaS = formatTime(document.getElementById('horaSalida').value);
+    
     document.getElementById('out-entrada').innerText = fechaE;
     document.getElementById('out-hora-e').innerText = horaE;
     document.getElementById('out-salida').innerText = fechaS;
     document.getElementById('out-hora-s').innerText = horaS;
+    
+    const precio = document.getElementById('precioInput').value || "$0.00";
+    const anticipo = document.getElementById('anticipoInput').value || "$0.00";
+    const deposito = document.getElementById('depositoInput').value || "$1,000.00";
 
-    document.getElementById('out-precio').innerText = data.p || "$0.00";
-    document.getElementById('out-anticipo').innerText = data.a || "$0.00";
-    document.getElementById('out-deposito').innerText = (data.d || "$1,000.00") + " MXN";
+    document.getElementById('out-precio').innerText = precio;
+    document.getElementById('out-anticipo').innerText = anticipo;
+    document.getElementById('out-deposito').innerText = deposito + " MXN";
 
+    // Llenar tarjetas visuales para la versión PDF/Impresa
     document.getElementById('out-card-entrada').innerText = `${fechaE} (${horaE})`;
     document.getElementById('out-card-salida').innerText = `${fechaS} (${horaS})`;
-    document.getElementById('out-card-costo').innerText = `${data.p} / Ant: ${data.a}`;
+    document.getElementById('out-card-costo').innerText = `${precio} / Ant: ${anticipo}`;
 
+    // Desglose de Extras seleccionados
+    const checkboxes = document.querySelectorAll('.chk-extra:checked');
     const seccionExtras = document.getElementById('extras-seccion-contrato');
     const listaExtras = document.getElementById('out-extras-lista');
     listaExtras.innerHTML = "";
 
-    if (data.ext && data.ext.length > 0) {
-      data.ext.forEach(item => {
+    if (checkboxes.length > 0) {
+      checkboxes.forEach(chk => {
         const li = document.createElement('li');
-        li.innerText = `${item.label} – ${toCurrencyStr(parseFloat(item.precio))} MXN`;
+        const precioExtra = parseFloat(chk.getAttribute('data-precio'));
+        li.innerText = `${chk.value} – ${toCurrencyStr(precioExtra)} MXN`;
         listaExtras.appendChild(li);
       });
       seccionExtras.style.display = "block";
@@ -499,104 +404,47 @@
       seccionExtras.style.display = "none";
     }
 
+    // Fecha de hoy
     document.getElementById('out-fecha-hoy').innerText = obtenerFechaActualTexto();
 
+    // Notas Adicionales
+    const notas = document.getElementById('notasInput').value;
     const seccionNotas = document.getElementById('notas-seccion-contrato');
-    if(data.nt && data.nt.trim() !== "") {
-        document.getElementById('out-notas').innerText = data.nt;
+    if(notas.trim() !== "") {
+        document.getElementById('out-notas').innerText = notas;
         seccionNotas.style.display = "block";
     } else {
         seccionNotas.style.display = "none";
     }
+
+    // Mostrar contrato
+    const box = document.getElementById('contrato-final');
+    box.style.display = 'block';
+    setTimeout(() => {
+      box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   }
 
-  // DETECTAR SI EL CLIENTE ABRE EL ENLACE EN SU DISPOSITIVO
-  window.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const contractDataParam = urlParams.get('c');
-
-    if (contractDataParam) {
-      try {
-        const decodedData = JSON.parse(decodeURIComponent(atob(contractDataParam)));
-        
-        // Ocultar formulario de edición y mostrar vista del cliente
-        document.getElementById('admin-form-area').style.display = 'none';
-        document.getElementById('contrato-final').style.display = 'block';
-        document.getElementById('clientBanner').style.display = 'block';
-
-        renderizarContrato(decodedData);
-      } catch(e) {
-        console.error("Error al decodificar los datos del contrato URL", e);
-      }
-    }
-  });
-
+  // Función de limpieza de formulario
   function clearForm() {
-    window.location.href = window.location.pathname;
-  }
+    document.getElementById('nombreInput').value = "";
+    document.getElementById('ineInput').value = "";
+    document.getElementById('fechaEntrada').value = "";
+    document.getElementById('horaEntrada').value = "15:00";
+    document.getElementById('fechaSalida').value = "";
+    document.getElementById('horaSalida').value = "12:00";
+    document.getElementById('precioRentaInput').value = "";
+    document.getElementById('precioInput').value = "";
+    document.getElementById('anticipoInput').value = "";
+    document.getElementById('depositoInput').value = "$1,000.00";
+    document.getElementById('notasInput').value = "";
 
-  // ==========================================
-  // LÓGICA DE FIRMA DIGITAL (CANVAS HTML5)
-  // ==========================================
-  const canvas = document.getElementById('canvasFirma');
-  const ctx = canvas.getContext('2d');
-  let dibujando = false;
+    // Desmarcar checkboxes de extras
+    const checkboxes = document.querySelectorAll('.chk-extra');
+    checkboxes.forEach(chk => chk.checked = false);
 
-  ctx.strokeStyle = "#000000";
-  ctx.lineWidth = 2;
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-
-  function getPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return {
-      x: clientX - rect.left,
-      y: clientY - rect.top
-    };
-  }
-
-  function iniciarTrazo(e) {
-    e.preventDefault();
-    dibujando = true;
-    const pos = getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-  }
-
-  function moverTrazo(e) {
-    if (!dibujando) return;
-    e.preventDefault();
-    const pos = getPos(e);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-  }
-
-  function detenerTrazo(e) {
-    if (dibujando) {
-      dibujando = false;
-      const dataURL = canvas.toDataURL("image/png");
-      const imgRender = document.getElementById('imgFirmaRender');
-      imgRender.src = dataURL;
-    }
-  }
-
-  canvas.addEventListener('mousedown', iniciarTrazo);
-  canvas.addEventListener('mousemove', moverTrazo);
-  canvas.addEventListener('mouseup', detenerTrazo);
-  canvas.addEventListener('mouseleave', detenerTrazo);
-
-  canvas.addEventListener('touchstart', iniciarTrazo, { passive: false });
-  canvas.addEventListener('touchmove', moverTrazo, { passive: false });
-  canvas.addEventListener('touchend', detenerTrazo);
-
-  function limpiarFirma() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const imgRender = document.getElementById('imgFirmaRender');
-    imgRender.src = "";
-    imgRender.style.display = "none";
-    canvas.style.display = "block";
+    document.getElementById('contrato-final').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 </script>
 
