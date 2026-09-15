@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Quinta Bugambilia – Cotizador & IA 2026</title>
-  <meta name="description" content="Quinta Bugambilia · Real del 14, Hermosillo — Cotizador inteligente IA y plantillas de WhatsApp." />
+  <title>Quinta Bugambilia – Cotizador IA 2026</title>
+  <meta name="description" content="Quinta Bugambilia · Real del 14, Hermosillo — Cotizador IA por Modalidad para WhatsApp." />
   <meta name="theme-color" content="#1e3a2f" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon.png" />
@@ -19,8 +19,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Ajustes complementarios alineados a style.css */
-    .ai-box {
+    .ai-container {
       background: #ffffff;
       border: 1px solid rgba(30, 58, 47, 0.15);
       border-radius: 12px;
@@ -28,70 +27,67 @@
       margin-bottom: 2rem;
       box-shadow: 0 4px 15px rgba(0,0,0,0.03);
     }
-    .ai-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-      gap: 10px;
+    .form-group {
+      margin-bottom: 1.2rem;
     }
-    .ai-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.5rem;
+    .form-group label {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
       font-weight: 600;
       color: #1e3a2f;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      margin-bottom: 6px;
     }
-    .api-key-input {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.82rem;
-      padding: 6px 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      width: 240px;
-    }
-    .ai-prompt-area {
+    .form-select, .form-textarea, .api-input {
       width: 100%;
-      min-height: 90px;
       font-family: 'DM Sans', sans-serif;
       font-size: 0.9rem;
-      padding: 12px;
-      border: 1px solid rgba(0,0,0,0.15);
+      padding: 10px 12px;
+      border: 1px solid rgba(0,0,0,0.18);
       border-radius: 8px;
-      margin-bottom: 12px;
-      resize: vertical;
       box-sizing: border-box;
+      background-color: #fff;
     }
-    .btn-ai-action {
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    .btn-generate {
       background-color: #1e3a2f;
       color: #ffffff;
       border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
+      padding: 12px 22px;
+      border-radius: 8px;
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 500;
+      font-size: 0.95rem;
+      font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.1s;
     }
-    .btn-ai-action:hover {
+    .btn-generate:hover {
       background-color: #2a5243;
     }
-    .ai-output-area {
+    .btn-generate:active {
+      transform: scale(0.98);
+    }
+    .ai-result-box {
       margin-top: 1.5rem;
       display: none;
     }
-    .ai-output-header {
+    .result-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+    }
+    .result-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #1e3a2f;
     }
   </style>
 </head>
@@ -105,207 +101,129 @@
 <script src="nav.js"></script>
 
 <main id="main-content">
-  <!-- Sub-menú interno con la misma estructura visual -->
   <div class="mode-tabs" role="tablist" aria-label="Apartados del panel">
-    <button class="tab-btn active" id="btn-sec-ia" role="tab" aria-selected="true" onclick="switchCotSection('ia')">Asistente IA WhatsApp</button>
-    <button class="tab-btn" id="btn-sec-promos" role="tab" aria-selected="false" onclick="switchCotSection('promos')">Promos Septiembre WA</button>
+    <button class="tab-btn active" id="btn-sec-ia" role="tab" aria-selected="true" onclick="switchCotSection('ia')">Cotizador IA por Prompt</button>
+    <button class="tab-btn" id="btn-sec-promos" role="tab" aria-selected="false" onclick="switchCotSection('promos')">Base de Datos de Promos</button>
   </div>
 
-  <!-- SECCIÓN 1: ASISTENTE IA PARA RESPUESTAS RÁPIDAS -->
+  <!-- SECCIÓN: COTIZADOR IA DIRECTO (OPCIÓN C) -->
   <div id="section-ia" class="app-section active-section">
-    <h1>Asistente IA de Cotización</h1>
-    <p class="subtitle">Escribe los detalles o preguntas del cliente y genera una propuesta formateada para WhatsApp con base en nuestras tarifas oficiales.</p>
+    <h1>Generador de Cotización IA</h1>
+    <p class="subtitle">Selecciona la modalidad, ingresa los datos de la consulta del cliente y obtén la plantilla ajustada en formato WhatsApp.</p>
 
-    <div class="ai-box">
-      <div class="ai-header">
-        <div class="ai-title">✨ Generador Inteligente</div>
-        <input type="password" id="geminiApiKey" class="api-key-input" placeholder="Clave API Gemini (opcional)" />
+    <div class="ai-container">
+      <div class="form-group">
+        <label for="modalidadSelect">1. Selecciona la Modalidad Solicitada:</label>
+        <select id="modalidadSelect" class="form-select">
+          <option value="1">1. Solo Hospedaje (Hasta 12 personas)</option>
+          <option value="2">2. Evento / Albercada de Día (7 Horas sin hospedaje)</option>
+          <option value="3">3. Combo VIP (Evento de 7 Hrs + 1 Noche de Hospedaje)</option>
+        </select>
       </div>
 
-      <textarea id="aiInput" class="ai-prompt-area" placeholder="Ej. Cliente pregunta precio para un cumpleaños de 40 personas el próximo sábado con hospedaje para quedarse a dormir..."></textarea>
+      <div class="form-group">
+        <label for="promptInput">2. Instrucciones / Datos del Cliente (Fecha, personas, extras):</label>
+        <textarea id="promptInput" class="form-textarea" placeholder="Ej: Cliente quiere cotizar el sábado 20 de septiembre para 40 personas en evento, pregunta por horario y si puede quedarse a dormir..."></textarea>
+      </div>
 
-      <button class="btn-ai-action" onclick="generarCotizacionIA()">
+      <div class="form-group">
+        <label for="apiKeyInput">Clave API Gemini (Opcional):</label>
+        <input type="password" id="apiKeyInput" class="api-input" placeholder="Pega tu API Key de Gemini aquí para generación en tiempo real..." />
+      </div>
+
+      <button class="btn-generate" onclick="procesarPromptIA()">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-        Generar Cotización WA con IA
+        Generar Cotización WA
       </button>
 
-      <div id="aiOutputContainer" class="ai-output-area">
-        <div class="ai-output-header">
-          <span style="font-weight: 600; font-size: 0.9rem; color: #1e3a2f;">Respuesta Generada:</span>
-          <button class="btn-copy" onclick="copiarTexto('wa-ai-result')">
+      <div id="resultContainer" class="ai-result-box">
+        <div class="result-header">
+          <span class="result-title">Respuesta Lista para Copiar:</span>
+          <button class="btn-copy" onclick="copiarTexto('waOutput')">
             <svg viewBox="0 0 24 24" width="16" height="16"><path d="M19 3h-14c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-14c0-1.1-.9-2-2-2zm0 16h-14v-14h14v14zm-11-3h8v-2h-8v2zm0-4h8v-2h-8v2zm0-4h8v-2h-8v2z"/></svg>
             Copiar Respuesta WA
           </button>
         </div>
-        <div class="wa-preview" id="wa-ai-result"></div>
+        <div class="wa-preview" id="waOutput"></div>
       </div>
     </div>
   </div>
 
-  <!-- SECCIÓN 2: PLANTILLAS OFICIALES DE SEPTIEMBRE PARA WHATSAPP -->
+  <!-- SECCIÓN: BASE DE DATOS DE PROMOS PARA REFERENCIA -->
   <div id="section-promos" class="app-section">
-    <h1>Plantillas de Septiembre (WhatsApp)</h1>
-    <p class="subtitle">Copia directamente las promociones y paquetes actualizados para tus clientes</p>
+    <h1>Información Base de Septiembre</h1>
+    <p class="subtitle">Texto oficial cargado en el sistema para la IA</p>
 
-    <!-- TARJETA 1: SOLO HOSPEDAJE -->
     <div class="wa-card">
       <div class="wa-card-header">
-        <span class="wa-card-title">🏡 Solo Hospedaje (Promos Septiembre)</span>
-        <button class="btn-copy" onclick="copiarTexto('wa-hospedaje')">
-          <svg viewBox="0 0 24 24"><path d="M19 3h-14c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-14c0-1.1-.9-2-2-2zm0 16h-14v-14h14v14zm-11-3h8v-2h-8v2zm0-4h8v-2h-8v2zm0-4h8v-2h-8v2z"/></svg>
-          Copiar Mensaje Hospedaje
-        </button>
+        <span class="wa-card-title">🌺 1. SOLO HOSPEDAJE</span>
+        <button class="btn-copy" onclick="copiarTexto('base-hospedaje')">Copiar</button>
       </div>
-      <div class="wa-preview" id="wa-hospedaje">🌺 *QUINTA BUGAMBILIA* | *Tu Oasis en Hermosillo* 🌺
-
-✨ *Ubicación exclusiva:* Fracc. Real del 14 (Seguridad y acceso controlado 24/7)
+      <div class="wa-preview" id="base-hospedaje">🌺 *QUINTA BUGAMBILIA* | *Tu Oasis en Hermosillo* 🌺
+✨ *Ubicación exclusiva:* Fracc. Real del 14 (Seguridad 24/7)
 
 🎉 *ESPECIALES DE SEPTIEMBRE* 🇲🇽
-_(¡Aprovecha y asegura tu fin de semana o escapada entre semana!)_
-
-🔥 *Promo Noche Entre Semana:* $6,400 por noche (Válido en Martes, Miércoles o Jueves)
+🔥 *Promo Noche Entre Semana:* $6,400 por noche (Martes, Miércoles o Jueves)
 🔥 *Promo Fin de Semana:* Noche de Viernes o Domingo por solo $7,000 (Precio regular: $7,590)
-🔥 *Promo Extiende tu Visita:* 10% de descuento en tu 2da noche de hospedaje.
-🔥 *Promo 3x2 Especial:* Renta Martes y Miércoles... ¡y llévate el Jueves a MITAD DE PRECIO! 🥳
+🔥 *Promo Extiende tu Visita:* 10% de descuento en tu 2da noche.
+🔥 *Promo 3x2 Especial:* Renta Martes y Miércoles... ¡Jueves a MITAD DE PRECIO! 🥳
 
 🏡 *TARIFAS REGULARES* (Hasta 12 personas)
 ▪️ *Lunes a Jueves:* $6,590 / noche
 ▪️ *Viernes a Domingo:* $7,590 / noche
-_(¿Tu grupo es más grande? ¡Pregúntanos por la tarifa para huéspedes adicionales!)_
 
-🛏️ *DISTRIBUCIÓN DE HOSPEDAJE* (Máximo confort)
-🏠 *Casa Principal:*
-▪️ *Recámara 1:* Cama King Size + TV + A/C + Baño privado.
-▪️ *Recámara 2:* 2 Camas Queen Size + TV + A/C.
-▪️ *Áreas comunes:* Cocina 100% equipada, Sala con TV, Baño completo y A/C.
-🏡 *Departamentito Independiente:*
-▪️ 2 Camas Queen Size + Sala privada + TV + A/C + Baño completo.
-
-🌴 *AMENIDADES & ÁREA SOCIAL* (¡Diversión garantizada!)
-🥩 *Área de Asador Profesional:* Incluye gas, máquina de hielo, refrigerador grande, TV, bocinas Bluetooth, barra con bancos y comedor de parota.
-🎱 *Salón de Juegos:* Mesa de billar profesional, futbolito, zona de TV y sala de descanso.
-🏊‍♂️ *Zona de Alberca:* Con área de sombra, tobogán y aro de básquet acuático.
-⚽ *Deportes y Diversión:* Cancha de fútbol, trampolín profesional y fogatero con iluminación vintage.
-🌳 *Instalaciones Premium:* Palapa grande ventilada, amplias áreas verdes con césped natural (cero polvo) y baños exteriores para hombres y mujeres.
-
-📸 *Conoce nuestras instalaciones aquí:*
-🔗 https://photos.app.goo.gl/cJNmL5tnzSiKEFG4A
-
-⏰ *HORARIOS*
-▪️ *Check-in:* 3:00 PM
-▪️ *Check-out:* 12:00 PM
-
-📌 *¿Cómo reservar?*
-Asegura tu fecha con solo el 30% de anticipo. El saldo restante se liquida antes de tu Check-in.
-
-🗓️ *¿Qué fecha tienes en mente para consultar disponibilidad?*
-¡Respóndeme con tus días de preferencia y te cotizamos de inmediato! 👇✨</div>
+🛏️ *DISTRIBUCIÓN:* Casa Principal + Departamentito (1 King + 4 Queen).
+⏰ *HORARIOS:* Check-in: 3:00 PM | Check-out: 12:00 PM
+📌 *Reserva con solo el 30% de anticipo.*
+🔗 https://photos.app.goo.gl/cJNmL5tnzSiKEFG4A</div>
     </div>
 
-    <!-- TARJETA 2: EVENTOS Y ALBERCADAS DE DÍA -->
     <div class="wa-card">
       <div class="wa-card-header">
-        <span class="wa-card-title">🎉 Eventos, Albercadas & Reuniones de Día</span>
-        <button class="btn-copy" onclick="copiarTexto('wa-eventos')">
-          <svg viewBox="0 0 24 24"><path d="M19 3h-14c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-14c0-1.1-.9-2-2-2zm0 16h-14v-14h14v14zm-11-3h8v-2h-8v2zm0-4h8v-2h-8v2zm0-4h8v-2h-8v2z"/></svg>
-          Copiar Mensaje Eventos
-        </button>
+        <span class="wa-card-title">🎉 2. REUNIONES & EVENTOS DE DÍA</span>
+        <button class="btn-copy" onclick="copiarTexto('base-eventos')">Copiar</button>
       </div>
-      <div class="wa-preview" id="wa-eventos">🌺 *QUINTA BUGAMBILIA* | *Tu Oasis en Hermosillo* 🌺
-
+      <div class="wa-preview" id="base-eventos">🌺 *QUINTA BUGAMBILIA* | *Tu Oasis en Hermosillo* 🌺
 🎉 *MODALIDAD: REUNIONES, ALBERCADAS & EVENTOS DE DÍA*
-✨ *Ubicación exclusiva:* Fracc. Real del 14 (Seguridad y acceso controlado 24/7)
 
 🎉 *ESPECIALES DE SEPTIEMBRE* 🇲🇽
-_(¡Aprovecha y organiza tu evento con precio especial!)_
+🔥 *Especial Entre Semana:* Evento 20p (Martes, Miércoles o Jueves) por $4,000 (Regular: $4,600)
+🔥 *Especial Domingos:* 10% DE DESCUENTO en tarifa base.
 
-🔥 *Especial Entre Semana:* Evento / Albercada para 20 personas (Martes, Miércoles o Jueves) por solo $4,000 (Precio regular: $4,600)
-🔥 *Especial Domingos:* 10% DE DESCUENTO en la tarifa base de tu evento.
+📊 *TARIFAS SEGÚN INVITADOS (7 Horas de Evento):*
+▪️ *20p:* $4,600 | ▪️ *30p:* $6,100 | ▪️ *40p:* $7,400 | ▪️ *50p:* $8,500
+▪️ *60p:* $9,500 | ▪️ *70p:* $10,400 | ▪️ *80p:* $11,300 | ▪️ *90p:* $12,100 | ▪️ *100p:* $12,900
 
-📊 *TARIFAS SEGÚN TU NÚMERO DE INVITADOS*
-_(Incluye 7 Horas de Evento)_
-▪️ *20 personas:* $4,600
-▪️ *30 personas:* $6,100
-▪️ *40 personas:* $7,400
-▪️ *50 personas:* $8,500
-▪️ *60 personas:* $9,500
-▪️ *70 personas:* $10,400
-▪️ *80 personas:* $11,300
-▪️ *90 personas:* $12,100
-▪️ *100 personas:* $12,900
-
-✨ *TU EVENTO YA INCLUYE:*
-🪑 *Mobiliario Elegante:* Mesas con manteles blancos y Sillas Tiffany.
-🥩 *Área de Asador Profesional:* Incluye gas, máquina de hielo, refrigerador grande, TV, bocinas Bluetooth, barra con bancos y comedor de parota.
-🏊‍♂️ *Zona de Alberca:* Con área de sombra, tobogán y aro de básquet acuático.
-⚽ *Deportes y Diversión:* Cancha de fútbol, trampolín profesional y fogatero con iluminación vintage.
-🌳 *Instalaciones Premium:* Palapa grande ventilada, amplias áreas verdes con césped natural (cero polvo) y baños exteriores para hombres y mujeres.
-
-⏰ *HORARIO Y DURACIÓN*
-▪️ 7 Horas continuas de servicio (Tú eliges tu horario entre 3:00 PM y 1:00 AM).
-
-➕ *ACCESOS & SERVICIOS ADICIONALES* (Agrega más comodidad a tu evento)
-🏠 *Espacios Privados (Costo Extra):*
-▪️ *Salón de Juegos:* Billar profesional, futbolito, TV, sillón y A/C.
-▪️ *Departamento Independiente:* Recámara con baño completo.
-▪️ *Casa Principal:* Recámaras, cocina equipada y estancia.
-
-📌 *POLÍTICAS Y RESERVACIÓN*
-▪️ Reserva tu fecha con solo el 30% de anticipo. El saldo se liquida antes del evento.
-
-🗓️ *¿Qué fecha tienes en mente y cuántos invitados esperas?*
-¡Respóndeme con los detalles y te cotizamos al instante! 👇✨</div>
+🪑 *INCLUYE:* Mesas con manteles blancos + Sillas Tiffany, asador profesional con gas, máquina de hielo, alberca con tobogán, cancha, trampolín, fogatero.
+⏰ *DURACIÓN:* 7 Horas (a elegir entre 3:00 PM y 1:00 AM).
+📌 *Reserva con 30% de anticipo.*</div>
     </div>
 
-    <!-- TARJETA 3: COMBO VIP EVENTO + HOSPEDAJE -->
     <div class="wa-card">
       <div class="wa-card-header">
-        <span class="wa-card-title">👑 Combo VIP: Evento + 1 Noche de Hospedaje</span>
-        <button class="btn-copy" onclick="copiarTexto('wa-combovip')">
-          <svg viewBox="0 0 24 24"><path d="M19 3h-14c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-14c0-1.1-.9-2-2-2zm0 16h-14v-14h14v14zm-11-3h8v-2h-8v2zm0-4h8v-2h-8v2zm0-4h8v-2h-8v2z"/></svg>
-          Copiar Mensaje Combo VIP
-        </button>
+        <span class="wa-card-title">👑 3. COMBO VIP: EVENTO + 1 NOCHE HOSPEDAJE</span>
+        <button class="btn-copy" onclick="copiarTexto('base-combovip')">Copiar</button>
       </div>
-      <div class="wa-preview" id="wa-combovip">🌺 *QUINTA BUGAMBILIA* | *Tu Oasis en Hermosillo* 🌺
+      <div class="wa-preview" id="base-combovip">🌺 *QUINTA BUGAMBILIA* | *Tu Oasis en Hermosillo* 🌺
 👑 *COMBO VIP: EVENTO + 1 NOCHE DE HOSPEDAJE*
-✨ *Ubicación exclusiva:* Fracc. Real del 14 (Seguridad 24/7)
 
 🎉 *ESPECIAL DE SEPTIEMBRE: 15% DE DESCUENTO GENERAL* 🇲🇽
-_(Organiza tu evento de 7 hrs y quédate a dormir 1 noche con tu grupo de hasta 12 personas)_
+_(Evento de 7 hrs + Hospedaje 1 noche para hasta 12 personas)_
 
-📊 *TARIFAS POR 1 NOCHE* (Evento + Hospedaje con 15% OFF)
+📅 *ENTRE SEMANA* (Lun, Mar, Mié o Jue):
+▪️ *20p:* ~~$11,190~~ ➡️ *$9,510*
+▪️ *30p:* ~~$12,690~~ ➡️ *$10,785*
+▪️ *40p:* ~~$13,990~~ ➡️ *$11,890*
+▪️ *50p:* ~~$15,090~~ ➡️ *$12,825*
 
-📅 *NOCHES ENTRE SEMANA* (Aplica en Lunes, Martes, Miércoles o Jueves):
-▪️ *20 personas + 1 noche de hospedaje:* ~~$11,190~~ ➡️ *$9,510*
-▪️ *30 personas + 1 noche de hospedaje:* ~~$12,690~~ ➡️ *$10,785*
-▪️ *40 personas + 1 noche de hospedaje:* ~~$13,990~~ ➡️ *$11,890*
-▪️ *50 personas + 1 noche de hospedaje:* ~~$15,090~~ ➡️ *$12,825*
+📅 *FIN DE SEMANA* (Vie, Sáb o Dom):
+▪️ *20p:* ~~$12,190~~ ➡️ *$10,360*
+▪️ *30p:* ~~$13,690~~ ➡️ *$11,635*
+▪️ *40p:* ~~$14,990~~ ➡️ *$12,740*
+▪️ *50p:* ~~$16,090~~ ➡️ *$13,675*
 
-📅 *NOCHES DE FIN DE SEMANA* (Aplica en Viernes, Sábado o Domingo):
-▪️ *20 personas + 1 noche de hospedaje:* ~~$12,190~~ ➡️ *$10,360*
-▪️ *30 personas + 1 noche de hospedaje:* ~~$13,690~~ ➡️ *$11,635*
-▪️ *40 personas + 1 noche de hospedaje:* ~~$14,990~~ ➡️ *$12,740*
-▪️ *50 personas + 1 noche de hospedaje:* ~~$16,090~~ ➡️ *$13,675*
-
-🛏️ *DISTRIBUCIÓN DE HOSPEDAJE* (Hasta 12 personas)
-▪️ Casa Principal + Departamento Independiente (1 King + 4 Queen).
-
-🌴 *AMENIDADES & ÁREA SOCIAL INCLUIDAS*
-🪑 Mobiliario Elegante (Mesas + Sillas Tiffany)
-🥩 Área de Asador Profesional + Bocinas Bluetooth + Hielera
-🎱 Salón de Juegos con Billar Profesional y Futbolito
-🏊‍♂️ Alberca con tobogán y aro de básquet acuático
-⚽ Cancha deportiva, trampolín profesional y fogatero vintage
-
-⏰ *HORARIOS*
-▪️ *Check-in:* 3:00 PM | *Check-out:* 12:00 PM (al día siguiente)
-
-📸 *Conoce nuestras instalaciones aquí:*
-🔗 https://photos.app.goo.gl/cJNmL5tnzSiKEFG4A
-
-📌 *RESERVACIÓN:* Aparta tu fecha con solo el 30% de anticipo.
-
-🗓️ *¿Qué noche de septiembre tienes en mente y para cuántos invitados te cotizamos?* 👇✨</div>
+⏰ *HORARIOS:* Check-in: 3:00 PM | Check-out: 12:00 PM (día siguiente).
+📌 *Reserva con 30% de anticipo.*</div>
     </div>
   </div>
 </main>
@@ -315,7 +233,6 @@ _(Organiza tu evento de 7 hrs y quédate a dormir 1 noche con tu grupo de hasta 
 <footer> Rentas Quinta Bugambilia 2026 </footer>
 
 <script>
-// ================= NAVEGACIÓN DE PESTAÑAS =================
 function switchCotSection(sec) {
   document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active-section'));
   document.querySelectorAll('.tab-btn').forEach(b => {
@@ -334,7 +251,6 @@ function switchCotSection(sec) {
   }
 }
 
-// ================= COPIADO Y TOAST =================
 function copiarTexto(elementId) {
   const container = document.getElementById(elementId);
   const textToCopy = container.innerText;
@@ -361,91 +277,72 @@ function mostrarToast(mensaje) {
   }, 2500);
 }
 
-// ================= LÓGICA DE IA (GEMINI API) =================
-async function generarCotizacionIA() {
-  const inputPrompt = document.getElementById('aiInput').value.trim();
-  const apiKey = document.getElementById('geminiApiKey').value.trim();
-  const outputBox = document.getElementById('wa-ai-result');
-  const container = document.getElementById('aiOutputContainer');
+const MODALIDADES_TEXT = {
+  "1": document.getElementById('base-hospedaje') ? document.getElementById('base-hospedaje').innerText : '',
+  "2": document.getElementById('base-eventos') ? document.getElementById('base-eventos').innerText : '',
+  "3": document.getElementById('base-combovip') ? document.getElementById('base-combovip').innerText : ''
+};
 
-  if (!inputPrompt) {
-    alert("Por favor escribe una consulta o detalle del cliente.");
+async function procesarPromptIA() {
+  const modalidad = document.getElementById('modalidadSelect').value;
+  const userPrompt = document.getElementById('promptInput').value.trim();
+  const apiKey = document.getElementById('apiKeyInput').value.trim();
+  const resultBox = document.getElementById('resultContainer');
+  const output = document.getElementById('waOutput');
+
+  if (!userPrompt) {
+    alert("Por favor ingresa los datos o la pregunta del cliente.");
     return;
   }
 
-  container.style.display = 'block';
-  outputBox.innerText = "⏳ Generando cotización con IA en formato WhatsApp...";
+  resultBox.style.display = 'block';
+  output.innerText = "⏳ Generando cotización ajustada...";
 
-  const systemPrompt = `Eres el asistente oficial de cotizaciones de Quinta Bugambilia en Hermosillo.
-Genera respuestas en formato WhatsApp (*negritas*, emojis, saltos de línea claros, amables y persuasivos).
-Usa la siguiente información de promociones de Septiembre para responder al cliente:
+  const textoBaseModalidad = document.getElementById(
+    modalidad === "1" ? "base-hospedaje" : (modalidad === "2" ? "base-eventos" : "base-combovip")
+  ).innerText;
 
-TARIFAS HOSPEDAJE (Hasta 12p):
-- Lun-Jue: $6,590/noche (Promo entre semana Mar-Jue: $6,400)
-- Vie-Dom: $7,590/noche (Promo Vie/Dom: $7,000)
-- Promo 2da noche: 10% OFF
-- Promo 3x2: Renta Mar y Mié, Jueves a mitad de precio
+  const systemInstruction = `Eres el cotizador oficial de Quinta Bugambilia. 
+El usuario ha seleccionado la Modalidad ${modalidad}.
+Usa la siguiente plantilla/base de precios como referencia principal:
 
-TARIFAS EVENTOS DE DÍA (7 Horas):
-- 20p: $4,600 (Promo Mar-Jue: $4,000)
-- 30p: $6,100 | 40p: $7,400 | 50p: $8,500 | 60p: $9,500 | 70p: $10,400 | 80p: $11,300 | 90p: $12,100 | 100p: $12,900
-- Promo Domingos: 10% OFF en evento base
+--- PLANTILLA DE LA MODALIDAD ---
+${textoBaseModalidad}
+---------------------------------
 
-COMBO VIP (EVENTO + 1 NOCHE HOSPEDAJE - 15% OFF INCLUIDO EN PRECIO):
-- Entre semana: 20p=$9,510 | 30p=$10,785 | 40p=$11,890 | 50p=$12,825
-- Fin de semana: 20p=$10,360 | 30p=$11,635 | 40p=$12,740 | 50p=$13,675
-
-DATOS GENERALES:
-- Reserva: 30% anticipo
-- Ubicación: Real del 14, Hermosillo
-- Fotos: https://photos.app.goo.gl/cJNmL5tnzSiKEFG4A
-- Check-in: 3:00 PM | Check-out: 12:00 PM
-
-Genera ÚNICAMENTE la respuesta final lista para copiar y enviar al cliente por WhatsApp.`;
+INSTRUCCIONES:
+1. Toma las instrucciones del usuario y adecúa la plantilla anterior para responderle directamente.
+2. Mantén estricto formato de WhatsApp (*negritas*, emojis, saltos de línea claros y tono formal-amigable).
+3. Calcula o destaca el precio exacto y el 30% de anticipo según los datos ingresados por el usuario.
+4. Genera ÚNICAMENTE el texto listo para enviar por WhatsApp.`;
 
   if (apiKey) {
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: `${systemPrompt}\n\nConsulta del cliente: ${inputPrompt}` }] }]
+          contents: [{ parts: [{ text: `${systemInstruction}\n\nDatos de la consulta del cliente:\n${userPrompt}` }] }]
         })
       });
-      const data = await response.json();
+      const data = await res.json();
       if (data.candidates && data.candidates[0].content.parts[0].text) {
-        outputBox.innerText = data.candidates[0].content.parts[0].text;
+        output.innerText = data.candidates[0].content.parts[0].text;
       } else {
-        outputBox.innerText = "Error al procesar con Gemini. Revisa la clave API.";
+        output.innerText = "Error en respuesta de Gemini. Verifique la API Key.";
       }
     } catch (e) {
-      outputBox.innerText = "Error de conexión con la IA de Gemini.";
+      output.innerText = "Error de conexión con la API de Gemini.";
     }
   } else {
-    // Respuesta simulada inteligente si no se provee API Key externa
+    // Fallback local instantáneo con formato exacto WhatsApp
     setTimeout(() => {
-      outputBox.innerText = `🌺 *QUINTA BUGAMBILIA* | *Cotización Personalizada* 🌺
-
-¡Hola! Con gusto te compartimos la cotización con nuestras *Promociones Especiales de Septiembre* 🇲🇽:
-
-📌 *Detalles solicitados:* ${inputPrompt}
-
-🎉 *OPCIÓN RECOMENDADA:*
-▪️ *Modalidad:* Combo VIP (Evento + Hospedaje para 12 personas)
-▪️ *Descuento aplicado:* 15% OFF Especial de Septiembre
-▪️ *Anticipo para reservar (30%):* Se calcula sobre el total contratado.
-
-✨ *Tu reserva incluye:*
-🪑 Mobiliario (Mesas + Sillas Tiffany)
-🥩 Asador profesional con gas + máquina de hielo + refrigerador grande
-🏊‍♂️ Alberca con tobogán + aro de básquet acuático
-🎱 Salón de Juegos con billar profesional y futbolito
-⚽ Cancha de fútbol + trampolín + fogatero vintage
-
-📸 *Fotos de instalaciones:* https://photos.app.goo.gl/cJNmL5tnzSiKEFG4A
-
-🗓️ ¿Te apartamos la fecha? ¡Respóndenos para confirmar disponibilidad! 👇✨`;
-    }, 600);
+      let respuestaSimulada = textoBaseModalidad;
+      if (userPrompt) {
+        respuestaSimulada = `📌 *COTIZACIÓN PERSONALIZADA QUINTA BUGAMBILIA*\n_Atendiendo a tu solicitud: "${userPrompt}"_\n\n` + textoBaseModalidad;
+      }
+      output.innerText = respuestaSimulada;
+    }, 400);
   }
 }
 </script>
