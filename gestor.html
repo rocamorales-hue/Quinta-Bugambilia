@@ -1,85 +1,320 @@
-<!-- Formulario Actualizado con los nuevos campos especificados -->
-<form id="reservationForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quinta Bugambilia - Gestor Premium</title>
     
-    <!-- Fila 1: Mes & Renta No. -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-            <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Mes *</label>
-            <select id="mes" required class="w-full px-3 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-quinta-olive focus:bg-white font-medium">
-                <option value="">Selecciona mes...</option>
-                <option value="01. enero">01. enero</option>
-                <option value="02. febrero">02. febrero</option>
-                <option value="03. marzo">03. marzo</option>
-                <option value="04. abril">04. abril</option>
-                <option value="05. mayo">05. mayo</option>
-                <option value="06. junio">06. junio</option>
-                <option value="07. julio">07. julio</option>
-                <option value="08. agosto">08. agosto</option>
-                <option value="09. septiembre">09. septiembre</option>
-                <option value="10. octubre">10. octubre</option>
-                <option value="11. noviembre">11. noviembre</option>
-                <option value="12. diciembre">12. diciembre</option>
-            </select>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        quinta: {
+                            cream: '#FAF7F2',
+                            card: '#FFFFFF',
+                            olive: '#2D4A3E',
+                            oliveDark: '#1E332A',
+                            oliveLight: '#EBF1EE',
+                            terracota: '#C85A32',
+                            terracotaDark: '#A64320',
+                            terracotaLight: '#FBF0EB',
+                            gold: '#D4AF37',
+                            goldLight: '#FDF8EA',
+                            sand: '#E6DFD5'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FAF7F2;
+            color: #2C302E;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #F2EDE4;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #C4B8A5;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #A69782;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- Header Navbar -->
+    <header class="bg-white border-b border-quinta-sand sticky top-0 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-quinta-olive to-quinta-oliveDark flex items-center justify-center text-quinta-gold shadow-md border border-quinta-gold/30">
+                    <i class="fa-solid font-serif text-2xl font-bold tracking-tighter">QB</i>
+                </div>
+                <div>
+                    <h1 class="font-serif text-2xl font-bold text-quinta-oliveDark tracking-wide flex items-center gap-2">
+                        Quinta Bugambilia
+                        <span class="text-xs font-sans font-semibold bg-quinta-goldLight text-amber-800 border border-quinta-gold/40 px-2.5 py-0.5 rounded-full">Gestor Premium</span>
+                    </h1>
+                    <p class="text-xs text-stone-500 font-medium">Control de Eventos & Sincronización Google Sheets</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <button onclick="toggleModal('modalConfig')" class="inline-flex items-center px-3.5 py-2 border border-emerald-600/30 text-emerald-800 bg-emerald-50 hover:bg-emerald-100 rounded-xl text-xs sm:text-sm font-semibold transition shadow-sm">
+                    <i class="fa-solid fa-file-excel mr-2 text-emerald-600 text-base"></i>
+                    <span>Conexión Google Sheets</span>
+                    <span id="statusBadge" class="ml-2 w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                </button>
+            </div>
         </div>
+    </header>
 
-        <div>
-            <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Renta No. (Consecutivo)</label>
-            <input type="text" id="rentaNo" readonly class="w-full px-3 py-2.5 text-sm bg-stone-200/60 border border-stone-300 rounded-xl font-bold text-quinta-oliveDark cursor-not-allowed">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Form Column (5 Cols) -->
+            <div class="lg:col-span-5">
+                <div class="bg-white rounded-2xl shadow-sm border border-quinta-sand overflow-hidden sticky top-28">
+                    <div class="bg-quinta-olive p-5 text-white flex justify-between items-center border-b border-quinta-oliveDark">
+                        <div>
+                            <h2 class="font-serif text-xl font-bold flex items-center text-quinta-cream">
+                                <i class="fa-regular fa-calendar-plus text-quinta-gold mr-2.5"></i>
+                                Nueva Reserva
+                            </h2>
+                            <p class="text-xs text-quinta-cream/70 mt-0.5">Captura la información requerida</p>
+                        </div>
+                        <span class="text-xs bg-quinta-gold/20 text-quinta-gold font-bold px-3 py-1 rounded-full border border-quinta-gold/30">Paso 1</span>
+                    </div>
+
+                    <form id="reservationForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
+                        
+                        <!-- Fila 1: Mes & Renta No. -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Mes *</label>
+                                <select id="mes" required class="w-full px-3 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-quinta-olive focus:bg-white font-medium text-stone-800">
+                                    <option value="">Selecciona mes...</option>
+                                    <option value="01. enero">01. enero</option>
+                                    <option value="02. febrero">02. febrero</option>
+                                    <option value="03. marzo">03. marzo</option>
+                                    <option value="04. abril">04. abril</option>
+                                    <option value="05. mayo">05. mayo</option>
+                                    <option value="06. junio">06. junio</option>
+                                    <option value="07. julio">07. julio</option>
+                                    <option value="08. agosto">08. agosto</option>
+                                    <option value="09. septiembre">09. septiembre</option>
+                                    <option value="10. octubre">10. octubre</option>
+                                    <option value="11. noviembre">11. noviembre</option>
+                                    <option value="12. diciembre">12. diciembre</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Renta No.</label>
+                                <input type="text" id="rentaNo" readonly class="w-full px-3 py-2.5 text-sm bg-stone-200/60 border border-stone-300 rounded-xl font-bold text-quinta-oliveDark cursor-not-allowed">
+                            </div>
+                        </div>
+
+                        <!-- Fila 2: Nombre Completo -->
+                        <div>
+                            <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Nombre Completo *</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-stone-400">
+                                    <i class="fa-regular fa-user text-sm"></i>
+                                </span>
+                                <input type="text" id="nombre" required placeholder="Ej. Roberto Morales"
+                                    class="w-full pl-10 pr-4 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-quinta-olive focus:bg-white transition font-medium">
+                            </div>
+                        </div>
+
+                        <!-- Fila 3: Estancia & Evento -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Estancia (Personas)</label>
+                                <select id="estancia" class="w-full px-3 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-quinta-olive font-medium text-stone-800">
+                                    <option value="0">0 personas</option>
+                                    <option value="2">2 personas</option>
+                                    <option value="4">4 personas</option>
+                                    <option value="6">6 personas</option>
+                                    <option value="8">8 personas</option>
+                                    <option value="10+">10+ personas</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Evento (Personas)</label>
+                                <select id="evento" class="w-full px-3 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-quinta-olive font-medium text-stone-800">
+                                    <option value="0">Sin evento</option>
+                                    <option value="25">Hasta 25 personas</option>
+                                    <option value="50">Hasta 50 personas</option>
+                                    <option value="75">Hasta 75 personas</option>
+                                    <option value="100">Hasta 100 personas</option>
+                                    <option value="150+">Más de 100 personas</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Fila 4: Total Venta -->
+                        <div class="p-4 bg-quinta-cream border border-quinta-sand/80 rounded-2xl">
+                            <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Total Venta ($ MXN) *</label>
+                            <input type="number" id="totalVenta" step="0.01" min="0" placeholder="0.00" required
+                                class="w-full px-3 py-2.5 text-base bg-white border border-stone-300 rounded-xl font-bold text-emerald-800 focus:ring-2 focus:ring-quinta-olive">
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" id="btnSave"
+                            class="w-full py-3.5 px-4 bg-gradient-to-r from-quinta-olive to-quinta-oliveDark hover:from-quinta-oliveDark hover:to-black text-white font-bold rounded-xl shadow-md hover:shadow-lg transition duration-200 flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-cloud-arrow-up text-quinta-gold"></i>
+                            <span>Guardar Reserva</span>
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- History / Table Column (7 Cols) -->
+            <div class="lg:col-span-7">
+                <div class="bg-white rounded-2xl shadow-sm border border-quinta-sand overflow-hidden flex flex-col h-full">
+                    
+                    <div class="p-5 border-b border-quinta-sand bg-quinta-cream/40 flex items-center justify-between">
+                        <div>
+                            <h2 class="font-serif text-xl font-bold text-quinta-oliveDark flex items-center">
+                                <i class="fa-solid fa-list-check text-quinta-terracota mr-2.5"></i>
+                                Historial de Reservas
+                            </h2>
+                            <p class="text-xs text-stone-500">Registros locales y sincronizados</p>
+                        </div>
+                    </div>
+
+                    <!-- Table List -->
+                    <div class="overflow-x-auto flex-grow custom-scrollbar">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-stone-100/70 border-b border-stone-200 text-[11px] font-bold text-quinta-oliveDark uppercase tracking-wider">
+                                    <th class="p-3.5">Renta No.</th>
+                                    <th class="p-3.5">Mes</th>
+                                    <th class="p-3.5">Cliente</th>
+                                    <th class="p-3.5 text-center">Estancia</th>
+                                    <th class="p-3.5 text-center">Evento</th>
+                                    <th class="p-3.5 text-right">Total Venta</th>
+                                    <th class="p-3.5 text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reservasTableBody" class="divide-y divide-stone-100 text-xs text-stone-700">
+                            </tbody>
+                        </table>
+                        
+                        <div id="emptyState" class="hidden p-12 text-center text-stone-400">
+                            <i class="fa-regular fa-calendar-xmark text-4xl mb-3 text-quinta-sand"></i>
+                            <p class="text-sm font-semibold text-stone-600">No hay reservas registradas</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
-    </div>
+    </main>
 
-    <!-- Fila 2: Nombre del Cliente -->
-    <div>
-        <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Nombre Completo *</label>
-        <input type="text" id="nombre" required placeholder="Ej. Roberto Morales" class="w-full px-3.5 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-quinta-olive focus:bg-white font-medium">
-    </div>
+    <script>
+        let reservations = JSON.parse(localStorage.getItem('qb_reservations')) || [];
 
-    <!-- Fila 3: Personas Estancia & Evento -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-            <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Estancia (Personas)</label>
-            <select id="estancia" class="w-full px-3 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-quinta-olive font-medium">
-                <option value="0">0 personas</option>
-                <option value="2">2 personas</option>
-                <option value="4">4 personas</option>
-                <option value="6">6 personas</option>
-                <option value="8">8 personas</option>
-                <option value="10+">10+ personas</option>
-            </select>
-        </div>
+        window.onload = function() {
+            generarRentaNo();
+            renderTable();
+        };
 
-        <div>
-            <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Evento (Personas)</label>
-            <select id="evento" class="w-full px-3 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-quinta-olive font-medium">
-                <option value="0">Sin evento</option>
-                <option value="25">Hasta 25 personas</option>
-                <option value="50">Hasta 50 personas</option>
-                <option value="75">Hasta 75 personas</option>
-                <option value="100">Hasta 100 personas</option>
-                <option value="150+">Más de 100 personas</option>
-            </select>
-        </div>
-    </div>
+        function generarRentaNo() {
+            const year = new Date().getFullYear();
+            const count = reservations.length + 20; // Consecutivo base
+            document.getElementById('rentaNo').value = `${year}-${count}`;
+        }
 
-    <!-- Fila 4: Total Venta (Entrada manual) -->
-    <div class="p-4 bg-quinta-cream border border-quinta-sand rounded-2xl">
-        <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Total Venta ($ MXN) *</label>
-        <input type="number" id="totalVenta" step="0.01" min="0" placeholder="0.00" required class="w-full px-3 py-2.5 text-base bg-white border border-stone-300 rounded-xl font-bold text-emerald-800 focus:ring-2 focus:ring-quinta-olive">
-    </div>
+        function handleFormSubmit(event) {
+            event.preventDefault();
 
-    <button type="submit" class="w-full py-3.5 bg-quinta-olive hover:bg-quinta-oliveDark text-white font-bold rounded-xl shadow transition">
-        Guardar Reserva
-    </button>
-</form>
+            const record = {
+                id: Date.now().toString(),
+                mes: document.getElementById('mes').value,
+                rentaNo: document.getElementById('rentaNo').value,
+                nombre: document.getElementById('nombre').value.trim(),
+                estancia: document.getElementById('estancia').value,
+                evento: document.getElementById('evento').value,
+                totalVenta: parseFloat(document.getElementById('totalVenta').value) || 0
+            };
 
-<script>
-    // Generador automático del número consecutivo (ej: 2026-21)
-    function generarRentaNo() {
-        const year = new Date().getFullYear();
-        const count = reservations.length + 20; // Toma el historial + base previa
-        document.getElementById('rentaNo').value = `${year}-${count}`;
-    }
+            reservations.unshift(record);
+            localStorage.setItem('qb_reservations', JSON.stringify(reservations));
 
-    // Ejecutar al cargar la pantalla
-    window.addEventListener('DOMContentLoaded', generarRentaNo);
-</script>
+            document.getElementById('reservationForm').reset();
+            generarRentaNo();
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('reservasTableBody');
+            const emptyState = document.getElementById('emptyState');
+            tbody.innerHTML = '';
+
+            if (reservations.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            reservations.forEach(res => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-quinta-cream/50 transition';
+                tr.innerHTML = `
+                    <td class="p-3.5 font-bold text-quinta-oliveDark">${escapeHtml(res.rentaNo)}</td>
+                    <td class="p-3.5 font-medium text-stone-600">${escapeHtml(res.mes)}</td>
+                    <td class="p-3.5 font-semibold text-stone-800">${escapeHtml(res.nombre)}</td>
+                    <td class="p-3.5 text-center">${escapeHtml(res.estancia)} p.</td>
+                    <td class="p-3.5 text-center">${escapeHtml(res.evento)} p.</td>
+                    <td class="p-3.5 text-right font-bold text-emerald-800">$${res.totalVenta.toLocaleString('es-MX', {minimumFractionDigits: 2})}</td>
+                    <td class="p-3.5 text-center">
+                        <button onclick="deleteRecord('${res.id}')" class="text-stone-400 hover:text-rose-600 p-1 transition">
+                            <i class="fa-solid fa-xmark text-sm"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function deleteRecord(id) {
+            reservations = reservations.filter(r => r.id !== id);
+            localStorage.setItem('qb_reservations', JSON.stringify(reservations));
+            generarRentaNo();
+            renderTable();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.innerText = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
