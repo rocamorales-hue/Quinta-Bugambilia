@@ -112,7 +112,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Mes *</label>
-                                <select id="mes" required class="w-full px-3 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-quinta-olive focus:bg-white font-medium text-stone-800">
+                                <select id="mes" required class="w-full px-3 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-quinta-olive font-medium text-stone-800">
                                     <option value="">Selecciona mes...</option>
                                     <option value="01. enero">01. enero</option>
                                     <option value="02. febrero">02. febrero</option>
@@ -143,7 +143,7 @@
                                     <i class="fa-regular fa-user text-sm"></i>
                                 </span>
                                 <input type="text" id="nombre" required placeholder="Ej. Roberto Morales"
-                                    class="w-full pl-10 pr-4 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-quinta-olive focus:bg-white transition font-medium">
+                                    class="w-full pl-10 pr-4 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:ring-2 focus:ring-quinta-olive transition font-medium">
                             </div>
                         </div>
 
@@ -183,7 +183,7 @@
 
                         <!-- Submit Button -->
                         <button type="submit" id="btnSave"
-                            class="w-full py-3.5 px-4 bg-gradient-to-r from-quinta-olive to-quinta-oliveDark hover:from-quinta-oliveDark hover:to-black text-white font-bold rounded-xl shadow-md hover:shadow-lg transition duration-200 flex items-center justify-center space-x-2">
+                            class="w-full py-3.5 px-4 bg-gradient-to-r from-quinta-olive to-quinta-oliveDark hover:from-quinta-oliveDark hover:to-black text-white font-bold rounded-xl shadow-md transition flex items-center justify-center space-x-2">
                             <i class="fa-solid fa-cloud-arrow-up text-quinta-gold"></i>
                             <span>Guardar Reserva</span>
                         </button>
@@ -192,7 +192,7 @@
                 </div>
             </div>
 
-            <!-- History / Table Column (7 Cols) -->
+            <!-- Table Column (7 Cols) -->
             <div class="lg:col-span-7">
                 <div class="bg-white rounded-2xl shadow-sm border border-quinta-sand overflow-hidden flex flex-col h-full">
                     
@@ -202,7 +202,7 @@
                                 <i class="fa-solid fa-list-check text-quinta-terracota mr-2.5"></i>
                                 Historial de Reservas
                             </h2>
-                            <p class="text-xs text-stone-500">Registros locales y sincronizados</p>
+                            <p class="text-xs text-stone-500">Registros guardados en el sistema</p>
                         </div>
                     </div>
 
@@ -236,21 +236,125 @@
         </div>
     </main>
 
+    <!-- Modal: Config Google Sheets URL -->
+    <div id="modalConfig" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl shadow-xl border border-stone-200 w-full max-w-lg overflow-hidden">
+            <div class="p-5 border-b border-stone-200 flex justify-between items-center bg-quinta-cream">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                        <i class="fa-solid fa-link text-sm"></i>
+                    </div>
+                    <h3 class="font-bold text-quinta-oliveDark text-base">Conexión con Google Sheets</h3>
+                </div>
+                <button onclick="toggleModal('modalConfig')" class="text-stone-400 hover:text-stone-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-4">
+                <p class="text-xs text-stone-600 leading-relaxed">
+                    Ingresa la URL del **Web App** obtenido en **Google Apps Script** para sincronizar automáticamente tus registros con tu hoja de cálculo.
+                </p>
+
+                <div>
+                    <label class="block text-xs font-bold text-quinta-oliveDark uppercase tracking-wider mb-1.5">Web App URL</label>
+                    <input type="url" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+                        class="w-full px-3 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded-xl focus:ring-2 focus:ring-emerald-600 text-stone-800 font-mono">
+                </div>
+
+                <button type="button" onclick="testGoogleSheetsConnection()" class="w-full py-2 px-3 border border-emerald-600 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Enviar Registro de Prueba</span>
+                </button>
+            </div>
+
+            <div class="p-4 bg-stone-50 border-t border-stone-200 flex justify-end space-x-2">
+                <button onclick="toggleModal('modalConfig')" class="px-4 py-2 text-xs font-semibold text-stone-600 hover:bg-stone-200 rounded-lg transition">
+                    Cancelar
+                </button>
+                <button onclick="saveScriptUrl()" class="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition shadow-md">
+                    Guardar Configuración
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let reservations = JSON.parse(localStorage.getItem('qb_reservations')) || [];
+        let scriptUrl = localStorage.getItem('qb_script_url') || '';
 
         window.onload = function() {
             generarRentaNo();
             renderTable();
+            checkScriptUrlStatus();
         };
+
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.toggle('hidden');
+                if (modalId === 'modalConfig' && !modal.classList.contains('hidden')) {
+                    document.getElementById('scriptUrlInput').value = scriptUrl;
+                }
+            }
+        }
+
+        function saveScriptUrl() {
+            const input = document.getElementById('scriptUrlInput').value.trim();
+            scriptUrl = input;
+            localStorage.setItem('qb_script_url', scriptUrl);
+            checkScriptUrlStatus();
+            toggleModal('modalConfig');
+            alert(scriptUrl ? 'Conexión con Google Sheets guardada.' : 'Conexión desvinculada.');
+        }
+
+        function checkScriptUrlStatus() {
+            const badge = document.getElementById('statusBadge');
+            if (badge) {
+                if (scriptUrl) {
+                    badge.className = 'ml-2 w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse';
+                } else {
+                    badge.className = 'ml-2 w-2.5 h-2.5 rounded-full bg-amber-500';
+                }
+            }
+        }
+
+        async function testGoogleSheetsConnection() {
+            const inputUrl = document.getElementById('scriptUrlInput').value.trim();
+            if (!inputUrl) {
+                alert('Ingresa primero la URL de tu Web App');
+                return;
+            }
+
+            const testData = {
+                rentaNo: '2026-TEST',
+                mes: '01. enero',
+                nombre: 'Prueba de Conexión QB',
+                estancia: '2',
+                evento: 'Sin evento',
+                totalVenta: 100
+            };
+
+            try {
+                await fetch(inputUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testData)
+                });
+                alert('Registro de prueba enviado a tu Google Sheet');
+            } catch (error) {
+                alert('Fallo al conectar con la URL especificada');
+            }
+        }
 
         function generarRentaNo() {
             const year = new Date().getFullYear();
-            const count = reservations.length + 20; // Consecutivo base
+            const count = reservations.length + 20;
             document.getElementById('rentaNo').value = `${year}-${count}`;
         }
 
-        function handleFormSubmit(event) {
+        async function handleFormSubmit(event) {
             event.preventDefault();
 
             const record = {
@@ -265,6 +369,19 @@
 
             reservations.unshift(record);
             localStorage.setItem('qb_reservations', JSON.stringify(reservations));
+
+            if (scriptUrl) {
+                try {
+                    await fetch(scriptUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(record)
+                    });
+                } catch (e) {
+                    console.error('Error al enviar a Sheets', e);
+                }
+            }
 
             document.getElementById('reservationForm').reset();
             generarRentaNo();
