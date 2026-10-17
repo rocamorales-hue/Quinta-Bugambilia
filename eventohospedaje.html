@@ -12,12 +12,46 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js?v=3').then((reg) => { reg.update(); });
+        navigator.serviceWorker.register('sw.js?v=4').then((reg) => { reg.update(); });
       });
     }
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    .sec{font:600 1.15rem 'Cormorant Garamond',serif;color:#1e3a2f;margin:1.4rem 0 .4rem;padding-bottom:.25rem;border-bottom:1px solid #d8d2c4}
+    .extra-item{display:flex;align-items:center;gap:.6rem;cursor:pointer}
+    .extra-item .extra-price{margin-left:auto}
+    #resumen{background:#f6f3ec;border:1px solid #d8d2c4;border-radius:10px;padding:.8rem 1rem;margin:1rem 0;font-size:.92rem}
+    #resumen div{display:flex;justify-content:space-between;gap:1rem;padding:2px 0}
+    #resumen .t{border-top:1px solid #c9c1ae;margin-top:4px;padding-top:6px;font-size:1.05rem}
+    #aviso{display:none;background:#fdecea;color:#8a1f17;border:1px solid #f1b5b0;border-radius:8px;padding:.7rem 1rem;margin-top:1rem}
+    #aviso.on{display:block}
+    #contrato-wrap[hidden]{display:none}
+    .acciones{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin:1rem auto;max-width:820px}
+    .acciones button{display:inline-flex;align-items:center;gap:.5rem;justify-content:center;min-height:48px;flex:1 1 220px}
+    .acciones button:disabled{opacity:.5}
+    #pdfEstado{width:100%;text-align:center;font-size:.85rem;color:#555}
+    /* Documento (pantalla, PDF e impresión) */
+    .doc{font:13px/1.5 "Times New Roman",Georgia,serif;color:#111;background:#fff;padding:1.2rem;max-width:820px;margin:1rem auto;border:1px solid #ddd;border-radius:6px}
+    .doc h2{font-size:1.05em;text-align:center;margin:0 0 1em}
+    .doc .cl{margin:0 0 .65em;text-align:justify}
+    .doc ul{margin:.3em 0 .3em 1.4em;padding:0}
+    .doc .tb{width:100%;border-collapse:collapse;margin:.4em 0;font-size:.95em}
+    .doc .tb td{border:1px solid #bbb;padding:3px 7px}
+    .doc .tb.r td:last-child{text-align:right;white-space:nowrap}
+    .doc .tot td{font-weight:bold;background:#f2f2f2}
+    .doc .extras{white-space:pre-line;font-style:italic;border:1px solid #ccc;padding:.5em .7em;margin:.7em 0}
+    .doc .firmas{display:flex;gap:2rem;margin-top:3.5rem;text-align:center}
+    .doc .firmas>div{flex:1;border-top:1px solid #000;padding-top:4px;font-size:.85em}
+    @media print{
+      body *{visibility:hidden}
+      #docContrato,#docContrato *{visibility:visible}
+      #docContrato{position:absolute;left:0;top:0;width:100%;margin:0;border:0;border-radius:0;padding:0}
+      @page{size:letter;margin:14mm}
+    }
+  </style>
 </head>
 <body>
 
@@ -32,367 +66,296 @@
     <p class="subtitle">Panel integral de control de reservas, cotización y hospedaje</p>
 
     <div class="form-container">
+      <div class="sec">Cliente</div>
       <div class="row">
-        <div class="field">
-          <label>Nombre del Cliente Arrendatario</label>
-          <input type="text" id="nombreInput" placeholder="Ej. Juan Pérez">
-        </div>
-        <div class="field">
-          <label>Identificación Oficial (INE / Pasaporte)</label>
-          <input type="text" id="ineInput" placeholder="Clave de Elector o No. de Documento">
-        </div>
+        <div class="field"><label for="nombreInput">Nombre del Cliente Arrendatario</label>
+          <input type="text" id="nombreInput" placeholder="Ej. Juan Pérez" autocomplete="off"></div>
+        <div class="field"><label for="ineInput">Identificación Oficial (INE / Pasaporte)</label>
+          <input type="text" id="ineInput" placeholder="Clave de Elector o No. de Documento" autocomplete="off"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="domicilioInput">Domicilio del Cliente</label>
+          <input type="text" id="domicilioInput" placeholder="Calle, número, colonia, ciudad" autocomplete="off"></div>
+        <div class="field"><label for="telefonoInput">Teléfono</label>
+          <input type="tel" id="telefonoInput" placeholder="662 000 0000" inputmode="tel" autocomplete="off"></div>
       </div>
 
+      <div class="sec">Fechas y horarios</div>
       <div class="row">
-        <div class="field">
-          <label>Fecha de Entrada (Check-In)</label>
-          <input type="date" id="fechaEntrada" onchange="calcularTotal()">
-        </div>
-        <div class="field">
-          <label>Hora de Entrada</label>
-          <input type="time" id="horaEntrada" value="15:00">
-        </div>
+        <div class="field"><label for="fechaEntrada">Fecha de Entrada (Check-In)</label><input type="date" id="fechaEntrada"></div>
+        <div class="field"><label for="horaEntrada">Hora de Entrada</label><input type="time" id="horaEntrada" value="15:00"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="fechaSalida">Fecha de Salida (Check-Out)</label><input type="date" id="fechaSalida"></div>
+        <div class="field"><label for="horaSalida">Hora de Salida</label><input type="time" id="horaSalida" value="12:00"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="fechaEvento">Fecha del Evento</label><input type="date" id="fechaEvento"></div>
+        <div class="field"><label for="nochesInput">Número de Noches (se calcula solo)</label><input type="number" id="nochesInput" min="0" value="1" inputmode="numeric"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="eventoInicioInput">Hora Inicio del Evento</label><input type="time" id="eventoInicioInput" value="16:00"></div>
+        <div class="field"><label for="eventoFinInput">Hora Fin del Evento</label><input type="time" id="eventoFinInput" value="23:00"></div>
       </div>
 
+      <div class="sec">Costos</div>
       <div class="row">
-        <div class="field">
-          <label>Fecha de Salida (Check-Out)</label>
-          <input type="date" id="fechaSalida" onchange="calcularTotal()">
-        </div>
-        <div class="field">
-          <label>Hora de Salida</label>
-          <input type="time" id="horaSalida" value="12:00">
-        </div>
+        <div class="field"><label for="costoNocheInput">Costo por Noche de Hospedaje ($)</label><input type="number" id="costoNocheInput" min="0" value="0" inputmode="decimal"></div>
+        <div class="field"><label for="descuentoInput">Descuento / Ajuste ($)</label><input type="number" id="descuentoInput" min="0" value="0" inputmode="decimal"></div>
       </div>
-
-      <!-- NUEVOS CAMPOS DE HORARIO DE EVENTO -->
-      <div class="row">
-        <div class="field">
-          <label>Hora Inicio del Evento</label>
-          <input type="time" id="eventoInicioInput" value="16:00">
-        </div>
-        <div class="field">
-          <label>Hora Fin del Evento</label>
-          <input type="time" id="eventoFinInput" value="23:00">
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="field">
-          <label>Número de Noches</label>
-          <input type="number" id="nochesInput" min="0" value="1" oninput="calcularTotal()">
-        </div>
-        <div class="field">
-          <label>Costo por Noche de Hospedaje ($)</label>
-          <input type="number" id="costoNocheInput" min="0" value="0" oninput="calcularTotal()">
-        </div>
-      </div>
-
       <div class="field">
-        <label>Paquete de Evento (Base de Personas / Aforo)</label>
-        <select id="paqueteSelect" onchange="calcularTotal()">
-          <option value="0" data-price="0" data-aforo="0">Sin Paquete de Evento (Solo Hospedaje)</option>
-          <option value="20" data-price="4600" data-aforo="20">20 personas — $4,600</option>
-          <option value="30" data-price="6540" data-aforo="30">30 personas — $6,540</option>
-          <option value="40" data-price="8240" data-aforo="40">40 personas — $8,240</option>
-          <option value="50" data-price="9700" data-aforo="50">50 personas — $9,700</option>
-          <option value="60" data-price="10420" data-aforo="60">60 personas — $10,420</option>
-          <option value="70" data-price="11140" data-aforo="70">70 personas — $11,140</option>
-          <option value="80" data-price="11860" data-aforo="80">80 personas — $11,860</option>
-        </select>
+        <label for="paqueteSelect">Paquete de Evento (Base de Personas / Aforo)</label>
+        <select id="paqueteSelect"></select>
       </div>
 
       <label>Servicios Extra / Adicionales</label>
-      <div class="extras-container">
-        <div class="extra-item" onclick="toggleCheckbox(event, 'extraBrincolin')">
-          <input type="checkbox" id="extraBrincolin" value="500" onchange="calcularTotal()">
-          <span class="extra-label">Brincolin Estándar</span>
-          <span class="extra-price">+$500</span>
-        </div>
-        <div class="extra-item" onclick="toggleCheckbox(event, 'extraBrincolinAcuatico')">
-          <input type="checkbox" id="extraBrincolinAcuatico" value="1200" onchange="calcularTotal()">
-          <span class="extra-label">Brincolin Acuático Grande</span>
-          <span class="extra-price">+$1,200</span>
-        </div>
-        <div class="extra-item" onclick="toggleCheckbox(event, 'extraFutbolito')">
-          <input type="checkbox" id="extraFutbolito" value="400" onchange="calcularTotal()">
-          <span class="extra-label">Mesa de Futbolito</span>
-          <span class="extra-price">+$400</span>
-        </div>
-        <div class="extra-item" onclick="toggleCheckbox(event, 'extraBocina')">
-          <input type="checkbox" id="extraBocina" value="400" onchange="calcularTotal()">
-          <span class="extra-label">Bocina de Alta Potencia</span>
-          <span class="extra-price">+$400</span>
-        </div>
-        <div class="extra-item" onclick="toggleCheckbox(event, 'extraCalentador')">
-          <input type="checkbox" id="extraCalentador" value="600" onchange="calcularTotal()">
-          <span class="extra-label">Calentador Ambiental de Gas</span>
-          <span class="extra-price">+$600</span>
-        </div>
-
+      <div class="extras-container" id="extras">
         <div class="manual-extra">
           <input type="text" id="manualNombre1" placeholder="Concepto Extra Manual (Ej. Sillas Extra)">
-          <input type="text" id="manualMonto1" placeholder="$0.00" oninput="calcularTotal()">
+          <input type="text" id="manualMonto1" placeholder="$0.00" inputmode="decimal">
         </div>
       </div>
 
       <div class="row">
-        <div class="field">
-          <label>Precio Total Calculado ($)</label>
-          <input type="text" id="precioInput" placeholder="Calculado automáticamente">
-        </div>
-        <div class="field">
-          <label>Depósito en Garantía (Reembolsable)</label>
-          <input type="text" id="depositoInput" value="$1,000.00">
-        </div>
+        <div class="field"><label for="precioInput">Precio Total Calculado ($)</label><input type="text" id="precioInput" readonly></div>
+        <div class="field"><label for="depositoInput">Depósito en Garantía (Reembolsable)</label><input type="text" id="depositoInput" value="$1,000.00" inputmode="decimal"></div>
       </div>
+      <div id="resumen"></div>
 
       <div class="field">
-        <label>Anotaciones Especiales</label>
+        <label for="anotacionesInput">Anotaciones Especiales</label>
         <textarea id="anotacionesInput" placeholder="Ej. Se autoriza la entrada de proveedores externos..."></textarea>
       </div>
 
-      <button class="btn-generar" onclick="generarContrato()">
+      <div id="aviso" role="alert"></div>
+      <button class="btn-generar" onclick="generar()">
         <svg style="width:18px;height:18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Generar e Integrar Contrato Final
+        Generar Contrato
       </button>
     </div>
 
-    <!-- ==========================================================================
-         VISTA IMPRIMIBLE DEL CONTRATO
-         ========================================================================== -->
-    <div id="contrato-final">
-      <div class="header-contrato">
-        <h2>CONTRATO DE ARRENDAMIENTO TEMPORAL Y HOSPEDAJE DE "QUINTA BUGAMBILIA"</h2>
-      </div>
-
-      <p><span class="clausula-title">PRIMERA. OBJETO DEL CONTRATO.</span> EL ARRENDADOR otorga en arrendamiento temporal y servicio de hospedaje el inmueble denominado "Quinta Bugambilia", ubicado en el Fraccionamiento Real del Catorce, en la ciudad de Hermosillo, Sonora. El inmueble se destina exclusivamente a fines recreativos, de esparcimiento de carácter familiar y pernocta.</p>
-
-      <p><span class="clausula-title">SEGUNDA. FECHA, HORARIO Y COSTO DEL ARRENDAMIENTO.</span> EL ARRENDATARIO, C. <span id="out-nombre" style="font-weight:bold; text-decoration:underline;"></span>, identificado con documento oficial No. <span id="out-ine" style="font-weight:bold;"></span>, hace uso del inmueble bajo las siguientes condiciones:</p>
-      
-      <ul style="margin-left:2rem; margin-bottom:0.8rem; font-size:0.9rem;">
-        <li><strong>Fecha de hospedaje:</strong> Del <span id="out-fecha-entrada" style="font-weight:bold;"></span> (Check-In a las <span id="out-hora-entrada" style="font-weight:bold;"></span> hrs) al <span id="out-fecha-salida" style="font-weight:bold;"></span> (Check-Out a las <span id="out-hora-salida" style="font-weight:bold;"></span> hrs), amparando un total de <span id="out-noches-cant" style="font-weight:bold;"></span> noche(s) de hospedaje.</li>
-        <li><strong>Evento:</strong> Se autoriza la realización de un evento el día <span id="out-fecha-evento" style="font-weight:bold;"></span> en el horario de <span id="out-hora-evento-inicio" style="font-weight:bold;"></span> hrs a <span id="out-hora-evento-fin" style="font-weight:bold;"></span> hrs.</li>
-        <li><strong>Ocupación y aforo máximo permitido:</strong> Máximo de <span id="out-aforo-evento" style="font-weight:bold;"></span> personas para el evento y capacidad de hospedaje para hasta 12 personas en dormitorios.</li>
-        <li><strong>Costo total del arrendamiento y hospedaje:</strong> <span id="out-precio" style="font-weight:bold; color:var(--green);"></span>.</li>
-        <li><strong>El arrendamiento incluye de forma base:</strong> Mesas con mantel, Sillas correspondientes al paquete, 1 hielera grande y acceso a las instalaciones de hospedaje para la(s) noche(s) contratada(s).</li>
-      </ul>
-
-      <p><span class="clausula-title">TERCERA. ANTICIPO Y PAGO DEL SALDO.</span> Para reservar la fecha, EL ARRENDATARIO deberá realizar un anticipo equivalente al 30% del monto total (<span id="out-anticipo" style="font-weight:bold;"></span>). El monto restante (<span id="out-saldo" style="font-weight:bold;"></span>) deberá liquidarse en su totalidad antes del ingreso al inmueble el día del inicio del servicio.</p>
-
-      <p><span class="clausula-title">CUARTA. DATOS PARA DEPÓSITO O TRANSFERENCIA.</span> Los pagos correspondientes deberán realizarse a la siguiente cuenta bancaria propiedad del ARRENDADOR:</p>
-      <table class="tabla-banco">
-        <tr><td>Banco:</td><td>Santander</td></tr>
-        <tr><td>Titular:</td><td>Javier Antonio Morales Mizquez</td></tr>
-        <tr><td>Número de Tarjeta:</td><td>5579 0890 0728 7264</td></tr>
-        <tr><td>CLABE:</td><td>014760655114097664</td></tr>
-        <tr><td>Número de Cuenta:</td><td>65511409766</td></tr>
-      </table>
-
-      <p><span class="clausula-title">QUINTA. DEPÓSITO DE GARANTÍA.</span> EL ARRENDATARIO entregará un depósito de garantía por la cantidad de <span id="out-deposito" style="font-weight:bold;"></span>, el cual será reembolsado al finalizar el periodo de hospedaje, siempre y cuando no se hayan ocasionado daños al inmueble, habitaciones, mobiliario o equipo, y se entregue en condiciones razonables de limpieza.</p>
-
-      <p><span class="clausula-title">SEXTA. OCUPACIÓN Y USO DE INSTALACIONES.</span> La ocupación máxima permitida para el evento es de <span id="out-aforo-evento2" style="font-weight:bold;"></span> personas y de 12 personas para el hospedaje nocturno. Se permite el uso de las áreas externas del inmueble y las habitaciones destinadas al hospedaje. Cualquier exceso de ocupación no autorizado en el evento o en el hospedaje dará lugar a la rescisión inmediata del contrato sin derecho a reembolso.</p>
-
-      <p><span class="clausula-title">SÉPTIMA. ACCESO AL SALÓN DE JUEGOS.</span> Se otorga acceso al salón de juegos. Queda expresamente estipulado que cualquier daño o desperfecto a cualquier equipo o mobiliario correrá por cargo del ARRENDATARIO. Se recomienda limitar el acceso a niños y controlar estrictamente el aforo en esta área para evitar incidentes.</p>
-
-      <p><span class="clausula-title">OCTAVA. CONDICIONES DE USO Y RESPONSABILIDADES.</span> El inmueble deberá usarse exclusivamente para los fines establecidos. EL ARRENDATARIO se compromete a firmar el reglamento de uso y hospedaje antes de ingresar. EL ARRENDADOR no se hace responsable por accidentes, lesiones, enfermedades o pérdidas de objetos personales durante el uso y estancia en el inmueble.</p>
-
-      <p><span class="clausula-title">NOVENA. CANCELACIONES.</span> En caso de cancelación por parte del ARRENDATARIO: más de 20 días de anticipación (reembolso del 80% del anticipo), entre 4 y 19 días (reembolso del 50% del anticipo), menos de 3 días (no habrá reembolso).</p>
-
-      <p><span class="clausula-title">DÉCIMA. PROHIBICIONES Y REGLAS DE CONVIVENCIA.</span> Queda estrictamente prohibido el uso de sustancias ilegales, la introducción de mascotas (salvo acuerdo previo por escrito) y generar ruido excesivo fuera de los horarios permitidos por la localidad. El incumplimiento dará lugar a la terminación inmediata del contrato y desalojo sin derecho a reembolso.</p>
-
-      <p><span class="clausula-title">DÉCIMA PRIMERA. LIMPIEZA Y DAÑOS.</span> EL ARRENDATARIO es responsable de entregar el inmueble en condiciones de orden y limpieza aceptables. Si los daños ocasionados a la propiedad, mobiliario o blancos exceden el monto del depósito de garantía, EL ARRENDATARIO se compromete formalmente a cubrir la diferencia de inmediato.</p>
-
-      <p><span class="clausula-title">DÉCIMA SEGUNDA. ACEPTACIÓN DEL CONTRATO.</span> Ambas partes declaran haber leído y comprendido el contenido del presente contrato, manifestando su conformidad y obligándose a su estricto cumplimiento.</p>
-
-      <div class="seccion-detalles">
-        <strong>SERVICIOS ADICIONALES Y ANOTACIONES INCLUIDAS:</strong>
-        <p id="out-detalles-extras" style="margin-top: 5px; font-style: italic; white-space: pre-line;"></p>
-      </div>
-
-      <div class="firmas-container firmas-print-grid">
-        <div class="firmas-box">
-          <div class="linea-firma"></div>
-          <p style="font-size:0.75rem; font-weight:bold;">EL ARRENDATARIO (CLIENTE)</p>
-          <p style="font-size:0.7rem; color:#444;" id="out-firma-nombre"></p>
-        </div>
-        <div class="firmas-box">
-          <div class="linea-firma"></div>
-          <p style="font-size:0.75rem; font-weight:bold;">EL ARRENDADOR</p>
-          <p style="font-size:0.7rem; color:#444;">Administración Quinta Bugambilia</p>
-        </div>
-      </div>
-
-      <div class="no-print-area">
-        <button class="btn-print" onclick="window.print()">
-          <svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-          Imprimir Contrato Oficial
-        </button>
+    <div id="contrato-wrap" hidden>
+      <div id="docContrato" class="doc"></div>
+      <div class="acciones">
+        <button class="btn-generar" id="btnShare" onclick="compartir()" disabled>Guardar / Compartir PDF</button>
+        <button class="btn-print" id="btnDl" onclick="descargar()" disabled>Descargar PDF</button>
+        <button class="btn-print" onclick="window.print()">Imprimir</button>
+        <div id="pdfEstado"></div>
       </div>
     </div>
   </main>
 
   <script>
-    function toggleCheckbox(e, id) {
-      const cb = document.getElementById(id);
-      if (e.target.tagName !== 'INPUT') {
-        cb.checked = !cb.checked;
-      }
-      calcularTotal();
+    /* ===== CONFIGURACIÓN (edita aquí tarifas, datos del arrendador y banco) ===== */
+    const CFG = {
+      arrendador: 'Javier Antonio Morales Mizquez',
+      domicilio: 'Fraccionamiento Real del Catorce, Hermosillo, Sonora', // agrega calle y número
+      dormitorios: 12,
+      anticipo: 0.30,
+      banco: [['Banco','Santander'],['Titular','Javier Antonio Morales Mizquez'],['Número de Tarjeta','5579 0890 0728 7264'],['CLABE','014760655114097664'],['Número de Cuenta','65511409766']]
+    };
+    const PAQUETES = [[20,4600],[30,6540],[40,8240],[50,9700],[60,10420],[70,11140],[80,11860]];
+    const EXTRAS = [['Brincolin Estándar',500],['Brincolin Acuático Grande',1200],['Mesa de Futbolito',400],['Bocina de Alta Potencia',400],['Calentador Ambiental de Gas',600]];
+
+    const $ = id => document.getElementById(id);
+    const num = v => parseFloat(String(v).replace(/[^0-9.]/g, '')) || 0;
+    const mxn = v => v.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+    const fecha = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' }) : '__________';
+    const hr = id => ($(id).value || '--:--') + ' hrs';
+    let pdfBlob = null, pdfName = '', seq = 0;
+
+    function letras(n) {
+      const U = ['','UN','DOS','TRES','CUATRO','CINCO','SEIS','SIETE','OCHO','NUEVE','DIEZ','ONCE','DOCE','TRECE','CATORCE','QUINCE','DIECISÉIS','DIECISIETE','DIECIOCHO','DIECINUEVE','VEINTE','VEINTIÚN','VEINTIDÓS','VEINTITRÉS','VEINTICUATRO','VEINTICINCO','VEINTISÉIS','VEINTISIETE','VEINTIOCHO','VEINTINUEVE'];
+      const D = ['','','','TREINTA','CUARENTA','CINCUENTA','SESENTA','SETENTA','OCHENTA','NOVENTA'];
+      const C = ['','CIENTO','DOSCIENTOS','TRESCIENTOS','CUATROCIENTOS','QUINIENTOS','SEISCIENTOS','SETECIENTOS','OCHOCIENTOS','NOVECIENTOS'];
+      const b = n => {
+        if (n === 100) return 'CIEN';
+        let s = C[Math.floor(n / 100)], r = n % 100;
+        if (r < 30) s += (s && r ? ' ' : '') + U[r];
+        else s += (s ? ' ' : '') + D[Math.floor(r / 10)] + (r % 10 ? ' Y ' + U[r % 10] : '');
+        return s.trim();
+      };
+      if (n === 0) return 'CERO';
+      const m = Math.floor(n / 1e6), k = Math.floor(n % 1e6 / 1000), r = n % 1000;
+      let s = '';
+      if (m) s += (m === 1 ? 'UN MILLÓN' : b(m) + ' MILLONES') + ' ';
+      if (k) s += (k === 1 ? '' : b(k) + ' ') + 'MIL ';
+      if (r) s += b(r);
+      return s.trim();
+    }
+    function letrasMXN(t) {
+      t = Math.round(t * 100) / 100;
+      const e = Math.floor(t), c = Math.round((t - e) * 100);
+      return `${letras(e)} PESOS ${String(c).padStart(2, '0')}/100 M.N.`;
     }
 
-    function calcularTotal() {
-      const selectPaquete = document.getElementById('paqueteSelect');
-      const optionSeleccionada = selectPaquete.options[selectPaquete.selectedIndex];
-      let costoPaquete = parseFloat(optionSeleccionada.getAttribute('data-price')) || 0;
-
-      const noches = parseInt(document.getElementById('nochesInput').value) || 0;
-      const costoNoche = parseFloat(document.getElementById('costoNocheInput').value) || 0;
-      let costoHospedaje = noches * costoNoche;
-
-      let costoExtras = 0;
-      const extrasIds = ['extraBrincolin', 'extraBrincolinAcuatico', 'extraFutbolito', 'extraBocina', 'extraCalentador'];
-      extrasIds.forEach(id => {
-        const item = document.getElementById(id);
-        if (item && item.checked) {
-          costoExtras += parseFloat(item.value);
-        }
-      });
-
-      const manualMonto = document.getElementById('manualMonto1').value.replace(/[^0-9.]/g, '');
-      if (manualMonto !== "" && !isNaN(manualMonto)) {
-        costoExtras += parseFloat(manualMonto);
-      }
-
-      let total = costoPaquete + costoHospedaje + costoExtras;
-      document.getElementById('precioInput').value = formatCurrency(total);
+    function desglose() {
+      const o = $('paqueteSelect').selectedOptions[0], aforo = +o.value, paq = +o.dataset.price;
+      const n = parseInt($('nochesInput').value) || 0, cn = num($('costoNocheInput').value);
+      const rows = [];
+      if (aforo) rows.push([`Paquete de evento (hasta ${aforo} personas)`, paq]);
+      if (n * cn) rows.push([`Hospedaje (${n} noche(s) × ${mxn(cn)})`, n * cn]);
+      EXTRAS.forEach(([nm, c], i) => { if ($('ex' + i).checked) rows.push([nm, c]); });
+      const mm = num($('manualMonto1').value);
+      if (mm) rows.push([$('manualNombre1').value.trim() || 'Concepto adicional', mm]);
+      const d = num($('descuentoInput').value);
+      if (d) rows.push(['Descuento / ajuste', -d]);
+      const total = Math.max(0, rows.reduce((s, r) => s + r[1], 0));
+      return { rows, total, aforo, n };
     }
 
-    function formatCurrency(val) {
-      return '$' + val.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    function calc() {
+      const d = desglose(), ant = Math.round(d.total * CFG.anticipo * 100) / 100;
+      $('precioInput').value = mxn(d.total);
+      $('resumen').innerHTML = d.rows.map(r => `<div><span>${esc(r[0])}</span><span>${mxn(r[1])}</span></div>`).join('')
+        + `<div class="t"><b>Total</b><b>${mxn(d.total)}</b></div>`
+        + `<div><span>Anticipo ${CFG.anticipo * 100}%</span><span>${mxn(ant)}</span></div><div><span>Saldo</span><span>${mxn(d.total - ant)}</span></div>`;
+      return d;
     }
 
-    function stringToFullDate(dateString) {
-      if(!dateString) return "___________";
-      const parts = dateString.split('-');
-      const date = new Date(parts[0], parts[1] - 1, parts[2]);
-      const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
-      return date.toLocaleDateString("es-MX", opciones);
+    function fechas() {
+      const a = $('fechaEntrada').value, s = $('fechaSalida').value;
+      if (a && s) { const n = Math.round((new Date(s) - new Date(a)) / 864e5); if (n >= 0) $('nochesInput').value = n; }
+      if (a && !$('fechaEvento').dataset.t) $('fechaEvento').value = a;
     }
 
-    function generarContrato() {
-      const nombre = document.getElementById('nombreInput').value.trim();
-      if(nombre === "") {
-        alert("Por favor ingrese el Nombre del Cliente.");
-        return;
-      }
+    function aviso(m) { $('aviso').textContent = m; $('aviso').classList.toggle('on', !!m); if (m) $('aviso').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    function estado(m, off) { $('pdfEstado').textContent = m; ['btnShare', 'btnDl'].forEach(i => $(i).disabled = off); }
 
-      document.getElementById('out-nombre').innerText = nombre;
-      document.getElementById('out-firma-nombre').innerText = nombre;
-      document.getElementById('out-ine').innerText = document.getElementById('ineInput').value || "_________________";
-      
-      // Pasar Fechas y Horas del DOM al Contrato
-      const entradaStr = document.getElementById('fechaEntrada').value;
-      const salidaStr = document.getElementById('fechaSalida').value;
-      document.getElementById('out-fecha-entrada').innerText = stringToFullDate(entradaStr);
-      document.getElementById('out-fecha-salida').innerText = stringToFullDate(salidaStr);
-      document.getElementById('out-fecha-evento').innerText = stringToFullDate(entradaStr); 
+    function contratoHTML() {
+      const g = id => $(id).value.trim(), d = desglose();
+      const a = g('fechaEntrada'), s = g('fechaSalida');
+      const ant = Math.round(d.total * CFG.anticipo * 100) / 100, saldo = d.total - ant;
+      const dep = esc(g('depositoInput') || '$1,000.00');
+      const hoy = new Date().toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' });
+      const ev = d.aforo ? `<li><b>Evento:</b> el día ${fecha(g('fechaEvento') || a)}, de ${hr('eventoInicioInput')} a ${hr('eventoFinInput')}. Al concluir el horario cesará la música y los invitados deberán retirarse.</li>` : '';
+      const desg = d.rows.map(r => `<tr><td>${esc(r[0])}</td><td>${mxn(r[1])}</td></tr>`).join('');
+      const banco = CFG.banco.map(r => `<tr><td>${r[0]}:</td><td>${esc(r[1])}</td></tr>`).join('');
 
-      document.getElementById('out-hora-entrada').innerText = document.getElementById('horaEntrada').value || "--:--";
-      document.getElementById('out-hora-salida').innerText = document.getElementById('horaSalida').value || "--:--";
-      
-      // Integrar Horarios del Evento
-      document.getElementById('out-hora-evento-inicio').innerText = document.getElementById('eventoInicioInput').value || "--:--";
-      document.getElementById('out-hora-evento-fin').innerText = document.getElementById('eventoFinInput').value || "--:--";
-
-      // Corregida variable que rompía el script
-      const nochesCant = document.getElementById('nochesInput').value || "0";
-      document.getElementById('out-noches-cant').innerText = nochesCant;
-
-      const selectP = document.getElementById('paqueteSelect');
-      const optionP = selectP.options[selectP.selectedIndex];
-      const aforo = optionP.getAttribute('data-aforo') || "0";
-      document.getElementById('out-aforo-evento').innerText = aforo;
-      document.getElementById('out-aforo-evento2').innerText = aforo;
-
-      let totalRaw = document.getElementById('precioInput').value.replace(/[^0-9.]/g, '');
-      let totalVal = parseFloat(totalRaw) || 0;
-      
-      let anticipoVal = totalVal * 0.30;
-      let saldoVal = totalVal - anticipoVal;
-
-      document.getElementById('out-precio').innerText = formatCurrency(totalVal) + ` (${numeroALetras(totalVal)})`;
-      document.getElementById('out-anticipo').innerText = formatCurrency(anticipoVal);
-      document.getElementById('out-saldo').innerText = formatCurrency(saldoVal);
-      document.getElementById('out-deposito').innerText = document.getElementById('depositoInput').value || "$1,000.00";
-
-      let stringExtras = "";
-      const extrasList = [
-        {id: 'extraBrincolin', nombre: 'Brincolin Estándar'},
-        {id: 'extraBrincolinAcuatico', nombre: 'Brincolin Acuático Grande'},
-        {id: 'extraFutbolito', nombre: 'Mesa de Futbolito'},
-        {id: 'extraBocina', nombre: 'Bocina de Alta Potencia'},
-        {id: 'extraCalentador', nombre: 'Calentador Ambiental de Gas'}
+      const cls = [
+        ['OBJETO', `EL ARRENDADOR otorga en arrendamiento temporal, y presta el servicio de hospedaje, del inmueble denominado "Quinta Bugambilia", ubicado en ${CFG.domicilio}, exclusivamente para fines recreativos, de esparcimiento familiar y pernocta. Queda prohibido subarrendar, ceder o destinar el inmueble a un fin distinto.`],
+        ['FECHAS, HORARIOS Y OCUPACIÓN', `EL ARRENDATARIO usará el inmueble bajo las siguientes condiciones:<ul><li><b>Hospedaje:</b> del ${fecha(a)} (entrada ${hr('horaEntrada')}) al ${fecha(s)} (salida ${hr('horaSalida')}), ${d.n} noche(s).</li>${ev}<li><b>Ocupación máxima:</b> ${d.aforo ? d.aforo + ' personas para el evento y ' : ''}${CFG.dormitorios} personas para pernocta.</li><li><b>Incluye:</b> ${d.aforo ? 'mesas con mantel, sillas conforme al paquete, 1 hielera grande y ' : ''}acceso a las instalaciones de hospedaje durante las noches contratadas.</li></ul>La permanencia fuera de los horarios pactados requiere autorización previa y por escrito de EL ARRENDADOR y podrá generar un cargo adicional.`],
+        ['PRECIO', `El precio total es de <b>${mxn(d.total)}</b> (${letrasMXN(d.total)}), integrado así:<table class="tb r">${desg}<tr class="tot"><td>TOTAL</td><td>${mxn(d.total)}</td></tr></table>`],
+        ['ANTICIPO Y PAGO DEL SALDO', `Para reservar la fecha, EL ARRENDATARIO pagará un anticipo del ${CFG.anticipo * 100}% del precio (<b>${mxn(ant)}</b>); la fecha no queda reservada hasta recibirse dicho anticipo. El saldo (<b>${mxn(saldo)}</b>) deberá liquidarse en su totalidad antes del ingreso al inmueble; de no hacerlo, EL ARRENDADOR podrá negar el acceso sin responsabilidad, perdiendo EL ARRENDATARIO el anticipo.`],
+        ['DATOS PARA PAGO', `Los pagos se realizarán a la siguiente cuenta, propiedad de EL ARRENDADOR; EL ARRENDATARIO conservará su comprobante:<table class="tb">${banco}</table>`],
+        ['DEPÓSITO DE GARANTÍA, LIMPIEZA Y DAÑOS', `EL ARRENDATARIO entregará, antes de ingresar y adicionalmente al precio, un depósito de garantía de <b>${dep}</b>. EL ARRENDADOR lo devolverá dentro de los 3 días hábiles siguientes a la salida, previa revisión del inmueble. Podrán descontarse del depósito los daños, faltantes, limpieza extraordinaria o tiempo adicional de uso. Si estos exceden el depósito, EL ARRENDATARIO pagará la diferencia de inmediato. El inmueble deberá entregarse en condiciones de orden y limpieza razonables.`],
+        ['USO, AFORO Y RESPONSABILIDAD POR INVITADOS', `EL ARRENDATARIO responde por los actos u omisiones de sus invitados, proveedores y demás personas que ingresen por su cuenta; los proveedores externos requieren autorización de EL ARRENDADOR. Todo exceso de ocupación no autorizado en el evento o en el hospedaje dará lugar a la rescisión inmediata del contrato, sin derecho a reembolso.`],
+        ['ALBERCA, SALÓN DE JUEGOS Y ÁREAS DE RIESGO', `Los menores de edad deberán permanecer en todo momento bajo la supervisión directa de un adulto responsable designado por EL ARRENDATARIO, especialmente en la alberca y áreas acuáticas, brincolines y salón de juegos. El aforo del salón de juegos deberá controlarse estrictamente. Cualquier daño al equipo o mobiliario será a cargo de EL ARRENDATARIO.`],
+        ['RESPONSABILIDAD Y REGLAMENTO', `EL ARRENDADOR no será responsable por accidentes, lesiones, enfermedades o pérdida de objetos personales ocurridos durante la estancia, salvo que deriven de su dolo, de su culpa grave o de condiciones del inmueble que le sean imputables. EL ARRENDATARIO firmará el Reglamento de Uso y Hospedaje antes de ingresar y lo dará a conocer a sus invitados.`],
+        ['CANCELACIONES', `Si EL ARRENDATARIO cancela por escrito: con 20 días o más de anticipación se reembolsará el 80% del anticipo; con 4 a 19 días, el 50%; con 3 días o menos, o por inasistencia, no habrá reembolso. Si EL ARRENDADOR no pudiera cumplir, o por caso fortuito o fuerza mayor que impida el uso del inmueble, se reprogramará sin costo o se devolverá íntegramente lo pagado. Las condiciones climáticas por sí solas no dan derecho a reembolso.`],
+        ['PROHIBICIONES Y RESCISIÓN', `Está prohibido el uso de sustancias ilegales, armas, pirotecnia, la introducción de mascotas (salvo acuerdo previo por escrito), la venta de bebidas alcohólicas o el cobro de acceso, y el ruido excesivo fuera de los horarios permitidos. El incumplimiento facultará a EL ARRENDADOR a terminar el contrato y desalojar el inmueble de inmediato, sin reembolso y sin perjuicio de reclamar los daños causados.`],
+        ['DATOS PERSONALES', `EL ARRENDATARIO autoriza el tratamiento de sus datos personales, incluida su identificación oficial, para fines de identificación, contratación y seguridad del inmueble, conforme a la legislación aplicable en materia de protección de datos personales. El aviso de privacidad está a su disposición con EL ARRENDADOR.`],
+        ['LEY APLICABLE Y JURISDICCIÓN', `Para su interpretación y cumplimiento, las partes se someten a la legislación del Estado de Sonora, en especial al Código Civil para el Estado de Sonora, y a los tribunales competentes de Hermosillo, Sonora, renunciando a cualquier otro fuero que por su domicilio presente o futuro pudiera corresponderles. Las notificaciones se harán en los domicilios y teléfonos señalados en este contrato.`],
+        ['ACEPTACIÓN', `Las partes declaran haber leído y comprendido este contrato, manifiestan su conformidad y lo firman en dos tantos.`]
       ];
+      const ord = ['PRIMERA','SEGUNDA','TERCERA','CUARTA','QUINTA','SEXTA','SÉPTIMA','OCTAVA','NOVENA','DÉCIMA','DÉCIMA PRIMERA','DÉCIMA SEGUNDA','DÉCIMA TERCERA','DÉCIMA CUARTA'];
 
-      extrasList.forEach(item => {
-        if(document.getElementById(item.id).checked) {
-          stringExtras += `• Incluye servicio de: ${item.nombre}.\n`;
-        }
-      });
+      let ex = EXTRAS.filter((e, i) => $('ex' + i).checked).map(e => `• Incluye servicio de: ${e[0]}.`).join('\n');
+      if (g('manualNombre1')) ex += `\n• Extra personalizado: ${g('manualNombre1')}${g('manualMonto1') ? ' (' + g('manualMonto1') + ')' : ''}.`;
+      if (g('anotacionesInput')) ex += `\n\nAnotaciones especiales (forman parte de este contrato): ${g('anotacionesInput')}`;
+      ex = ex.trim() || 'Ninguno. Solo se contrata el paquete base configurado.';
 
-      const manualNombre = document.getElementById('manualNombre1').value.trim();
-      const manualPrecio = document.getElementById('manualMonto1').value.trim();
-      if(manualNombre !== "") {
-        stringExtras += `• Extra Personalizado: ${manualNombre} (${manualPrecio}).\n`;
-      }
-
-      const anotaciones = document.getElementById('anotacionesInput').value.trim();
-      if(anotaciones !== "") {
-        stringExtras += `\nNotas de la Administración: ${anotaciones}`;
-      }
-
-      if(stringExtras === "") {
-        stringExtras = "Ninguno. Solo se compromete el paquete base configurado.";
-      }
-      document.getElementById('out-detalles-extras').innerText = stringExtras;
-
-      const boxContrato = document.getElementById('contrato-final');
-      boxContrato.style.display = 'block';
-      setTimeout(() => {
-        boxContrato.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 150);
+      return `<h2>CONTRATO DE ARRENDAMIENTO TEMPORAL Y HOSPEDAJE DE "QUINTA BUGAMBILIA"</h2>
+        <p class="cl">En Hermosillo, Sonora, a ${hoy}, celebran este contrato, por una parte <b>${esc(CFG.arrendador)}</b>, en lo sucesivo "EL ARRENDADOR", y por la otra <b>C. ${esc(g('nombreInput'))}</b>, con identificación oficial No. <b>${esc(g('ineInput'))}</b>, domicilio en ${esc(g('domicilioInput') || '______________________')} y teléfono ${esc(g('telefonoInput') || '____________')}, en lo sucesivo "EL ARRENDATARIO". <b>DECLARAN:</b> (I) EL ARRENDADOR, que cuenta con la propiedad o las facultades para arrendar el inmueble; (II) EL ARRENDATARIO, que tiene capacidad legal, que sus datos son verdaderos y que conoce el inmueble. Con base en ello, convienen las siguientes:</p>
+        ${cls.map((c, i) => `<p class="cl"><b>${ord[i]}. ${c[0]}.</b> ${c[1]}</p>`).join('')}
+        <div class="cl"><b>SERVICIOS ADICIONALES Y ANOTACIONES:</b><div class="extras">${esc(ex)}</div></div>
+        <div class="firmas"><div><b>EL ARRENDATARIO</b><br>${esc(g('nombreInput'))}</div><div><b>EL ARRENDADOR</b><br>${esc(CFG.arrendador)}</div></div>`;
     }
 
-    function numeroALetras(num) {
-      let entero = Math.floor(num);
-      return entero.toLocaleString('es-MX') + " pesos 00/100 M.N.";
+    function generar() {
+      const g = id => $(id).value.trim(), a = g('fechaEntrada'), s = g('fechaSalida');
+      const err = !g('nombreInput') ? 'Ingresa el nombre del cliente.'
+        : !g('ineInput') ? 'Ingresa la identificación oficial.'
+        : !a || !s ? 'Captura la fecha de entrada y la de salida.'
+        : s < a ? 'La salida no puede ser anterior a la entrada.'
+        : desglose().total <= 0 ? 'El total es $0.00: revisa paquete, noches y extras.' : '';
+      if (err) return aviso(err);
+      aviso('');
+      calc();
+      $('docContrato').innerHTML = contratoHTML();
+      $('contrato-wrap').hidden = false;
+      const n = g('nombreInput').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '_');
+      pdfName = `Contrato_QuintaBugambilia_${n}_${a}.pdf`;
+      pdfBlob = null;
+      estado('Preparando PDF…', true);
+      setTimeout(() => $('contrato-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+      prepararPDF(++seq);
+    }
+
+    async function prepararPDF(my) {
+      if (typeof html2pdf === 'undefined') return estado('No cargó el generador de PDF (revisa tu conexión). Usa Imprimir → Guardar como PDF.', true);
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'position:fixed;left:-9999px;top:0;width:725px;background:#fff';
+      const el = $('docContrato').cloneNode(true);
+      el.removeAttribute('id');
+      el.style.cssText = 'width:725px;max-width:725px;margin:0;padding:0;border:0;border-radius:0';
+      wrap.appendChild(el); document.body.appendChild(wrap);
+      try {
+        await new Promise(r => setTimeout(r, 250));
+        const blob = await html2pdf().set({
+          margin: [12, 12, 16, 12],
+          image: { type: 'jpeg', quality: 0.95 },
+          html2canvas: { scale: 1.6, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
+          jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' },
+          pagebreak: { mode: ['css', 'legacy'], avoid: ['.cl', '.firmas', '.tb', 'li'] }
+        }).from(el).toPdf().get('pdf').then(pdf => {
+          const n = pdf.internal.getNumberOfPages(), w = pdf.internal.pageSize.getWidth(), h = pdf.internal.pageSize.getHeight();
+          pdf.setFontSize(8); pdf.setTextColor(110);
+          for (let i = 1; i <= n; i++) { pdf.setPage(i); pdf.text(`Quinta Bugambilia · Contrato · Página ${i} de ${n}`, w / 2, h - 7, { align: 'center' }); }
+        }).outputPdf('blob');
+        if (my === seq) { pdfBlob = blob; estado('PDF listo. Toca "Guardar / Compartir" y elige Archivos, Drive o WhatsApp.', false); }
+      } catch (e) {
+        console.error(e);
+        if (my === seq) estado('No se pudo crear el PDF. Usa Imprimir → Guardar como PDF.', true);
+      } finally { wrap.remove(); }
+    }
+
+    function descargar() {
+      if (!pdfBlob) return;
+      const u = URL.createObjectURL(pdfBlob), l = document.createElement('a');
+      l.href = u; l.download = pdfName; document.body.appendChild(l); l.click(); l.remove();
+      setTimeout(() => URL.revokeObjectURL(u), 60000);
+    }
+
+    async function compartir() {
+      if (!pdfBlob) return;
+      const f = new File([pdfBlob], pdfName, { type: 'application/pdf' });
+      if (navigator.canShare && navigator.canShare({ files: [f] })) {
+        try { await navigator.share({ files: [f], title: 'Contrato Quinta Bugambilia' }); return; }
+        catch (e) { if (e.name === 'AbortError') return; }
+      }
+      descargar();
+    }
+
+    function stale() {
+      if ($('contrato-wrap').hidden) return;
+      seq++; pdfBlob = null;
+      estado('Cambiaste datos: vuelve a generar el contrato antes de guardar el PDF.', true);
     }
 
     function clearForm() {
-      document.getElementById('nombreInput').value = "";
-      document.getElementById('ineInput').value = "";
-      document.getElementById('fechaEntrada').value = "";
-      document.getElementById('fechaSalida').value = "";
-      document.getElementById('horaEntrada').value = "15:00";
-      document.getElementById('horaSalida').value = "12:00";
-      document.getElementById('eventoInicioInput').value = "16:00";
-      document.getElementById('eventoFinInput').value = "23:00";
-      document.getElementById('nochesInput').value = "1";
-      document.getElementById('costoNocheInput').value = "0";
-      document.getElementById('paqueteSelect').value = "0";
-      document.getElementById('precioInput').value = "";
-      document.getElementById('manualNombre1').value = "";
-      document.getElementById('manualMonto1').value = "";
-      document.getElementById('anotacionesInput').value = "";
-      document.getElementById('depositoInput').value = "$1,000.00";
-      
-      const checkboxes = document.querySelectorAll('.extra-item input[type="checkbox"]');
-      checkboxes.forEach(cb => cb.checked = false);
-
-      document.getElementById('contrato-final').style.display = 'none';
+      document.querySelectorAll('.form-container input, .form-container textarea').forEach(i => {
+        if (i.type === 'checkbox') i.checked = false; else i.value = i.defaultValue;
+      });
+      $('paqueteSelect').selectedIndex = 0; delete $('fechaEvento').dataset.t;
+      seq++; pdfBlob = null; aviso(''); calc();
+      $('contrato-wrap').hidden = true;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    /* ===== Inicio ===== */
+    $('paqueteSelect').innerHTML = '<option value="0" data-price="0">Sin paquete de evento (solo hospedaje)</option>'
+      + PAQUETES.map(([p, c]) => `<option value="${p}" data-price="${c}">${p} personas — ${mxn(c)}</option>`).join('');
+    $('extras').insertAdjacentHTML('afterbegin', EXTRAS.map(([n, c], i) =>
+      `<label class="extra-item"><input type="checkbox" id="ex${i}"><span class="extra-label">${n}</span><span class="extra-price">+${mxn(c)}</span></label>`).join(''));
+    const F = document.querySelector('.form-container');
+    ['input', 'change'].forEach(t => F.addEventListener(t, e => {
+      if (e.target.id === 'fechaEvento') e.target.dataset.t = 1;
+      if (e.target.id === 'fechaEntrada' || e.target.id === 'fechaSalida') fechas();
+      calc(); stale();
+    }));
+    calc();
   </script>
 </body>
 </html>
