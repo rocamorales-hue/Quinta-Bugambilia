@@ -21,8 +21,15 @@
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     .sec{font:600 1.15rem 'Cormorant Garamond',serif;color:#1e3a2f;margin:1.4rem 0 .4rem;padding-bottom:.25rem;border-bottom:1px solid #d8d2c4}
-    .extra-item{display:flex;align-items:center;gap:.6rem;cursor:pointer}
-    .extra-item .extra-price{margin-left:auto}
+    .extra-item{display:flex;align-items:center;gap:.6rem}
+    .extra-item .xl{display:flex;align-items:center;gap:.6rem;cursor:pointer;flex:1}
+    .extra-item .xp{width:7rem;flex:none;text-align:right}
+    .noche,.cpt,.dsc{display:flex;gap:.5rem;align-items:center;margin:.3rem 0}
+    .noche span{flex:1;font-size:.92rem}
+    .noche input,.cpt .ca{width:8rem;flex:none}
+    .cpt .cn{flex:1;min-width:0}
+    .cpt .x{min-height:40px;width:40px;flex:none}
+    .dsc select{width:5rem;flex:none}
     #resumen{background:#f6f3ec;border:1px solid #d8d2c4;border-radius:10px;padding:.8rem 1rem;margin:1rem 0;font-size:.92rem}
     #resumen div{display:flex;justify-content:space-between;gap:1rem;padding:2px 0}
     #resumen .t{border-top:1px solid #c9c1ae;margin-top:4px;padding-top:6px;font-size:1.05rem}
@@ -91,30 +98,39 @@
       </div>
       <div class="row">
         <div class="field"><label for="fechaEvento">Fecha del Evento</label><input type="date" id="fechaEvento"></div>
-        <div class="field"><label for="nochesInput">Número de Noches (se calcula solo)</label><input type="number" id="nochesInput" min="0" value="1" inputmode="numeric"></div>
+        <div class="field"><label for="nochesInput">Noches (según las fechas)</label><input type="number" id="nochesInput" value="0" readonly></div>
       </div>
       <div class="row">
         <div class="field"><label for="eventoInicioInput">Hora Inicio del Evento</label><input type="time" id="eventoInicioInput" value="16:00"></div>
         <div class="field"><label for="eventoFinInput">Hora Fin del Evento</label><input type="time" id="eventoFinInput" value="23:00"></div>
       </div>
 
-      <div class="sec">Costos</div>
-      <div class="row">
-        <div class="field"><label for="costoNocheInput">Costo por Noche de Hospedaje ($)</label><input type="number" id="costoNocheInput" min="0" value="0" inputmode="decimal"></div>
-        <div class="field"><label for="descuentoInput">Descuento / Ajuste ($)</label><input type="number" id="descuentoInput" min="0" value="0" inputmode="decimal"></div>
-      </div>
-      <div class="field">
-        <label for="paqueteSelect">Paquete de Evento (Base de Personas / Aforo)</label>
-        <select id="paqueteSelect"></select>
-      </div>
+      <div class="sec">Hospedaje por noche</div>
+      <div class="field"><label for="costoNocheInput">Tarifa base por noche ($): se aplica a todas las noches y luego puedes ajustar cada una</label>
+        <input type="number" id="costoNocheInput" min="0" value="0" inputmode="decimal"></div>
+      <div id="nochesList"></div>
 
-      <label>Servicios Extra / Adicionales</label>
-      <div class="extras-container" id="extras">
-        <div class="manual-extra">
-          <input type="text" id="manualNombre1" placeholder="Concepto Extra Manual (Ej. Sillas Extra)">
-          <input type="text" id="manualMonto1" placeholder="$0.00" inputmode="decimal">
-        </div>
+      <div class="sec">Paquete, extras y conceptos</div>
+      <div class="row">
+        <div class="field"><label for="paqueteSelect">Paquete de Evento (Aforo)</label><select id="paqueteSelect"></select></div>
+        <div class="field"><label for="paqueteCustom">Precio personalizado del paquete ($)</label>
+          <input type="number" id="paqueteCustom" min="0" inputmode="decimal" placeholder="Vacío = tarifa de lista"></div>
       </div>
+      <label>Servicios Extra (puedes editar el precio de cada uno)</label>
+      <div class="extras-container" id="extras"></div>
+      <label>Conceptos adicionales</label>
+      <div id="conceptos"></div>
+      <button type="button" class="btn-print" onclick="agregarConcepto()">+ Agregar concepto</button>
+
+      <div class="sec">Descuento y precio final</div>
+      <div class="row">
+        <div class="field"><label for="descuentoInput">Descuento</label>
+          <div class="dsc"><select id="descTipo"><option value="$">$</option><option value="%">%</option></select>
+          <input type="number" id="descuentoInput" min="0" value="0" inputmode="decimal"></div></div>
+        <div class="field"><label for="descMotivo">Motivo del descuento</label><input type="text" id="descMotivo" placeholder="Ej. Cliente frecuente"></div>
+      </div>
+      <div class="field"><label for="totalFijo">Precio final pactado ($): opcional, sustituye al total calculado</label>
+        <input type="number" id="totalFijo" min="0" inputmode="decimal" placeholder="Vacío = usar el total calculado"></div>
 
       <div class="row">
         <div class="field"><label for="precioInput">Precio Total Calculado ($)</label><input type="text" id="precioInput" readonly></div>
@@ -163,7 +179,7 @@
     const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
     const fecha = s => s ? new Date(s + 'T12:00:00').toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' }) : '__________';
     const hr = id => ($(id).value || '--:--') + ' hrs';
-    let pdfBlob = null, pdfName = '', seq = 0;
+    let pdfBlob = null, pdfName = '', seq = 0, NP = [];
 
     function letras(n) {
       const U = ['','UN','DOS','TRES','CUATRO','CINCO','SEIS','SIETE','OCHO','NUEVE','DIEZ','ONCE','DOCE','TRECE','CATORCE','QUINCE','DIECISÉIS','DIECISIETE','DIECIOCHO','DIECINUEVE','VEINTE','VEINTIÚN','VEINTIDÓS','VEINTITRÉS','VEINTICUATRO','VEINTICINCO','VEINTISÉIS','VEINTISIETE','VEINTIOCHO','VEINTINUEVE'];
@@ -190,18 +206,44 @@
       return `${letras(e)} PESOS ${String(c).padStart(2, '0')}/100 M.N.`;
     }
 
+    const nocheLbl = (a, i) => { const d = new Date(a + 'T12:00:00'); d.setDate(d.getDate() + i); return d.toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short' }); };
+    const conceptos = () => [...document.querySelectorAll('.cpt')].map(r => ({ n: r.querySelector('.cn').value.trim() || 'Concepto adicional', m: num(r.querySelector('.ca').value) })).filter(c => c.m);
+
+    function agregarConcepto() {
+      const r = document.createElement('div'); r.className = 'cpt';
+      r.innerHTML = '<input class="cn" type="text" placeholder="Concepto (Ej. Sillas extra)"><input class="ca" type="number" min="0" inputmode="decimal" placeholder="$0.00"><button type="button" class="x" aria-label="Quitar" onclick="this.parentNode.remove();calc();stale()">✕</button>';
+      $('conceptos').appendChild(r); r.firstChild.focus();
+    }
+
+    function renderNoches() {
+      const a = $('fechaEntrada').value, s = $('fechaSalida').value, base = $('costoNocheInput').value;
+      let n = a && s ? Math.round((new Date(s) - new Date(a)) / 864e5) : 0;
+      if (n < 0) n = 0;
+      NP = Array.from({ length: n }, (_, i) => NP[i] !== undefined ? NP[i] : base);
+      $('nochesInput').value = n;
+      $('nochesList').innerHTML = n
+        ? NP.map((v, i) => `<div class="noche"><span>Noche ${i + 1} · ${nocheLbl(a, i)}</span><input type="number" min="0" inputmode="decimal" data-i="${i}" value="${v}" aria-label="Precio noche ${i + 1}"></div>`).join('')
+        : '<small>Sin noches: la salida es el mismo día (evento sin pernocta).</small>';
+    }
+
     function desglose() {
-      const o = $('paqueteSelect').selectedOptions[0], aforo = +o.value, paq = +o.dataset.price;
-      const n = parseInt($('nochesInput').value) || 0, cn = num($('costoNocheInput').value);
-      const rows = [];
-      if (aforo) rows.push([`Paquete de evento (hasta ${aforo} personas)`, paq]);
-      if (n * cn) rows.push([`Hospedaje (${n} noche(s) × ${mxn(cn)})`, n * cn]);
-      EXTRAS.forEach(([nm, c], i) => { if ($('ex' + i).checked) rows.push([nm, c]); });
-      const mm = num($('manualMonto1').value);
-      if (mm) rows.push([$('manualNombre1').value.trim() || 'Concepto adicional', mm]);
-      const d = num($('descuentoInput').value);
-      if (d) rows.push(['Descuento / ajuste', -d]);
-      const total = Math.max(0, rows.reduce((s, r) => s + r[1], 0));
+      const o = $('paqueteSelect').selectedOptions[0], aforo = +o.value, a = $('fechaEntrada').value;
+      const pc = $('paqueteCustom').value.trim(), paq = pc !== '' ? num(pc) : +o.dataset.price;
+      const rows = [], n = NP.length, np = NP.map(num);
+      if (aforo) rows.push([`Paquete de evento (hasta ${aforo} personas)${pc !== '' ? ', precio especial' : ''}`, paq]);
+      if (n && np.some(v => v > 0)) {
+        if (np.every(v => v === np[0])) rows.push([`Hospedaje (${n} noche(s) × ${mxn(np[0])})`, np[0] * n]);
+        else np.forEach((v, i) => rows.push([`Noche ${i + 1} (${nocheLbl(a, i)})`, v]));
+      }
+      EXTRAS.forEach(([nm], i) => { if ($('ex' + i).checked) rows.push([nm, num($('exp' + i).value)]); });
+      conceptos().forEach(c => rows.push([c.n, c.m]));
+      const sub = rows.reduce((s, r) => s + r[1], 0);
+      let total = sub;
+      const dv = num($('descuentoInput').value), pct = $('descTipo').value === '%', mot = $('descMotivo').value.trim();
+      const dsc = Math.round(Math.min(pct ? sub * Math.min(dv, 100) / 100 : dv, sub) * 100) / 100;
+      if (dsc > 0) { rows.push([`Descuento${pct ? ' ' + dv + '%' : ''}${mot ? ' (' + mot + ')' : ''}`, -dsc]); total = sub - dsc; }
+      const fx = $('totalFijo').value.trim();
+      if (fx !== '' && Math.abs(num(fx) - total) > 0.004) { rows.push(['Ajuste por precio especial pactado', num(fx) - total]); total = num(fx); }
       return { rows, total, aforo, n };
     }
 
@@ -215,9 +257,9 @@
     }
 
     function fechas() {
-      const a = $('fechaEntrada').value, s = $('fechaSalida').value;
-      if (a && s) { const n = Math.round((new Date(s) - new Date(a)) / 864e5); if (n >= 0) $('nochesInput').value = n; }
+      const a = $('fechaEntrada').value;
       if (a && !$('fechaEvento').dataset.t) $('fechaEvento').value = a;
+      renderNoches();
     }
 
     function aviso(m) { $('aviso').textContent = m; $('aviso').classList.toggle('on', !!m); if (m) $('aviso').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
@@ -230,12 +272,14 @@
       const dep = esc(g('depositoInput') || '$1,000.00');
       const hoy = new Date().toLocaleDateString('es-MX', { day:'numeric', month:'long', year:'numeric' });
       const ev = d.aforo ? `<li><b>Evento:</b> el día ${fecha(g('fechaEvento') || a)}, de ${hr('eventoInicioInput')} a ${hr('eventoFinInput')}. Al concluir el horario cesará la música y los invitados deberán retirarse.</li>` : '';
+      const incL = [...(d.aforo ? ['mesas con mantel', 'sillas conforme al paquete', '1 hielera grande'] : []), ...(d.n ? ['acceso a las instalaciones de hospedaje durante las noches contratadas'] : [])];
+      const inc = incL.length > 1 ? incL.slice(0, -1).join(', ') + ' y ' + incL.slice(-1) : incL[0] || 'el uso del inmueble';
       const desg = d.rows.map(r => `<tr><td>${esc(r[0])}</td><td>${mxn(r[1])}</td></tr>`).join('');
       const banco = CFG.banco.map(r => `<tr><td>${r[0]}:</td><td>${esc(r[1])}</td></tr>`).join('');
 
       const cls = [
         ['OBJETO', `EL ARRENDADOR otorga en arrendamiento temporal, y presta el servicio de hospedaje, del inmueble denominado "Quinta Bugambilia", ubicado en ${CFG.domicilio}, exclusivamente para fines recreativos, de esparcimiento familiar y pernocta. Queda prohibido subarrendar, ceder o destinar el inmueble a un fin distinto.`],
-        ['FECHAS, HORARIOS Y OCUPACIÓN', `EL ARRENDATARIO usará el inmueble bajo las siguientes condiciones:<ul><li><b>Hospedaje:</b> del ${fecha(a)} (entrada ${hr('horaEntrada')}) al ${fecha(s)} (salida ${hr('horaSalida')}), ${d.n} noche(s).</li>${ev}<li><b>Ocupación máxima:</b> ${d.aforo ? d.aforo + ' personas para el evento y ' : ''}${CFG.dormitorios} personas para pernocta.</li><li><b>Incluye:</b> ${d.aforo ? 'mesas con mantel, sillas conforme al paquete, 1 hielera grande y ' : ''}acceso a las instalaciones de hospedaje durante las noches contratadas.</li></ul>La permanencia fuera de los horarios pactados requiere autorización previa y por escrito de EL ARRENDADOR y podrá generar un cargo adicional.`],
+        ['FECHAS, HORARIOS Y OCUPACIÓN', `EL ARRENDATARIO usará el inmueble bajo las siguientes condiciones:<ul>${d.n ? `<li><b>Hospedaje:</b> del ${fecha(a)} (entrada ${hr('horaEntrada')}) al ${fecha(s)} (salida ${hr('horaSalida')}), ${d.n} noche(s).</li>` : `<li><b>Uso del inmueble:</b> el ${fecha(a)}, de ${hr('horaEntrada')} a ${hr('horaSalida')}, sin pernocta.</li>`}${ev}<li><b>Ocupación máxima:</b> ${[d.aforo ? d.aforo + ' personas para el evento' : '', d.n ? CFG.dormitorios + ' personas para pernocta' : ''].filter(Boolean).join(' y ')}.</li><li><b>Incluye:</b> ${inc}.</li></ul>La permanencia fuera de los horarios pactados requiere autorización previa y por escrito de EL ARRENDADOR y podrá generar un cargo adicional.`],
         ['PRECIO', `El precio total es de <b>${mxn(d.total)}</b> (${letrasMXN(d.total)}), integrado así:<table class="tb r">${desg}<tr class="tot"><td>TOTAL</td><td>${mxn(d.total)}</td></tr></table>`],
         ['ANTICIPO Y PAGO DEL SALDO', `Para reservar la fecha, EL ARRENDATARIO pagará un anticipo del ${CFG.anticipo * 100}% del precio (<b>${mxn(ant)}</b>); la fecha no queda reservada hasta recibirse dicho anticipo. El saldo (<b>${mxn(saldo)}</b>) deberá liquidarse en su totalidad antes del ingreso al inmueble; de no hacerlo, EL ARRENDADOR podrá negar el acceso sin responsabilidad, perdiendo EL ARRENDATARIO el anticipo.`],
         ['DATOS PARA PAGO', `Los pagos se realizarán a la siguiente cuenta, propiedad de EL ARRENDADOR; EL ARRENDATARIO conservará su comprobante:<table class="tb">${banco}</table>`],
@@ -252,7 +296,6 @@
       const ord = ['PRIMERA','SEGUNDA','TERCERA','CUARTA','QUINTA','SEXTA','SÉPTIMA','OCTAVA','NOVENA','DÉCIMA','DÉCIMA PRIMERA','DÉCIMA SEGUNDA','DÉCIMA TERCERA','DÉCIMA CUARTA'];
 
       let ex = EXTRAS.filter((e, i) => $('ex' + i).checked).map(e => `• Incluye servicio de: ${e[0]}.`).join('\n');
-      if (g('manualNombre1')) ex += `\n• Extra personalizado: ${g('manualNombre1')}${g('manualMonto1') ? ' (' + g('manualMonto1') + ')' : ''}.`;
       if (g('anotacionesInput')) ex += `\n\nAnotaciones especiales (forman parte de este contrato): ${g('anotacionesInput')}`;
       ex = ex.trim() || 'Ninguno. Solo se contrata el paquete base configurado.';
 
@@ -338,8 +381,10 @@
       document.querySelectorAll('.form-container input, .form-container textarea').forEach(i => {
         if (i.type === 'checkbox') i.checked = false; else i.value = i.defaultValue;
       });
-      $('paqueteSelect').selectedIndex = 0; delete $('fechaEvento').dataset.t;
-      seq++; pdfBlob = null; aviso(''); calc();
+      document.querySelectorAll('.form-container select').forEach(x => x.selectedIndex = 0);
+      document.querySelectorAll('.cpt').forEach(r => r.remove());
+      delete $('fechaEvento').dataset.t; NP = [];
+      seq++; pdfBlob = null; aviso(''); renderNoches(); calc();
       $('contrato-wrap').hidden = true;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -348,13 +393,18 @@
     $('paqueteSelect').innerHTML = '<option value="0" data-price="0">Sin paquete de evento (solo hospedaje)</option>'
       + PAQUETES.map(([p, c]) => `<option value="${p}" data-price="${c}">${p} personas — ${mxn(c)}</option>`).join('');
     $('extras').insertAdjacentHTML('afterbegin', EXTRAS.map(([n, c], i) =>
-      `<label class="extra-item"><input type="checkbox" id="ex${i}"><span class="extra-label">${n}</span><span class="extra-price">+${mxn(c)}</span></label>`).join(''));
+      `<div class="extra-item"><label class="xl"><input type="checkbox" id="ex${i}"><span class="extra-label">${n}</span></label><input type="number" class="xp" id="exp${i}" value="${c}" min="0" inputmode="decimal" aria-label="Precio de ${n}"></div>`).join(''));
     const F = document.querySelector('.form-container');
     ['input', 'change'].forEach(t => F.addEventListener(t, e => {
-      if (e.target.id === 'fechaEvento') e.target.dataset.t = 1;
-      if (e.target.id === 'fechaEntrada' || e.target.id === 'fechaSalida') fechas();
+      const id = e.target.id || '';
+      if (id === 'fechaEvento') e.target.dataset.t = 1;
+      if (id === 'fechaEntrada' || id === 'fechaSalida') fechas();
+      if (id === 'costoNocheInput') { NP = NP.map(() => e.target.value); renderNoches(); }
+      if (e.target.dataset.i !== undefined) NP[+e.target.dataset.i] = e.target.value;
+      if (id.startsWith('exp')) $('ex' + id.slice(3)).checked = true;
       calc(); stale();
     }));
+    renderNoches();
     calc();
   </script>
 </body>
